@@ -4,6 +4,7 @@
 #include "FGHUD.h"
 #include "Hologram/FGBuildableHologram.h"
 #include "FGColoredInstanceMeshProxy.h"
+#include "FGClearanceData.h"
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -17,6 +18,13 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     mDisplayName = FText::FromString(TEXT("FICSIT Dispatch Terminal"));
     mDescription = FText::FromString(TEXT("A centralized FICSIT logistics console. Review production contracts, track deliveries, monitor reputation and coordinate your factory's supply chain."));
     mHologramClass = AFGBuildableHologram::StaticClass();
+
+    FFGClearanceData TerminalClearance;
+    TerminalClearance.Type = EClearanceType::CT_Default;
+    TerminalClearance.ClearanceBox = FBox(FVector(-85.0f,-60.0f,0.0f),FVector(85.0f,60.0f,235.0f));
+    TerminalClearance.RelativeTransform = FTransform::Identity;
+    TerminalClearance.ExcludeForSnapping = false;
+    mClearanceData.Add(TerminalClearance);
 
     SolidCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("DispatchSolidCollision"));
     SolidCollision->SetupAttachment(RootComponent);
