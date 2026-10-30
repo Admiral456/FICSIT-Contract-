@@ -175,8 +175,10 @@ void AFICSITContractsSubsystem::RefreshExpiredContracts()
     if (!HasAuthority()) return;
     const int64 Now = GetUtcUnixTime();
     const auto HasExpired = [Now](const FFICSITContract& Contract) { return Contract.ExpiresAtUnix > 0 && Now >= Contract.ExpiresAtUnix; };
-    const bool bNeedsRefresh = AvailableContracts.Num() < 3 || AvailableContracts.ContainsByPredicate(HasExpired) || ActiveContracts.ContainsByPredicate(HasExpired);
-    if (!bNeedsRefresh) return;
+    // A board can legitimately have fewer than three free offers when all unlocked templates
+    // are already offered or active. Do not replicate an unchanged board every 15 seconds.
+    const bool bHasExpiredContract = AvailableContracts.ContainsByPredicate(HasExpired) || ActiveContracts.ContainsByPredicate(HasExpired);
+    if (!bHasExpiredContract) return;
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     Engine.expire(Now);
     Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
