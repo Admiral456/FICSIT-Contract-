@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate the source plugin descriptor and expected C++ module files."""
 
+import ast
 import json
 from pathlib import Path
 
@@ -51,6 +52,7 @@ def main() -> int:
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsRemoteCallObject.cpp",
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsGameInstanceModule.h",
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsGameInstanceModule.cpp",
+        PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITDispatchTerminalContent.h",
     ]
     errors.extend(
         f"Required source file missing: {path.relative_to(ROOT)}"
@@ -66,6 +68,46 @@ def main() -> int:
         f"Required Dispatch Terminal source asset missing: {path.relative_to(ROOT)}"
         for path in source_assets if not path.is_file()
     )
+
+    # Parse the Editor utility without importing Unreal's Python module.
+    asset_script = source_assets[-1]
+    if asset_script.is_file():
+        try:
+            ast.parse(asset_script.read_text(encoding="utf-8"), filename=str(asset_script))
+        except SyntaxError as exc:
+            errors.append(f"Unreal asset utility has invalid Python syntax: {exc}")
+
+    # Validate OBJ topology references, UV coordinates and MTL slot declarations.
+    obj_path, mtl_path = source_assets[0], source_assets[1]
+    if obj_path.is_file() and mtl_path.is_file():
+        obj_lines = obj_path.read_text(encoding="utf-8").splitlines()
+        vertex_count = sum(line.startswith("v ") for line in obj_lines)
+        uv_count = sum(line.startswith("vt ") for line in obj_lines)
+        face_lines = [line for line in obj_lines if line.startswith("f ")]
+        used_materials = {line[7:].strip() for line in obj_lines if line.startswith("usemtl ")}
+        defined_materials = {
+            line[7:].strip()
+            for line in mtl_path.read_text(encoding="utf-8").splitlines()
+            if line.startswith("newmtl ")
+        }
+        if vertex_count == 0 or uv_count == 0 or not face_lines:
+            errors.append("Dispatch Terminal OBJ must contain vertices, UVs and faces.")
+        for face_number, face in enumerate(face_lines, start=1):
+            for corner in face[2:].split():
+                parts = corner.split("/")
+                try:
+                    vertex_index = int(parts[0])
+                    uv_index = int(parts[1]) if len(parts) > 1 and parts[1] else 0
+                except (ValueError, IndexError):
+                    errors.append(f"Dispatch Terminal OBJ face {face_number} has an invalid vertex/UV reference.")
+                    break
+                if not (1 <= vertex_index <= vertex_count) or not (1 <= uv_index <= uv_count):
+                    errors.append(f"Dispatch Terminal OBJ face {face_number} references an out-of-range vertex or UV.")
+                    break
+        missing_materials = sorted(used_materials - defined_materials)
+        if missing_materials:
+            errors.append("Dispatch Terminal OBJ references undefined MTL slots: " + ", ".join(missing_materials))
+
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
