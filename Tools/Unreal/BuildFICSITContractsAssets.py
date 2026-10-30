@@ -71,6 +71,7 @@ def make_icon(path):
     os.makedirs(os.path.dirname(path),exist_ok=True)
     with open(path,"wb") as f: f.write(png)
 
+require(os.path.isfile(os.path.join(PLUGIN_ROOT, "FICSITContracts.uplugin")), "Game Feature plugin not found: "+PLUGIN_ROOT)
 require(os.path.isfile(MESH_SOURCE), "DispatchTerminal.obj not found: "+MESH_SOURCE)
 make_icon(ICON_SOURCE)
 asset_tools=unreal.AssetToolsHelpers.get_asset_tools()
