@@ -42,6 +42,7 @@ struct FICSITCONTRACTS_API FFICSITContract
     UPROPERTY(SaveGame, BlueprintReadOnly) bool bLongTerm = false;
     UPROPERTY(SaveGame, BlueprintReadOnly) bool bCompleted = false;
     UPROPERTY(SaveGame, BlueprintReadOnly) bool bExpired = false;
+    UPROPERTY(SaveGame, BlueprintReadOnly) bool bAbandoned = false;
     UPROPERTY(SaveGame, BlueprintReadOnly) int64 FinishedAtUnix = 0;
     UPROPERTY(SaveGame, BlueprintReadOnly) TArray<FFICSITContractRequirement> Requirements;
     UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") int32 GetProgressPercent() const;
@@ -64,6 +65,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") TArray<FFICSITContract> GetContractHistory() const { return ContractHistory; }
 
     bool AcceptContract(FName ContractId, FString& OutMessage);
+    bool AbandonContract(FName ContractId, FString& OutMessage);
     int32 DeliverFromInventory(AFGCharacterPlayer* Player, FName ContractId, FString& OutMessage);
     FString FormatContract(const FFICSITContract& Contract) const;
     UPROPERTY(BlueprintAssignable, Category = "FICSIT Contracts") FOnFICSITContractBoardChanged OnContractBoardChanged;
