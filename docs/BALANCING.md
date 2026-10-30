@@ -34,6 +34,6 @@ The Factory Backbone Program pays its 750 reputation reward once, after the Powe
 | Asset | Cost |
 |---|---|
 | Dispatch Terminal build recipe | 20 Heavy Modular Frames, 20 Computers, 50 Cable, 40 Reinforced Iron Plates, 10 Motors |
-| FICSIT Dispatch Network schematic | 25 Modular Frames, 10 Computers, 100 Cable, 10 Motors |
+| FICSIT Dispatch Network schematic | 25 Modular Frames, 10 Computers, 100 Cable, 10 Motors; requires Oil Processing |
 
 These are initial Tier 5 balance values and require in-game playtesting.
