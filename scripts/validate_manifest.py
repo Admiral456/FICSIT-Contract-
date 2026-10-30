@@ -17,8 +17,8 @@ def main() -> int:
         errors.append("SemVersion and VersionName must be identical.")
     if not isinstance(descriptor.get("Version"), int) or descriptor["Version"] < 1:
         errors.append("Version must be a positive, monotonically incremented plugin revision.")
-    if not sem_version.startswith("0.1.1"):
-        errors.append("The source descriptor is expected to describe the 0.1.1 alpha.")
+    if not sem_version.startswith("0.1.2"):
+        errors.append("The source descriptor is expected to describe the 0.1.2 alpha.")
     if descriptor.get("GameVersion") != ">=491125":
         errors.append("GameVersion must retain the SML 3.12.0 minimum CL#491125.")
     if not any(
