@@ -45,6 +45,13 @@ UFICSITDispatchTerminalRecipe::UFICSITDispatchTerminalRecipe()
 }
 UFICSITDispatchTerminalRecipeUnlock::UFICSITDispatchTerminalRecipeUnlock()
 { mRecipes.Add(UFICSITDispatchTerminalRecipe::StaticClass()); }
+UFICSITDispatchTerminalPrerequisite::UFICSITDispatchTerminalPrerequisite()
+{
+    mSchematics.Add(LoadClass<UFGSchematic>(nullptr,
+        TEXT("/Game/FactoryGame/Schematics/Progression/Schematic_5-1.Schematic_5-1_C")));
+    mRequireAllSchematicsToBePurchased = true;
+}
+
 UFICSITDispatchTerminalSchematic::UFICSITDispatchTerminalSchematic()
 {
     mType=ESchematicType::EST_Milestone;
