@@ -2,7 +2,7 @@
 
 **FICSIT Contracts** is a Satisfactory gameplay mod that adds a production-contract board, item delivery orders, company reputation and contract progression.
 
-> **Current status: 0.1.3 source alpha.** The portable contract engine, sequential multi-stage orders, save-state validation, cancellation penalties and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
+> **Current status: 0.2.0 source alpha.** The portable contract engine, sequential multi-stage orders and a native FICSIT Dispatch Terminal source implementation are now in the repository. The terminal includes a native buildable actor, Satisfactory interaction widget, native building descriptor/recipe/Tier 5 schematic and a low-poly OBJ/MTL source model. Unreal asset import, custom UE compilation and in-game testing are still outstanding; this is not a ready-to-install release.
 
 ## Version 0.1.x
 
@@ -46,7 +46,7 @@ The current compatibility target is Satisfactory 1.2 / SML 3.12.x:
 ### Add the mod to the Starter Project
 
 1. Set up the Satisfactory Modding Starter Project and the matching custom Unreal Engine using the official guide.
-2. Copy this repository's `Mods/FICSITContracts` directory into the Starter Project's `Mods/` directory.
+2. Copy `Mods/GameFeatures/FICSITContracts` into the Starter Project's `Mods/GameFeatures` directory. Also copy `Mods/FICSITContracts/ContentSource` and `Tools/Unreal` to the project root.
 3. Regenerate Visual Studio project files.
 4. Build the `FactoryGameEditor` target in Development Editor configuration.
 5. Open the Starter Project in the custom editor and use Alpakit to stage/package FICSIT Contracts.
@@ -78,9 +78,9 @@ ctest --test-dir build --output-on-failure
 
 GitHub Actions runs these portable tests on pushes and pull requests. **This CI job is not an Unreal Engine build** and cannot prove that the SML plugin compiles or loads in Satisfactory.
 
-## Known limitations in 0.1.3
+## Known limitations in 0.2.0
 
-- No Dispatch Terminal building, conveyor input, custom mesh, animations or dedicated graphical contract screen yet. The multi-stage chain is currently managed through chat commands.
+- The terminal UI currently displays the board and history; accepting/delivering/cancelling still uses the existing server-authoritative chat commands. Belt input, dispatch animation/audio and a full client-to-server UI action layer are not implemented yet.
 - The board is shared by the session rather than a separate per-player economy.
 - Item classes are resolved from vanilla asset class paths at runtime. These paths must be confirmed in the target Starter Project/game build before a packaged release.
 - Timed contracts use UTC wall-clock time, so they can expire while the game is closed.
@@ -88,3 +88,8 @@ GitHub Actions runs these portable tests on pushes and pull requests. **This CI 
 - The Unreal plugin has not yet been compiled or tested in-game in this environment.
 
 See [technical analysis](docs/TECHNICAL_ANALYSIS.md), [roadmap](docs/ROADMAP.md), [balance rules](docs/BALANCING.md) and the [in-game test checklist](docs/GAME_TEST_CHECKLIST.md).
+
+
+### Dispatch Terminal asset import
+
+Run `Tools/Unreal/BuildFICSITContractsAssets.py` inside the SML 3.12 Unreal Editor. It imports the OBJ/MTL mesh, generates and imports the 256px terminal icon, and creates the required `UFGGameFeatureData` asset. Set the Game Feature's Initial State to Active before compiling and packaging. See [Dispatch Terminal design](docs/DISPATCH_TERMINAL_DESIGN.md).

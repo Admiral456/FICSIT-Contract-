@@ -1,4 +1,4 @@
-# Initial balance values (0.1.3)
+# Initial balance values (0.2.0)
 
 All values are currently compiled into the portable engine. They are intentionally conservative and will become configurable after the first in-game balance pass.
 
@@ -27,3 +27,13 @@ All values are currently compiled into the portable engine. They are intentional
 There are three available offers at a time and a maximum of three active contracts. Completed, expired and cancelled contract history is capped at the latest 50 entries. Cancelling an active contract costs 25% of its listed reputation reward (rounded up, minimum 5 for positive-reward orders); the charge is capped at the player's current reputation.
 
 The Factory Backbone Program pays its 750 reputation reward once, after the Powertrain stage is completed. Its stage progress is saved independently, and future-stage items are not accepted early.
+
+
+## Dispatch Terminal construction (0.2.0)
+
+| Asset | Cost |
+|---|---|
+| Dispatch Terminal build recipe | 20 Heavy Modular Frames, 20 Computers, 50 Cable, 40 Reinforced Iron Plates, 10 Motors |
+| FICSIT Dispatch Network schematic | 25 Modular Frames, 10 Computers, 100 Cable, 10 Motors |
+
+These are initial Tier 5 balance values and require in-game playtesting.

@@ -22,7 +22,7 @@ Zdroje:
 ## Zvolená architektura 0.1.2
 
 1. **Portable domain engine** (`Source/FICSITContractsCore`) obsahuje generování nabídek, přijímání, částečné dodávky, dokončení, expiraci, penalizované zrušení, reputaci a omezenou historii. Nepoužívá Unreal typy, takže jde sestavit a testovat samostatně.
-2. **SML runtime plugin** (`Mods/FICSITContracts`) kompiluje tentýž engine jako součást Unreal modulu a převádí jeho data na `USTRUCT`.
+2. **SML runtime plugin** (`Mods/GameFeatures/FICSITContracts`) kompiluje tentýž engine jako součást Unreal modulu a převádí jeho data na `USTRUCT`.
 3. **World module** nastaví `bRootModule`, zaregistruje `AFICSITContractsSubsystem` a příkaz `/contracts`.
 4. **Server-authoritative subsystem** používá `SpawnOnServer_Replicate`. Autoritativní instance mění board; vlastnosti s `Replicated` se posílají klientům.
 5. **Persistence** používá `IFGSaveInterface` a SaveGame vlastnosti pro reputaci, pořadové ID, nabídky, aktivní smlouvy a historii, včetně příznaku zrušení, fází a indexu aktuální fáze.
@@ -30,7 +30,7 @@ Zdroje:
 7. **Interakce v 0.1.x je záměrně přes příkazy `/contracts`, `/contracts accept <ID>`, `/contracts deliver <ID>`, `/contracts cancel <ID>` a `/contracts history`. Zrušení aktivního kontraktu odečte 25 % odměny reputace (zaokrouhleno nahoru, minimálně 5 u kladné odměny, nejvýše však aktuální reputace) a zachová dílčí průběh v historii jako `CANCELLED`. Dodávka používá hlavní inventář hráče. Před odečtením se kontroluje autorita, dostupné množství a načtení třídy předmětu. Odečítá se nejvýše chybějící množství.
 8. **Testy** kompilují stejný portable C++ engine jako Unreal adapter, ale záměrně neimitují Unreal runtime.
 
-## Rozsah 0.1.3 a vědomá omezení
+## Rozsah 0.2.0 a vědomá omezení
 
 Verze 0.1.3 rozšiřuje kontraktový systém o sekvenční třífázový Factory Backbone Program. Legacy zakázky bez pole `Stages` se nadále vyhodnocují jako jednofázové a ukládají do původního `Requirements` pole. Projekt stále není kompletním rozšířením s vlastní budovou. Neobsahuje nové assety, proto je `CanContainContent` v `.uplugin` nastaveno na `false`. Jakmile přidáme Dispatch Terminal, modely, hologram, UI widgety a další assety, bude třeba přidat content/Game Feature část podle aktuálního postupu SML 3.12 a vytvořit příslušný `FGGameFeatureData` asset v editoru. Dokumentace [Buildable tutorial](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/SimpleMod/buildable.html) popisuje, že buildable potřebuje descriptor, actor a hologram, nikoli pouze C++ třídu.
 
@@ -50,3 +50,10 @@ Kontrakty jsou nyní sdílené pro session, nikoli per-player. To je záměr pro
 - Alpakit staging a instalaci balíčku.
 
 Tyto body jsou záměrně vedené jako herní/build testy; úspěch portable CMake testů se za ně nevydává.
+
+
+## Dispatch Terminal source implementation (0.2.0)
+
+The plugin now includes `AFICSITDispatchTerminal : AFGBuildable`, a `UFGInteractWidget` subclass, a native `UFGBuildingDescriptor` subclass, a build-gun `UFGRecipe`, a `UFGUnlockRecipe` and a Tier 5 `UFGSchematic` registered by the root `UGameWorldModule`. The actor opens the widget through `AFGHUD::OpenInteractUI`; the widget reads the existing replicated `AFICSITContractsSubsystem` and does not mutate it from the client. This avoids an unsafe client-side write path while a proper owner-valid RCO action layer is pending.
+
+The source mesh is OBJ/MTL, not a cooked `.uasset`. SML 3.12 requires a Game Feature Data asset for content-bearing mods; the Unreal Editor utility imports the mesh/icon and creates that asset. The plugin is marked `CanContainContent=true` and is located in `Mods/GameFeatures/FICSITContracts`. Custom UE compilation, Alpakit packaging, build-gun placement, save/load and multiplayer interaction remain unverified.

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 — FICSIT Dispatch Terminal source implementation
+
+- Add a native placeable `AFICSITDispatchTerminal` buildable actor with Satisfactory use interaction and a dedicated trace volume.
+- Add a native `UFGInteractWidget` board viewer for reputation, available offers, active multi-stage orders and recent history.
+- Add native building descriptor, build-gun recipe, recipe unlock and Tier 5 Logistics milestone registration.
+- Add low-poly OBJ/MTL terminal source model and an Unreal Editor utility for mesh/icon import and Game Feature Data creation.
+- Move the content-bearing plugin into the SML 3.12 `Mods/GameFeatures` layout.
+- Correct the vanilla Reinforced Iron Plate descriptor path after checking the current SML asset tree.
+
+The UI is currently read-only for contract mutations; commands remain server-authoritative. The Unreal Editor import, UE compile and in-game tests are still outstanding.
+
 ## 0.1.3 — Sequential long-term contract stages
 
 - Convert Factory Backbone Program into three ordered stages: Iron Plates, Reinforced Iron Plates, then Motors.

@@ -79,7 +79,7 @@ int main() {
     ContractEngine chainEngine(advancedEngine.state());
     expect(chainEngine.accept(stagedOffer.id, now), "long-term staged contract can be accepted");
     const std::string ironPlatePath = "/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C";
-    const std::string reinforcedPath = "/Game/FactoryGame/Resource/Parts/ReinforcedIronPlate/Desc_ReinforcedIronPlate.Desc_ReinforcedIronPlate_C";
+    const std::string reinforcedPath = "/Game/FactoryGame/Resource/Parts/IronPlateReinforced/Desc_IronPlateReinforced.Desc_IronPlateReinforced_C";
     const std::string motorPath = "/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C";
     const auto partialStageDelivery = chainEngine.deliver(stagedOffer.id, ironPlatePath, 1000, now + 1);
     expect(partialStageDelivery.acceptedAmount == 1000 && !partialStageDelivery.stageCompleted,

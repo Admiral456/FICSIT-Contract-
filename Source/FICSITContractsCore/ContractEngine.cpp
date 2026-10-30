@@ -28,7 +28,7 @@ const std::vector<ContractTemplate>& templates() {
         {"SUP-CABLE", "Cable Shipment", Difficulty::Small, 45, 0, false, 1200,
          {{"/Game/FactoryGame/Resource/Parts/Cable/Desc_Cable.Desc_Cable_C", "Cable", 250}}},
         {"SUP-RIP", "Reinforced Plate Order", Difficulty::Medium, 130, 150, false, 1800,
-         {{"/Game/FactoryGame/Resource/Parts/ReinforcedIronPlate/Desc_ReinforcedIronPlate.Desc_ReinforcedIronPlate_C", "Reinforced Iron Plates", 120}}},
+         {{"/Game/FactoryGame/Resource/Parts/IronPlateReinforced/Desc_IronPlateReinforced.Desc_IronPlateReinforced_C", "Reinforced Iron Plates", 120}}},
         {"SUP-ROTOR", "Rotor Replacement Stock", Difficulty::Medium, 150, 150, false, 1800,
          {{"/Game/FactoryGame/Resource/Parts/Rotor/Desc_Rotor.Desc_Rotor_C", "Rotors", 60}}},
         {"SUP-MOTOR", "Motor Delivery", Difficulty::Large, 350, 500, false, 2400,
@@ -121,7 +121,7 @@ void ContractEngine::ensureOffers(std::size_t targetCount, std::int64_t nowUnix,
                     {"/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C", "Iron Plates", 2000, 0}
                 }},
                 {"02 - Reinforcement", {
-                    {"/Game/FactoryGame/Resource/Parts/ReinforcedIronPlate/Desc_ReinforcedIronPlate.Desc_ReinforcedIronPlate_C", "Reinforced Iron Plates", 500, 0}
+                    {"/Game/FactoryGame/Resource/Parts/IronPlateReinforced/Desc_IronPlateReinforced.Desc_IronPlateReinforced_C", "Reinforced Iron Plates", 500, 0}
                 }},
                 {"03 - Powertrain", {
                     {"/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C", "Motors", 150, 0}

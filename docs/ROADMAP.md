@@ -19,7 +19,12 @@
 
 ## 0.2.0 — Logistics
 
-- [ ] FICSIT Dispatch Terminal buildable.
+- [x] Native FICSIT Dispatch Terminal actor with Satisfactory use interaction.
+- [x] Native terminal board viewer for offers, active orders, reputation and history.
+- [x] Native building descriptor, build-gun recipe and Tier 5 Logistics schematic source.
+- [x] Low-poly OBJ/MTL source model and Unreal Editor asset import utility.
+- [ ] Import cooked mesh/icon and create/activate the Game Feature Data asset in the target Starter Project.
+- [ ] Compile the native buildable/widget/content classes with custom UE 5.6.1 and test build-gun placement.
 - [ ] Belt input and server-side item acceptance.
 - [ ] Inventory/transfer transaction that cannot duplicate or lose items on failure.
 - [ ] Dispatch animation, model, material and sound assets.
@@ -35,7 +40,8 @@
 ## 0.4.0 — Expanded gameplay
 
 - [ ] Additional multi-stage contract families and special challenges.
-- [ ] Contract board graphical screen and improved history.
+- [ ] Server-validated terminal UI actions through an owner-valid remote-call object.
+- [ ] Contract board graphical screen with interactive accept/deliver/cancel actions and improved history.
 - [ ] Dedicated-server validation and broader multiplayer tests.
 - [ ] Mod compatibility review and performance profiling.
 

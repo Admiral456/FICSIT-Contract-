@@ -1,4 +1,4 @@
-# In-game validation checklist for 0.1.3
+# In-game validation checklist for 0.2.0
 
 This checklist is intentionally unchecked until tested in the target game.
 
@@ -50,3 +50,18 @@ This checklist is intentionally unchecked until tested in the target game.
 - [ ] Expire an active timed contract.
 - [ ] Cancel an active contract and confirm the cancellation penalty is applied only once.
 - [ ] Test an item descriptor class that fails to resolve and confirm no items are removed.
+
+
+## Dispatch Terminal — editor and in-game validation
+
+- [ ] Run the asset import utility in the SML 3.12 Starter Project.
+- [ ] Confirm the `FICSITContracts` Game Feature Data asset exists and Initial State is Active.
+- [ ] Compile Development Editor with custom UE 5.6.1 and resolve all UHT/compiler warnings.
+- [ ] Confirm FICSIT Dispatch Network appears in the Tier 5 Logistics schematic list.
+- [ ] Purchase the schematic and confirm the build recipe appears in the build gun under Trading Post / Progression.
+- [ ] Build the terminal and verify the hologram, placement clearance, dismantle refund and paint/customizer behavior.
+- [ ] Look at the terminal and press E; confirm the Satisfactory interaction widget opens and closes correctly.
+- [ ] Confirm the board shows current reputation, active contracts, available offers and staged progress.
+- [ ] Confirm a second player sees the same board and no duplicate contract state is created by a second terminal.
+- [ ] Save/reload with one or more terminals placed and confirm they remain usable.
+- [ ] Confirm chat commands still perform accept/deliver/cancel on the authoritative host.
