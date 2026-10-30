@@ -26,8 +26,8 @@ Zdroje:
 3. **World module** nastaví `bRootModule`, zaregistruje `AFICSITContractsSubsystem` a příkaz `/contracts`.
 4. **Server-authoritative subsystem** používá `SpawnOnServer_Replicate`. Autoritativní instance mění board; vlastnosti s `Replicated` se posílají klientům.
 5. **Persistence** používá `IFGSaveInterface` a SaveGame vlastnosti pro reputaci, pořadové ID, nabídky, aktivní smlouvy a historii.
-6. **Dodávka v 0.1** je záměrně přes příkaz `/contracts deliver <ID>` a hlavní inventář hráče. Před odečtením se kontroluje autorita, dostupné množství a načtení třídy předmětu. Odečítá se nejvýše chybějící množství.
-7. **Testy** kompilují stejný portable C++ engine jako Unreal adapter, ale záměrně neimitují Unreal runtime.
+6. **Serverové příkazy:** SML `AChatCommandSubsystem` je ve zdrojovém kódu SML nastaven na `SpawnOnServer`, takže `/contracts` příkazy jsou vykonávány na autoritativní straně. SML chat-command dokumentace potvrzuje registraci přes `UGameWorldModule::mChatCommands`. Dodávka nejdříve ověří autoritu a hlavní inventář; protože herní `UFGInventoryComponent::Remove()` vrací `void`, adaptér po odečtení znovu načte počet předmětů a do kontraktu připíše pouze pozorovaný rozdíl.\n7. **Dodávka v 0.1** je záměrně přes příkaz `/contracts deliver <ID>` a hlavní inventář hráče. Před odečtením se kontroluje autorita, dostupné množství a načtení třídy předmětu. Odečítá se nejvýše chybějící množství.
+8. **Testy** kompilují stejný portable C++ engine jako Unreal adapter, ale záměrně neimitují Unreal runtime.
 
 ## Rozsah 0.1.0 a vědomá omezení
 
