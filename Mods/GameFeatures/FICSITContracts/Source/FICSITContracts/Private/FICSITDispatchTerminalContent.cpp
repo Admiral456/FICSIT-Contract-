@@ -59,6 +59,9 @@ UFICSITDispatchTerminalSchematic::UFICSITDispatchTerminalSchematic()
     mDescription=FText::FromString(TEXT("Establish a dedicated logistics dispatch point. Unlocks the FICSIT Dispatch Terminal, a centralized interface for production contracts, delivery tracking and factory reputation."));
     mSchematicCategory=LoadClass<UFGSchematicCategory>(nullptr,TEXT("/Game/FactoryGame/Schematics/SchematicCategories/SC_Logistics.SC_Logistics_C"));
     mMenuPriority=145.0f;mTechTier=5;mTimeToComplete=0.0f;mIsPlayerSpecific=false;
+    mDependenciesBlocksSchematicAccess=true;
+    mHiddenUntilDependenciesMet=true;
+    mSchematicDependencies.Add(CreateDefaultSubobject<UFICSITDispatchTerminalPrerequisite>(TEXT("RequiresOilProcessing")));
     AddCost(mCost,TEXT("/Game/FactoryGame/Resource/Parts/ModularFrame/Desc_ModularFrame.Desc_ModularFrame_C"),25);
     AddCost(mCost,TEXT("/Game/FactoryGame/Resource/Parts/Computer/Desc_Computer.Desc_Computer_C"),10);
     AddCost(mCost,TEXT("/Game/FactoryGame/Resource/Parts/Cable/Desc_Cable.Desc_Cable_C"),100);
