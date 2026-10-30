@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2 — Contract cancellation
+
+- Add `/contracts cancel <ID>` for active contracts.
+- Apply a 25% reputation cancellation fee, rounded up, with a minimum of 5 for positive-reward contracts; the fee cannot reduce reputation below zero.
+- Preserve partial delivery progress in cancellation history and distinguish cancelled orders from expired orders.
+- Persist and replicate cancellation state through the SML subsystem.
+- Add portable tests for fee rounding, the minimum fee, low-reputation clamping, single cancellation and expiry precedence.
+
+This remains a source alpha. The SML plugin has not yet been compiled with the target custom Unreal Engine or tested inside Satisfactory.
+
 ## 0.1.1 — Source alpha hardening
 
 - Verify the observed inventory count after the game's void-returning inventory removal call; only confirmed removals are credited to contracts.
