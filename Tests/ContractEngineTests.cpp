@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <set>
 #include <string>
 
 using namespace FicsitContracts;
@@ -18,6 +19,11 @@ int main() {
     engine.ensureOffers(3, now, 12345);
     expect(engine.state().offers.size() == 3, "new board has three offers");
     expect(engine.state().reputation == 0, "new board starts at zero reputation");
+
+    std::set<std::string> initialTemplates;
+    for (const auto& offer : engine.state().offers) initialTemplates.insert(offer.templateId);
+    expect(initialTemplates.size() == engine.state().offers.size(), "the same template is not listed twice");
+
     const auto first = engine.state().offers.front();
     expect(engine.accept(first.id, now), "valid offer can be accepted");
     expect(engine.state().active.size() == 1, "accepted contract becomes active");
@@ -27,22 +33,34 @@ int main() {
     const auto active = engine.state().active.front();
     const auto requirement = active.requirements.front();
     const int half = requirement.requiredAmount / 2;
-    auto partial = engine.deliver(active.id, requirement.itemClassPath, half, now + 1);
+    const auto zeroDelivery = engine.deliver(active.id, requirement.itemClassPath, 0, now + 1);
+    const auto negativeDelivery = engine.deliver(active.id, requirement.itemClassPath, -10, now + 1);
+    const auto wrongItemDelivery = engine.deliver(active.id, "/not/a/required/item", 10, now + 1);
+    expect(zeroDelivery.acceptedAmount == 0 && negativeDelivery.acceptedAmount == 0, "zero and negative deliveries are rejected");
+    expect(wrongItemDelivery.acceptedAmount == 0 && !wrongItemDelivery.requirementFound, "unrequested items are rejected");
+    expect(engine.state().active.front().requirements.front().deliveredAmount == 0, "invalid deliveries do not mutate progress");
+
+    auto partial = engine.deliver(active.id, requirement.itemClassPath, half, now + 2);
     expect(partial.contractFound && partial.requirementFound, "delivery locates contract and item requirement");
     expect(partial.acceptedAmount == half, "partial delivery accepts only supplied amount");
     expect(!partial.completed, "partial delivery does not complete contract");
     expect(ContractEngine::progressPercent(engine.state().active.front()) < 100, "partial delivery progress remains below 100 percent");
-    auto rest = engine.deliver(active.id, requirement.itemClassPath, requirement.requiredAmount * 10, now + 2);
+
+    // A save/load round trip is represented by serializing the value snapshot and rebuilding the engine.
+    ContractEngine restoredEngine(engine.state());
+    expect(restoredEngine.state().active.size() == 1, "active contracts survive a snapshot restore");
+    expect(restoredEngine.state().active.front().requirements.front().deliveredAmount == half, "partial progress survives a snapshot restore");
+    expect(restoredEngine.state().nextSerial == engine.state().nextSerial, "contract serial survives a snapshot restore");
+
+    auto rest = restoredEngine.deliver(active.id, requirement.itemClassPath, requirement.requiredAmount * 10, now + 3);
     expect(rest.acceptedAmount == requirement.requiredAmount - half, "excess is clamped to remaining amount");
     expect(rest.completed, "fully supplied contract completes");
     expect(rest.reputationAwarded == active.rewardReputation, "completion pays configured reputation exactly once");
-    expect(engine.state().active.empty(), "completed contract leaves active list");
-    expect(engine.state().reputation == active.rewardReputation, "reputation is added on completion");
-    expect(engine.state().history.size() == 1 && engine.state().history.back().completed, "completed contract is recorded in history");
-    expect(!engine.deliver(active.id, requirement.itemClassPath, requirement.requiredAmount, now + 3).contractFound, "completed contract cannot be paid twice");
-    expect(engine.state().reputation == active.rewardReputation, "duplicate delivery cannot award reputation twice");
-    const auto wrongItem = engine.deliver("FC-NOT-ACTIVE", "not-an-item", 20, now + 4);
-    expect(!wrongItem.contractFound && wrongItem.acceptedAmount == 0, "unknown contract and item cannot change state");
+    expect(restoredEngine.state().active.empty(), "completed contract leaves active list");
+    expect(restoredEngine.state().reputation == active.rewardReputation, "reputation is added on completion");
+    expect(restoredEngine.state().history.size() == 1 && restoredEngine.state().history.back().completed, "completed contract is recorded in history");
+    expect(!restoredEngine.deliver(active.id, requirement.itemClassPath, requirement.requiredAmount, now + 4).contractFound, "completed contract cannot be paid twice");
+    expect(restoredEngine.state().reputation == active.rewardReputation, "duplicate delivery cannot award reputation twice");
 
     Snapshot advancedState; advancedState.reputation = 1000;
     ContractEngine advancedEngine(advancedState);
@@ -55,6 +73,17 @@ int main() {
     }
     expect(foundLongTerm, "1000 reputation unlocks the long-term factory contract");
 
+    // The active-contract cap must be tested with more than three distinct offers available.
+    ContractEngine capEngine(advancedState);
+    capEngine.ensureOffers(10, now, 9981);
+    expect(capEngine.state().offers.size() == 9, "cap test has at least four available offers");
+    const auto capOffers = capEngine.state().offers;
+    expect(capEngine.accept(capOffers[0].id, now), "first active slot can be used");
+    expect(capEngine.accept(capOffers[1].id, now), "second active slot can be used");
+    expect(capEngine.accept(capOffers[2].id, now), "third active slot can be used");
+    expect(!capEngine.accept(capOffers[3].id, now), "fourth active contract is rejected");
+    expect(capEngine.state().active.size() == 3, "active contract cap remains three");
+
     Snapshot historyState;
     for (int index = 0; index < 55; ++index) {
         Contract oldContract; oldContract.id = "FC-OLD-" + std::to_string(index);
@@ -65,27 +94,49 @@ int main() {
     expect(historyEngine.state().history.size() == 50, "history retains no more than 50 entries");
     expect(historyEngine.state().offers.empty(), "all elapsed offers are removed");
 
-    ContractEngine capEngine; capEngine.ensureOffers(3, now, 9981);
-    const auto offers = capEngine.state().offers;
-    expect(capEngine.accept(offers[0].id, now), "first slot can be used");
-    expect(capEngine.accept(offers[1].id, now), "second slot can be used");
-    expect(capEngine.accept(offers[2].id, now), "third slot can be used");
-    capEngine.ensureOffers(3, now, 9982);
-    expect(capEngine.state().active.size() == 3, "active contract cap is three");
+    Snapshot oversizedHistory;
+    for (int index = 0; index < 60; ++index) {
+        Contract oldContract; oldContract.id = "FC-SAVED-" + std::to_string(index);
+        oversizedHistory.history.push_back(oldContract);
+    }
+    ContractEngine loadedHistoryEngine(oversizedHistory);
+    expect(loadedHistoryEngine.state().history.size() == 50, "restoring an oversized save trims history to the limit");
 
-    Snapshot expiryState; Contract expiring; expiring.id = "FC-EXPIRING"; expiring.title = "Expiry test";
+    Snapshot expiryState;
+    Contract expiring; expiring.id = "FC-EXPIRING"; expiring.title = "Expiry test";
     expiring.timeLimited = true; expiring.expiresAtUnix = now + 30;
-    expiring.requirements.push_back({"item", "Test Item", 10, 0}); expiryState.active.push_back(expiring);
+    expiring.requirements.push_back({"item", "Test Item", 10, 0});
+    expiryState.active.push_back(expiring);
     ContractEngine expiryEngine(expiryState); expiryEngine.expire(now + 30);
     expect(expiryEngine.state().active.empty(), "expired active contract is removed");
     expect(expiryEngine.state().history.size() == 1 && expiryEngine.state().history.front().expired, "expired contract is recorded as expired");
     expect(expiryEngine.state().reputation == 0, "expired contract grants no reputation");
+
+    Snapshot offerExpiryState;
+    Contract expiringOffer; expiringOffer.id = "FC-OFFER-EXPIRING"; expiringOffer.expiresAtUnix = now + 5;
+    offerExpiryState.offers.push_back(expiringOffer);
+    ContractEngine offerExpiryEngine(offerExpiryState); offerExpiryEngine.expire(now + 5);
+    expect(offerExpiryEngine.state().offers.empty(), "expired offer is removed from the board");
+    expect(offerExpiryEngine.state().history.size() == 1 && offerExpiryEngine.state().history.front().expired, "expired offer is recorded in history");
+
+    Snapshot malformedState;
+    malformedState.reputation = -25;
+    malformedState.nextSerial = 0;
+    Contract malformed; malformed.id = "FC-MALFORMED";
+    malformed.requirements.push_back({"item", "Test Item", -4, 90});
+    malformedState.active.push_back(malformed);
+    ContractEngine sanitizedEngine(malformedState);
+    expect(sanitizedEngine.state().reputation == 0, "negative reputation is sanitized");
+    expect(sanitizedEngine.state().nextSerial == 1, "zero contract serial is sanitized");
+    expect(sanitizedEngine.state().active.front().requirements.front().requiredAmount == 0, "negative requirement amount is sanitized");
+    expect(sanitizedEngine.state().active.front().requirements.front().deliveredAmount == 0, "delivered amount is clamped to its requirement");
 
     expect(std::string(ContractEngine::rankName(0)) == "FICSIT Trainee", "entry rank");
     expect(std::string(ContractEngine::rankName(150)) == "Logistics Associate", "associate rank threshold");
     expect(std::string(ContractEngine::rankName(500)) == "Logistics Specialist", "specialist rank threshold");
     expect(std::string(ContractEngine::rankName(1000)) == "FICSIT Coordinator", "coordinator rank threshold");
     expect(std::string(ContractEngine::rankName(2000)) == "Supply Chain Director", "director rank threshold");
+
     if (failures == 0) { std::cout << "All FICSIT Contracts core tests passed.\n"; return EXIT_SUCCESS; }
     std::cerr << failures << " test(s) failed.\n"; return EXIT_FAILURE;
 }
