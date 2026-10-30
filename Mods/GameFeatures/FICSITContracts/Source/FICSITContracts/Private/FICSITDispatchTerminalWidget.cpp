@@ -13,7 +13,7 @@
 UFICSITDispatchTerminalWidget::UFICSITDispatchTerminalWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     mUseKeyboard = true; mUseMouse = true; mDisablePlayerActions = true; mDisableBuildGunActions = true;
-    mSupportsCaching = false; mDesiredHorizontalAlignment = HAlign_Center; mDesiredVerticalAlignment = VAlign_Center;
+    mSupportsCaching = false; SetDesiredHorizontalAlignment(HAlign_Center); SetDesiredVerticalAlignment(VAlign_Center);
 }
 
 void UFICSITDispatchTerminalWidget::NativeConstruct()
