@@ -225,6 +225,7 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
     const FicsitContracts::Contract ContractCopy = *ContractIterator;
     int32 TotalDelivered = 0;
     int32 UnresolvedItemClasses = 0;
+    int32 InventoryRemovalMismatches = 0;
     for (const FicsitContracts::Requirement& Requirement : ContractCopy.requirements)
     {
         const int32 Remaining = FMath::Max(0, Requirement.requiredAmount - Requirement.deliveredAmount);
@@ -238,11 +239,25 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
             continue;
         }
         const TSubclassOf<UFGItemDescriptor> ItemClass(LoadedItemClass);
-        const int32 Available = Inventory->GetNumItems(ItemClass);
-        const int32 ToDeliver = FMath::Min(Remaining, FMath::Max(0, Available));
-        if (ToDeliver <= 0) continue;
-        Inventory->Remove(ItemClass, ToDeliver);
-        const FicsitContracts::DeliveryResult Delivery = Engine.deliver(ContractIdUtf8, Requirement.itemClassPath, ToDeliver, Now);
+        const int32 AvailableBefore = Inventory->GetNumItems(ItemClass);
+        const int32 RequestedRemoval = FMath::Min(Remaining, FMath::Max(0, AvailableBefore));
+        if (RequestedRemoval <= 0) continue;
+
+        // Remove() is void in the game API. Credit the order only for the quantity
+        // that is verifiably absent from inventory after the operation.
+        Inventory->Remove(ItemClass, RequestedRemoval);
+        const int32 AvailableAfter = Inventory->GetNumItems(ItemClass);
+        const int32 ActuallyRemoved = FMath::Clamp(AvailableBefore - AvailableAfter, 0, RequestedRemoval);
+        if (ActuallyRemoved != RequestedRemoval)
+        {
+            ++InventoryRemovalMismatches;
+            UE_LOG(LogTemp, Warning,
+                TEXT("FICSIT Contracts inventory removal mismatch for %s: requested %d, observed %d"),
+                *ItemClassPath, RequestedRemoval, ActuallyRemoved);
+        }
+        if (ActuallyRemoved <= 0) continue;
+
+        const FicsitContracts::DeliveryResult Delivery = Engine.deliver(ContractIdUtf8, Requirement.itemClassPath, ActuallyRemoved, Now);
         TotalDelivered += Delivery.acceptedAmount;
     }
 
@@ -250,9 +265,12 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
     ApplySnapshot(Engine.state());
     if (TotalDelivered <= 0)
     {
-        OutMessage = UnresolvedItemClasses > 0
-            ? TEXT("No items were taken. One or more vanilla item classes could not be resolved; see the mod log.")
-            : TEXT("You do not have any of the outstanding required items in your main inventory.");
+        if (InventoryRemovalMismatches > 0)
+            OutMessage = TEXT("The game did not remove the requested inventory quantity. No progress was credited; check the mod log.");
+        else if (UnresolvedItemClasses > 0)
+            OutMessage = TEXT("No items were taken. One or more vanilla item classes could not be resolved; see the mod log.");
+        else
+            OutMessage = TEXT("You do not have any of the outstanding required items in your main inventory.");
         return 0;
     }
 
