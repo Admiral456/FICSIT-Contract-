@@ -1,4 +1,4 @@
-# In-game validation checklist for 0.1.0
+# In-game validation checklist for 0.1.2
 
 This checklist is intentionally unchecked until tested in the target game.
 
@@ -23,6 +23,9 @@ This checklist is intentionally unchecked until tested in the target game.
 - [ ] Confirm a partially supplied contract stays active and reports the correct percentage.
 - [ ] Confirm a completed contract is moved to history and reputation is awarded once.
 - [ ] Confirm a repeated delivery cannot award reputation again.
+- [ ] Cancel a partially completed order and confirm the reputation fee and retained cancellation history.
+- [ ] Confirm cancellation cannot push reputation below zero.
+- [ ] Confirm an expired order cannot be cancelled and is labelled EXPIRED, not CANCELLED.
 - [ ] Save, exit, reload and confirm offers, active progress, reputation and history persist.
 - [ ] Verify a timed offer expires after its deadline and grants no reputation.
 
@@ -39,4 +42,5 @@ This checklist is intentionally unchecked until tested in the target game.
 - [ ] Deliver more than the remaining amount.
 - [ ] Deliver an item not required by the selected contract.
 - [ ] Expire an active timed contract.
+- [ ] Cancel an active contract and confirm the cancellation penalty is applied only once.
 - [ ] Test an item descriptor class that fails to resolve and confirm no items are removed.
