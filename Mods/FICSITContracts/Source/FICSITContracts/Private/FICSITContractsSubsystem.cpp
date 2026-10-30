@@ -40,6 +40,7 @@ namespace
         Result.longTerm = Source.bLongTerm;
         Result.completed = Source.bCompleted;
         Result.expired = Source.bExpired;
+        Result.abandoned = Source.bAbandoned;
         Result.finishedAtUnix = Source.FinishedAtUnix;
         for (const FFICSITContractRequirement& Requirement : Source.Requirements)
             Result.requirements.push_back({ToUtf8(Requirement.ItemClassPath), ToUtf8(Requirement.DisplayName), Requirement.RequiredAmount, Requirement.DeliveredAmount});
@@ -59,6 +60,7 @@ namespace
         Result.bLongTerm = Source.longTerm;
         Result.bCompleted = Source.completed;
         Result.bExpired = Source.expired;
+        Result.bAbandoned = Source.abandoned;
         Result.FinishedAtUnix = Source.finishedAtUnix;
         for (const FicsitContracts::Requirement& Requirement : Source.requirements)
         {
@@ -199,6 +201,29 @@ bool AFICSITContractsSubsystem::AcceptContract(FName ContractId, FString& OutMes
         return false;
     }
     OutMessage = FString::Printf(TEXT("Contract %s accepted. Deliver the requested items with /contracts deliver %s."), *ContractId.ToString(), *ContractId.ToString());
+    return true;
+}
+
+bool AFICSITContractsSubsystem::AbandonContract(FName ContractId, FString& OutMessage)
+{
+    if (!HasAuthority())
+    {
+        OutMessage = TEXT("Contract changes must be processed by the session host.");
+        return false;
+    }
+
+    FicsitContracts::ContractEngine Engine(BuildSnapshot());
+    const FicsitContracts::AbandonResult Result = Engine.abandon(ToUtf8(ContractId.ToString()), GetUtcUnixTime());
+    ApplySnapshot(Engine.state());
+    if (!Result.contractFound)
+    {
+        OutMessage = TEXT("No active contract with that ID was found. It may already be completed or expired.");
+        return false;
+    }
+
+    OutMessage = FString::Printf(
+        TEXT("Contract %s cancelled. Reputation penalty: -%d. Current reputation: %d (%s)."),
+        *ContractId.ToString(), Result.reputationPenalty, Reputation, *GetRankName());
     return true;
 }
 
