@@ -11,16 +11,24 @@ permissions:
 
 jobs:
   test:
-    name: Build and test portable contract engine
-    runs-on: ubuntu-latest
+    name: Build and test portable contract engine (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Validate plugin manifest and source layout
+        uses: actions/checkout@v7
+      - name: Validate plugin manifest and source layout (Linux)
+        if: runner.os == 'Linux'
         run: python3 scripts/validate_manifest.py
+      - name: Validate plugin manifest and source layout (Windows)
+        if: runner.os == 'Windows'
+        run: py -3 scripts/validate_manifest.py
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build
       - name: Build
         run: cmake --build build --config Release --parallel
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --build-config Release --output-on-failure
