@@ -131,6 +131,48 @@ int main() {
     expect(sanitizedEngine.state().active.front().requirements.front().requiredAmount == 0, "negative requirement amount is sanitized");
     expect(sanitizedEngine.state().active.front().requirements.front().deliveredAmount == 0, "delivered amount is clamped to its requirement");
 
+    Snapshot abandonState;
+    abandonState.reputation = 50;
+    Contract abandonTarget;
+    abandonTarget.id = "FC-ABANDON";
+    abandonTarget.title = "Cancellation test";
+    abandonTarget.rewardReputation = 42;
+    abandonTarget.requirements.push_back({"item", "Test Item", 20, 7});
+    abandonState.active.push_back(abandonTarget);
+    ContractEngine abandonEngine(abandonState);
+    const AbandonResult abandoned = abandonEngine.abandon("FC-ABANDON", now + 10);
+    expect(abandoned.contractFound, "an active contract can be abandoned");
+    expect(abandoned.reputationPenalty == 11, "abandon penalty rounds 25 percent up");
+    expect(abandonEngine.state().reputation == 39, "abandon penalty is deducted from reputation");
+    expect(abandonEngine.state().active.empty(), "abandoned contract leaves active list");
+    expect(abandonEngine.state().history.size() == 1 && abandonEngine.state().history.front().abandoned,
+        "abandoned contract is retained in history");
+    expect(abandonEngine.state().history.front().requirements.front().deliveredAmount == 7,
+        "abandon history retains previously delivered progress");
+    expect(!abandonEngine.abandon("FC-ABANDON", now + 11).contractFound,
+        "the same contract cannot be abandoned twice");
+
+    Snapshot lowRepState;
+    lowRepState.reputation = 4;
+    Contract costly; costly.id = "FC-COSTLY"; costly.rewardReputation = 100;
+    costly.requirements.push_back({"item", "Test Item", 1, 0});
+    lowRepState.active.push_back(costly);
+    ContractEngine lowRepEngine(lowRepState);
+    const AbandonResult lowRepAbandoned = lowRepEngine.abandon("FC-COSTLY", now + 12);
+    expect(lowRepAbandoned.reputationPenalty == 4 && lowRepEngine.state().reputation == 0,
+        "abandon fee cannot push reputation below zero");
+
+    Snapshot expiredAbandonState;
+    Contract alreadyExpired; alreadyExpired.id = "FC-ALREADY-EXPIRED";
+    alreadyExpired.expiresAtUnix = now + 1;
+    alreadyExpired.requirements.push_back({"item", "Test Item", 1, 0});
+    expiredAbandonState.active.push_back(alreadyExpired);
+    ContractEngine expiredAbandonEngine(expiredAbandonState);
+    expect(!expiredAbandonEngine.abandon("FC-ALREADY-EXPIRED", now + 1).contractFound,
+        "expired contract cannot be manually abandoned");
+    expect(expiredAbandonEngine.state().history.size() == 1 && expiredAbandonEngine.state().history.front().expired,
+        "expiry takes precedence over manual abandonment");
+
     expect(std::string(ContractEngine::rankName(0)) == "FICSIT Trainee", "entry rank");
     expect(std::string(ContractEngine::rankName(150)) == "Logistics Associate", "associate rank threshold");
     expect(std::string(ContractEngine::rankName(500)) == "Logistics Specialist", "specialist rank threshold");
