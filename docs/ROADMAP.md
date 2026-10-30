@@ -1,6 +1,6 @@
 # Roadmap
 
-## 0.1.0 — Contract loop (source alpha)
+## 0.1.x — Contract loop and source hardening
 
 - [x] Portable contract engine.
 - [x] Three-offer board and reputation-gated catalog.
@@ -9,6 +9,7 @@
 - [x] Timed expiry and capped history.
 - [x] SML C++ world subsystem, save interface and replicated board source.
 - [x] `/contracts`, `/contracts accept`, `/contracts deliver`, `/contracts history` source.
+- [x] Inventory read-back guard so progress is only credited for observed removals.
 - [x] Portable CMake tests and GitHub Actions CI.
 - [ ] Compile with target custom UE 5.6.1 and SML 3.12.x.
 - [ ] Verify item descriptor class paths in the target asset registry.
