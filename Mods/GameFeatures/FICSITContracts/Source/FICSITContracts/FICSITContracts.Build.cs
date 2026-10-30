@@ -7,6 +7,6 @@ public class FICSITContracts : ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         CppStandard = CppStandardVersion.Cpp17;
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "FactoryGame", "SML", "UMG", "Slate", "SlateCore" });
-        PublicIncludePaths.Add(Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "..", "..", "..", "Source", "FICSITContractsCore")));
+        PublicIncludePaths.Add(Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "..", "..", "..", "..", "Source", "FICSITContractsCore")));
     }
 }
