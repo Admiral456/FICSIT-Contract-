@@ -13,7 +13,7 @@ AFICSITContractsChatCommand::AFICSITContractsChatCommand()
     MinNumberOfArguments = 0;
     CommandName = TEXT("contracts");
     Aliases.Add(TEXT("fcontracts"));
-    Usage = FText::FromString(TEXT("/contracts [accept <ID> | deliver <ID> | history]"));
+    Usage = FText::FromString(TEXT("/contracts [accept <ID> | deliver <ID> | cancel <ID> | history]"));
 }
 
 EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCommandSender* Sender, const TArray<FString>& Arguments, const FString& Label)
@@ -38,7 +38,7 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
         Sender->SendChatMessage(TEXT("ACTIVE CONTRACTS"), FLinearColor::Green);
         if (Active.Num() == 0) Sender->SendChatMessage(TEXT("No active contracts. Accept one with /contracts accept <ID>."));
         for (const FFICSITContract& Contract : Active) Sender->SendChatMessage(Contracts->FormatContract(Contract));
-        Sender->SendChatMessage(TEXT("Commands: /contracts accept <ID> | /contracts deliver <ID> | /contracts history"));
+        Sender->SendChatMessage(TEXT("Commands: /contracts accept <ID> | /contracts deliver <ID> | /contracts cancel <ID> | /contracts history"));
         return EExecutionStatus::COMPLETED;
     }
 
@@ -52,7 +52,7 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
         for (int32 Index = FirstIndex; Index < History.Num(); ++Index)
         {
             const FFICSITContract& Contract = History[Index];
-            const FString Status = Contract.bCompleted ? TEXT("COMPLETED") : TEXT("EXPIRED");
+            const FString Status = Contract.bCompleted ? TEXT("COMPLETED") : (Contract.bAbandoned ? TEXT("CANCELLED") : TEXT("EXPIRED"));
             Sender->SendChatMessage(FString::Printf(TEXT("%s | %s | %s"), *Status, *Contract.ContractId.ToString(), *Contract.Title));
         }
         return EExecutionStatus::COMPLETED;
@@ -60,7 +60,7 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
 
     if (Arguments.Num() < 2)
     {
-        Sender->SendChatMessage(TEXT("Usage: /contracts accept <ID> | /contracts deliver <ID>"), FLinearColor::Red);
+        Sender->SendChatMessage(TEXT("Usage: /contracts accept <ID> | /contracts deliver <ID> | /contracts cancel <ID>"), FLinearColor::Red);
         return EExecutionStatus::BAD_ARGUMENTS;
     }
     const FName ContractId(*Arguments[1]);
@@ -70,6 +70,13 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
         const bool bAccepted = Contracts->AcceptContract(ContractId, Message);
         Sender->SendChatMessage(Message, bAccepted ? FLinearColor::Green : FLinearColor::Red);
         return bAccepted ? EExecutionStatus::COMPLETED : EExecutionStatus::UNCOMPLETED;
+    }
+    if (Subcommand == TEXT("cancel"))
+    {
+        FString Message;
+        const bool bCancelled = Contracts->AbandonContract(ContractId, Message);
+        Sender->SendChatMessage(Message, bCancelled ? FLinearColor::Yellow : FLinearColor::Red);
+        return bCancelled ? EExecutionStatus::COMPLETED : EExecutionStatus::UNCOMPLETED;
     }
     if (Subcommand == TEXT("deliver"))
     {
