@@ -7,6 +7,7 @@
 - Normalize persisted contract amounts and reputation when restoring the portable state engine.
 - Repair a zero next-contract serial and trim restored history to the 50-entry limit.
 - Expand automated tests for invalid deliveries, progress restore, active-contract limits, offer expiry, malformed save state and history trimming.
+- Avoid unnecessary repeated board replication when all unlocked templates are already offered or active.
 
 This remains a source alpha. The SML plugin has not yet been compiled with the target custom Unreal Engine or tested inside Satisfactory.
 
