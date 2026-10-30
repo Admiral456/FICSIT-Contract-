@@ -89,7 +89,21 @@ for filename, destination, name in [
 
 mesh_path=PLUGIN_MOUNT+"/Buildables/DispatchTerminal/SM_DispatchTerminal.SM_DispatchTerminal"
 icon_path=PLUGIN_MOUNT+"/UI/TX_DispatchTerminal_256.TX_DispatchTerminal_256"
-require(unreal.EditorAssetLibrary.load_asset(mesh_path) is not None, "Terminal mesh import failed.")
+mesh=unreal.EditorAssetLibrary.load_asset(mesh_path)
+require(mesh is not None, "Terminal mesh import failed.")
+# The gunmetal/steel surfaces use the game's customization-aware material.
+# Orange, black and screen slots retain their dedicated source materials.
+factory_material=unreal.EditorAssetLibrary.load_asset("/Game/FactoryGame/-Shared/Material/MI_Factory_Base_01")
+if factory_material:
+    static_materials=mesh.get_editor_property("static_materials")
+    for static_material in static_materials:
+        slot_name=str(static_material.get_editor_property("material_slot_name"))
+        if slot_name in ("Gunmetal","Steel"):
+            static_material.set_editor_property("material_interface",factory_material)
+    mesh.set_editor_property("static_materials",static_materials)
+else:
+    unreal.log_warning("MI_Factory_Base_01 was not found; verify the game material path before final packaging.")
+unreal.EditorAssetLibrary.save_loaded_asset(mesh)
 require(unreal.EditorAssetLibrary.load_asset(icon_path) is not None, "Terminal icon import failed.")
 
 game_feature_class=unreal.load_class(None,"/Script/FactoryGame.FGGameFeatureData")
