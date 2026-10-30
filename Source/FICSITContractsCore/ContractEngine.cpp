@@ -55,6 +55,25 @@ bool isComplete(const Contract& contract) {
 ContractEngine::ContractEngine(Snapshot state) : state_(std::move(state)) {
     if (state_.nextSerial == 0) state_.nextSerial = 1;
     if (state_.reputation < 0) state_.reputation = 0;
+
+    // Be defensive when loading data written by an older or damaged save.
+    const auto normalize = [](std::vector<Contract>& contracts) {
+        for (Contract& contract : contracts) {
+            for (Requirement& requirement : contract.requirements) {
+                requirement.requiredAmount = std::max(0, requirement.requiredAmount);
+                requirement.deliveredAmount = std::clamp(requirement.deliveredAmount, 0, requirement.requiredAmount);
+            }
+        }
+    };
+    normalize(state_.offers);
+    normalize(state_.active);
+    normalize(state_.history);
+
+    constexpr std::size_t HistoryLimit = 50;
+    if (state_.history.size() > HistoryLimit) {
+        state_.history.erase(state_.history.begin(),
+            state_.history.begin() + static_cast<std::ptrdiff_t>(state_.history.size() - HistoryLimit));
+    }
 }
 const Snapshot& ContractEngine::state() const noexcept { return state_; }
 Snapshot& ContractEngine::state() noexcept { return state_; }
