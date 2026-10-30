@@ -18,6 +18,8 @@ public:
     virtual void OnUse_Implementation(AFGCharacterPlayer* ByCharacter, const FUseState& State) override;
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UBoxComponent> SolidCollision;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
     TObjectPtr<UBoxComponent> InteractionVolume;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
     TObjectPtr<UFGColoredInstanceMeshProxy> ImportedTerminalMesh;
