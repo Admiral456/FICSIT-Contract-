@@ -21,7 +21,7 @@ private:
     UFUNCTION() void RefreshBoard();
     void AddSection(const FText& Heading);
     void AddContractEntry(const FText& GroupLabel, const FText& ContractText,
-        bool bEmphasize, FName ContractId = NAME_None, EDispatchAction Action = EDispatchAction::None);
+        bool bEmphasize, FName ContractId = NAME_None, EDispatchAction Action = EDispatchAction::None, int32 ProgressPercent = -1);
     void SendContractAction(FName ContractId, EDispatchAction Action);
     class AFICSITContractsSubsystem* FindBoard() const;
 };
