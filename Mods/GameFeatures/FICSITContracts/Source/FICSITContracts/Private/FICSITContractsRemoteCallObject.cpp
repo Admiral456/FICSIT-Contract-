@@ -10,7 +10,7 @@ bool UFICSITContractsRemoteCallObject::ResolveAuthorizedRequest(
 {
     OutPlayer = GetOwnerPlayerCharacter();
     OutController = GetOwnerPlayerController();
-    if (!IsValid(OutPlayer) || !IsValid(OutController) || !OutPlayer->HasAuthority())
+    if (!IsValid(OutPlayer) || !IsValid(OutController) || !OutPlayer->HasAuthority() || !OutController->HasAuthority())
         return false;
     if (OutPlayer->GetController() != OutController)
         return false;
