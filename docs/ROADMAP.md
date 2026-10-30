@@ -40,7 +40,7 @@
 ## 0.4.0 — Expanded gameplay
 
 - [ ] Additional multi-stage contract families and special challenges.
-- [ ] Server-validated terminal UI actions through an owner-valid remote-call object.
+- [x] Server-validated terminal UI actions through an owner-valid remote-call object (source implementation).
 - [ ] Contract board graphical screen with interactive accept/deliver/cancel actions and improved history.
 - [ ] Dedicated-server validation and broader multiplayer tests.
 - [ ] Mod compatibility review and performance profiling.

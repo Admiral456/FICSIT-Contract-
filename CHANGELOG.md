@@ -7,9 +7,10 @@
 - Add native building descriptor, build-gun recipe, recipe unlock and Tier 5 Logistics milestone registration.
 - Add low-poly OBJ/MTL terminal source model and an Unreal Editor utility for mesh/icon import and Game Feature Data creation.
 - Move the content-bearing plugin into the SML 3.12 `Mods/GameFeatures` layout.
+- Register a Game Instance module and owner-bound `UFGRemoteCallObject` for terminal button actions.
 - Correct the vanilla Reinforced Iron Plate descriptor path after checking the current SML asset tree.
 
-The UI is currently read-only for contract mutations; commands remain server-authoritative. The Unreal Editor import, UE compile and in-game tests are still outstanding.
+Add owner-bound server RPC actions for accepting, delivering and cancelling directly from the terminal UI. Each request validates the owning player and uses the server-authoritative contract subsystem. Unreal Editor import, UE compile and in-game tests are still outstanding.
 
 ## 0.1.3 — Sequential long-term contract stages
 

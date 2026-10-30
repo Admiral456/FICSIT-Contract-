@@ -47,6 +47,10 @@ def main() -> int:
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITDispatchTerminalWidget.h",
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITDispatchTerminalWidget.cpp",
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITDispatchTerminalContent.cpp",
+        PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsRemoteCallObject.h",
+        PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsRemoteCallObject.cpp",
+        PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsGameInstanceModule.h",
+        PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsGameInstanceModule.cpp",
     ]
     errors.extend(
         f"Required source file missing: {path.relative_to(ROOT)}"

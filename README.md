@@ -80,7 +80,7 @@ GitHub Actions runs these portable tests on pushes and pull requests. **This CI 
 
 ## Known limitations in 0.2.0
 
-- The terminal UI currently displays the board and history; accepting/delivering/cancelling still uses the existing server-authoritative chat commands. Belt input, dispatch animation/audio and a full client-to-server UI action layer are not implemented yet.
+- The terminal UI now has Accept, Deliver and Cancel buttons. Those actions are routed through an owner-bound SML Remote Call Object and revalidated against the requesting player and server-side inventory. The original chat commands remain available as a fallback. Belt input, dispatch animation and audio are not implemented yet.
 - The board is shared by the session rather than a separate per-player economy.
 - Item classes are resolved from vanilla asset class paths at runtime. These paths must be confirmed in the target Starter Project/game build before a packaged release.
 - Timed contracts use UTC wall-clock time, so they can expire while the game is closed.
