@@ -10,6 +10,7 @@
 - [x] SML C++ world subsystem, save interface and replicated board source.
 - [x] `/contracts`, `/contracts accept`, `/contracts deliver`, `/contracts cancel`, `/contracts history` source.
 - [x] Penalized cancellation with persisted history status and reputation-floor protection.
+- [x] Three-stage Factory Backbone Program with sequential delivery gating and saved stage progress.
 - [x] Inventory read-back guard so progress is only credited for observed removals.
 - [x] Portable CMake tests and GitHub Actions CI.
 - [ ] Compile with target custom UE 5.6.1 and SML 3.12.x.
@@ -33,7 +34,7 @@
 
 ## 0.4.0 — Expanded gameplay
 
-- [ ] Long-term multi-stage contracts and special challenges.
+- [ ] Additional multi-stage contract families and special challenges.
 - [ ] Contract board graphical screen and improved history.
 - [ ] Dedicated-server validation and broader multiplayer tests.
 - [ ] Mod compatibility review and performance profiling.

@@ -35,17 +35,14 @@ const std::vector<ContractTemplate>& templates() {
          {{"/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C", "Motors", 150}}},
         {"SUP-MODULAR-FRAME", "Structural Frame Order", Difficulty::Large, 280, 500, false, 2400,
          {{"/Game/FactoryGame/Resource/Parts/ModularFrame/Desc_ModularFrame.Desc_ModularFrame_C", "Modular Frames", 100}}},
-        {"SPECIAL-FACTORY-BACKBONE", "Factory Backbone Program", Difficulty::Special, 750, 1000, true, 0,
-         {{"/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C", "Iron Plates", 2000},
-          {"/Game/FactoryGame/Resource/Parts/ReinforcedIronPlate/Desc_ReinforcedIronPlate.Desc_ReinforcedIronPlate_C", "Reinforced Iron Plates", 500},
-          {"/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C", "Motors", 150}}}
+        {"SPECIAL-FACTORY-BACKBONE", "Factory Backbone Program", Difficulty::Special, 750, 1000, true, 0, {}}
     };
     return value;
 }
 
-bool isComplete(const Contract& contract) {
-    if (contract.requirements.empty()) return false;
-    return std::all_of(contract.requirements.begin(), contract.requirements.end(),
+bool requirementsComplete(const std::vector<Requirement>& requirements) {
+    if (requirements.empty()) return false;
+    return std::all_of(requirements.begin(), requirements.end(),
         [](const Requirement& requirement) {
             return requirement.requiredAmount > 0 && requirement.deliveredAmount >= requirement.requiredAmount;
         });
@@ -59,10 +56,16 @@ ContractEngine::ContractEngine(Snapshot state) : state_(std::move(state)) {
     // Be defensive when loading data written by an older or damaged save.
     const auto normalize = [](std::vector<Contract>& contracts) {
         for (Contract& contract : contracts) {
-            for (Requirement& requirement : contract.requirements) {
-                requirement.requiredAmount = std::max(0, requirement.requiredAmount);
-                requirement.deliveredAmount = std::clamp(requirement.deliveredAmount, 0, requirement.requiredAmount);
-            }
+            const auto normalizeRequirements = [](std::vector<Requirement>& requirements) {
+                for (Requirement& requirement : requirements) {
+                    requirement.requiredAmount = std::max(0, requirement.requiredAmount);
+                    requirement.deliveredAmount = std::clamp(requirement.deliveredAmount, 0, requirement.requiredAmount);
+                }
+            };
+            normalizeRequirements(contract.requirements);
+            for (ContractStage& stage : contract.stages) normalizeRequirements(stage.requirements);
+            if (contract.stages.empty()) contract.currentStageIndex = 0;
+            else contract.currentStageIndex = std::min(contract.currentStageIndex, contract.stages.size() - 1);
         }
     };
     normalize(state_.offers);
@@ -112,8 +115,22 @@ void ContractEngine::ensureOffers(std::size_t targetCount, std::int64_t nowUnix,
         contract.difficulty = entry.difficulty; contract.rewardReputation = entry.reward; contract.longTerm = entry.longTerm;
         contract.timeLimited = !entry.longTerm && entry.timedWindowSeconds > 0 && (random() % 4U == 0U);
         contract.expiresAtUnix = contract.timeLimited ? nowUnix + entry.timedWindowSeconds : 0;
-        for (const auto& requirement : entry.requirements)
-            contract.requirements.push_back({requirement.path, requirement.label, requirement.amount, 0});
+        if (entry.id == std::string("SPECIAL-FACTORY-BACKBONE")) {
+            contract.stages = {
+                {"01 - Structural Base", {
+                    {"/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C", "Iron Plates", 2000, 0}
+                }},
+                {"02 - Reinforcement", {
+                    {"/Game/FactoryGame/Resource/Parts/ReinforcedIronPlate/Desc_ReinforcedIronPlate.Desc_ReinforcedIronPlate_C", "Reinforced Iron Plates", 500, 0}
+                }},
+                {"03 - Powertrain", {
+                    {"/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C", "Motors", 150, 0}
+                }}
+            };
+        } else {
+            for (const auto& requirement : entry.requirements)
+                contract.requirements.push_back({requirement.path, requirement.label, requirement.amount, 0});
+        }
         state_.offers.push_back(std::move(contract));
     }
 }
@@ -148,20 +165,32 @@ DeliveryResult ContractEngine::deliver(const std::string& contractId, const std:
         [&contractId](const Contract& contract) { return contract.id == contractId; });
     if (contractIterator == state_.active.end()) return result;
     result.contractFound = true;
-    auto requirementIterator = std::find_if(contractIterator->requirements.begin(), contractIterator->requirements.end(),
+    std::vector<Requirement>& requirements = currentRequirements(*contractIterator);
+    auto requirementIterator = std::find_if(requirements.begin(), requirements.end(),
         [&itemClassPath](const Requirement& requirement) { return requirement.itemClassPath == itemClassPath; });
-    if (requirementIterator == contractIterator->requirements.end()) return result;
+    if (requirementIterator == requirements.end()) return result;
     result.requirementFound = true;
     const int remaining = std::max(0, requirementIterator->requiredAmount - requirementIterator->deliveredAmount);
     result.acceptedAmount = std::min(amount, remaining);
     requirementIterator->deliveredAmount += result.acceptedAmount;
 
-    if (isComplete(*contractIterator)) {
-        Contract completed = std::move(*contractIterator);
-        completed.completed = true; completed.expired = false; completed.finishedAtUnix = nowUnix;
-        result.reputationAwarded = completed.rewardReputation;
-        state_.reputation += completed.rewardReputation; result.completed = true;
-        state_.active.erase(contractIterator); pushHistory(std::move(completed));
+    if (requirementsComplete(requirements)) {
+        result.stageCompleted = true;
+        result.completedStageIndex = static_cast<int>(contractIterator->currentStageIndex);
+        result.stageCount = static_cast<int>(stageCount(*contractIterator));
+
+        if (!contractIterator->stages.empty() &&
+            contractIterator->currentStageIndex + 1 < contractIterator->stages.size()) {
+            ++contractIterator->currentStageIndex;
+            result.nextStageIndex = static_cast<int>(contractIterator->currentStageIndex);
+        } else {
+            Contract completed = std::move(*contractIterator);
+            completed.completed = true; completed.expired = false; completed.finishedAtUnix = nowUnix;
+            result.reputationAwarded = completed.rewardReputation;
+            state_.reputation += completed.rewardReputation; result.completed = true;
+            result.nextStageIndex = result.completedStageIndex;
+            state_.active.erase(contractIterator); pushHistory(std::move(completed));
+        }
     }
     return result;
 }
@@ -193,12 +222,45 @@ AbandonResult ContractEngine::abandon(const std::string& contractId, std::int64_
 }
 
 int ContractEngine::progressPercent(const Contract& contract) noexcept {
-    std::int64_t required = 0, delivered = 0;
-    for (const auto& requirement : contract.requirements) {
-        required += std::max(0, requirement.requiredAmount);
-        delivered += std::min(std::max(0, requirement.deliveredAmount), std::max(0, requirement.requiredAmount));
-    }
-    return required > 0 ? static_cast<int>((delivered * 100) / required) : 0;
+    const auto requirementsPercent = [](const std::vector<Requirement>& requirements) {
+        std::int64_t required = 0;
+        std::int64_t delivered = 0;
+        for (const Requirement& requirement : requirements) {
+            required += std::max(0, requirement.requiredAmount);
+            delivered += std::min(std::max(0, requirement.deliveredAmount), std::max(0, requirement.requiredAmount));
+        }
+        return required > 0 ? static_cast<int>((delivered * 100) / required) : 0;
+    };
+    if (contract.stages.empty()) return requirementsPercent(contract.requirements);
+
+    std::int64_t stagePercentTotal = 0;
+    for (const ContractStage& stage : contract.stages)
+        stagePercentTotal += requirementsPercent(stage.requirements);
+    return static_cast<int>(stagePercentTotal / static_cast<std::int64_t>(contract.stages.size()));
+}
+
+std::vector<Requirement>& ContractEngine::currentRequirements(Contract& contract) noexcept {
+    static std::vector<Requirement> empty;
+    if (contract.stages.empty()) return contract.requirements;
+    if (contract.currentStageIndex >= contract.stages.size()) return empty;
+    return contract.stages[contract.currentStageIndex].requirements;
+}
+
+const std::vector<Requirement>& ContractEngine::currentRequirements(const Contract& contract) noexcept {
+    static const std::vector<Requirement> empty;
+    if (contract.stages.empty()) return contract.requirements;
+    if (contract.currentStageIndex >= contract.stages.size()) return empty;
+    return contract.stages[contract.currentStageIndex].requirements;
+}
+
+const std::string& ContractEngine::currentStageTitle(const Contract& contract) noexcept {
+    static const std::string empty;
+    if (contract.stages.empty() || contract.currentStageIndex >= contract.stages.size()) return empty;
+    return contract.stages[contract.currentStageIndex].title;
+}
+
+std::size_t ContractEngine::stageCount(const Contract& contract) noexcept {
+    return contract.stages.empty() ? 1U : contract.stages.size();
 }
 const char* ContractEngine::rankName(int reputation) noexcept {
     if (reputation >= 2000) return "Supply Chain Director";

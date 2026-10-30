@@ -69,9 +69,72 @@ int main() {
     bool foundLongTerm = false;
     for (const auto& offer : advancedEngine.state().offers) if (offer.longTerm) {
         foundLongTerm = true;
-        expect(offer.requirements.size() == 3, "long-term backbone order has three product requirements");
+        expect(offer.stages.size() == 3, "long-term backbone order has three sequential stages");
+        expect(offer.requirements.empty(), "staged contract does not expose future-stage items as current requirements");
     }
     expect(foundLongTerm, "1000 reputation unlocks the long-term factory contract");
+    Contract stagedOffer;
+    for (const Contract& offer : advancedEngine.state().offers)
+        if (offer.templateId == "SPECIAL-FACTORY-BACKBONE") stagedOffer = offer;
+    ContractEngine chainEngine(advancedEngine.state());
+    expect(chainEngine.accept(stagedOffer.id, now), "long-term staged contract can be accepted");
+    const std::string ironPlatePath = "/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C";
+    const std::string reinforcedPath = "/Game/FactoryGame/Resource/Parts/ReinforcedIronPlate/Desc_ReinforcedIronPlate.Desc_ReinforcedIronPlate_C";
+    const std::string motorPath = "/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C";
+    const auto partialStageDelivery = chainEngine.deliver(stagedOffer.id, ironPlatePath, 1000, now + 1);
+    expect(partialStageDelivery.acceptedAmount == 1000 && !partialStageDelivery.stageCompleted,
+        "partial first-stage delivery does not unlock the next stage");
+    ContractEngine partialChainRestore(chainEngine.state());
+    expect(partialChainRestore.state().active.front().stages.front().requirements.front().deliveredAmount == 1000,
+        "partial stage progress survives snapshot restoration");
+    const auto firstStageDelivery = partialChainRestore.deliver(stagedOffer.id, ironPlatePath, 5000, now + 2);
+    expect(firstStageDelivery.stageCompleted && !firstStageDelivery.completed,
+        "first stage completes without completing the whole chain");
+    expect(firstStageDelivery.acceptedAmount == 1000, "stage delivery clamps to the stage remainder");
+    expect(partialChainRestore.state().active.front().currentStageIndex == 1,
+        "completing the first stage unlocks the second stage");
+    expect(ContractEngine::progressPercent(partialChainRestore.state().active.front()) >= 33,
+        "staged contract progress includes completed earlier stages");
+    const auto futureStageAttempt = partialChainRestore.deliver(stagedOffer.id, motorPath, 150, now + 3);
+    expect(!futureStageAttempt.requirementFound && futureStageAttempt.acceptedAmount == 0,
+        "future-stage products cannot be delivered early");
+
+    ContractEngine restoredChain(partialChainRestore.state());
+    expect(restoredChain.state().active.front().currentStageIndex == 1,
+        "current stage survives a save snapshot restore");
+    expect(ContractEngine::currentStageTitle(restoredChain.state().active.front()) == "02 - Reinforcement",
+        "restored chain identifies its current stage");
+    const auto secondStageDelivery = restoredChain.deliver(stagedOffer.id, reinforcedPath, 500, now + 4);
+    expect(secondStageDelivery.stageCompleted && !secondStageDelivery.completed,
+        "second stage advances without paying final reputation");
+    expect(restoredChain.state().active.front().currentStageIndex == 2,
+        "second stage unlocks the final stage");
+    const auto finalStageDelivery = restoredChain.deliver(stagedOffer.id, motorPath, 150, now + 5);
+    expect(finalStageDelivery.stageCompleted && finalStageDelivery.completed,
+        "final stage completes the full chain");
+    expect(finalStageDelivery.reputationAwarded == 750 && restoredChain.state().reputation == 1750,
+        "long-term reputation is awarded only after every stage is complete");
+    expect(restoredChain.state().active.empty(), "completed staged order leaves active contracts");
+    expect(restoredChain.state().history.back().stages.size() == 3,
+        "completed history retains the full stage chain");
+    expect(ContractEngine::progressPercent(restoredChain.state().history.back()) == 100,
+        "completed staged order reports 100 percent progress");
+
+    Snapshot malformedStages;
+    Contract malformedChain;
+    malformedChain.id = "FC-MALFORMED-STAGES";
+    malformedChain.currentStageIndex = 999;
+    malformedChain.stages = {
+        {"Stage 1", {{"item-a", "Item A", -5, 10}}},
+        {"Stage 2", {{"item-b", "Item B", 3, 1}}}
+    };
+    malformedStages.active.push_back(malformedChain);
+    ContractEngine sanitizedStages(malformedStages);
+    expect(sanitizedStages.state().active.front().currentStageIndex == 1,
+        "restored stage index is clamped to the final valid stage");
+    expect(ContractEngine::currentRequirements(sanitizedStages.state().active.front()).front().deliveredAmount == 1,
+        "current stage delivery amount remains bounded after restore");
+
 
     // The active-contract cap must be tested with more than three distinct offers available.
     ContractEngine capEngine(advancedState);

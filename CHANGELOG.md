@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.3 — Sequential long-term contract stages
+
+- Convert Factory Backbone Program into three ordered stages: Iron Plates, Reinforced Iron Plates, then Motors.
+- Prevent delivery of products assigned to future stages; one delivery action can complete at most one stage.
+- Award the long-term reputation reward only after the final stage is completed.
+- Persist stage definitions and current stage through the SML save/replication structs.
+- Preserve compatibility with legacy single-stage contracts saved through the original Requirements field.
+- Add automated coverage for sequential gating, stage progress, snapshot restore and final-only rewards.
+
+This remains a source alpha. The SML plugin has not yet been compiled with the target custom Unreal Engine or tested inside Satisfactory.
+
 ## 0.1.2 — Contract cancellation
 
 - Add `/contracts cancel <ID>` for active contracts.

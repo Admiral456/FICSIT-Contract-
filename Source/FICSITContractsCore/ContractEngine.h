@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -15,6 +16,11 @@ struct Requirement {
     int deliveredAmount = 0;
 };
 
+struct ContractStage {
+    std::string title;
+    std::vector<Requirement> requirements;
+};
+
 struct Contract {
     std::string id;
     std::string templateId;
@@ -28,7 +34,10 @@ struct Contract {
     bool expired = false;
     bool abandoned = false;
     std::int64_t finishedAtUnix = 0;
+    // Legacy single-stage requirements stay supported for existing saves.
     std::vector<Requirement> requirements;
+    std::vector<ContractStage> stages;
+    std::size_t currentStageIndex = 0;
 };
 
 struct Snapshot {
@@ -43,6 +52,10 @@ struct DeliveryResult {
     bool contractFound = false;
     bool requirementFound = false;
     bool completed = false;
+    bool stageCompleted = false;
+    int completedStageIndex = -1;
+    int nextStageIndex = -1;
+    int stageCount = 1;
     int acceptedAmount = 0;
     int reputationAwarded = 0;
 };
@@ -67,6 +80,10 @@ public:
     void expire(std::int64_t nowUnix);
 
     static int progressPercent(const Contract& contract) noexcept;
+    static std::vector<Requirement>& currentRequirements(Contract& contract) noexcept;
+    static const std::vector<Requirement>& currentRequirements(const Contract& contract) noexcept;
+    static const std::string& currentStageTitle(const Contract& contract) noexcept;
+    static std::size_t stageCount(const Contract& contract) noexcept;
     static const char* rankName(int reputation) noexcept;
     static int activeContractLimit() noexcept;
 

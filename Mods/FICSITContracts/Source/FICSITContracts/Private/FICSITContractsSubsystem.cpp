@@ -42,8 +42,17 @@ namespace
         Result.expired = Source.bExpired;
         Result.abandoned = Source.bAbandoned;
         Result.finishedAtUnix = Source.FinishedAtUnix;
+        Result.currentStageIndex = static_cast<std::size_t>(FMath::Max(0, Source.CurrentStageIndex));
         for (const FFICSITContractRequirement& Requirement : Source.Requirements)
             Result.requirements.push_back({ToUtf8(Requirement.ItemClassPath), ToUtf8(Requirement.DisplayName), Requirement.RequiredAmount, Requirement.DeliveredAmount});
+        for (const FFICSITContractStage& SourceStage : Source.Stages)
+        {
+            FicsitContracts::ContractStage Stage;
+            Stage.title = ToUtf8(SourceStage.StageTitle);
+            for (const FFICSITContractRequirement& Requirement : SourceStage.Requirements)
+                Stage.requirements.push_back({ToUtf8(Requirement.ItemClassPath), ToUtf8(Requirement.DisplayName), Requirement.RequiredAmount, Requirement.DeliveredAmount});
+            Result.stages.push_back(MoveTemp(Stage));
+        }
         return Result;
     }
 
@@ -62,6 +71,7 @@ namespace
         Result.bExpired = Source.expired;
         Result.bAbandoned = Source.abandoned;
         Result.FinishedAtUnix = Source.finishedAtUnix;
+        Result.CurrentStageIndex = static_cast<int32>(Source.currentStageIndex);
         for (const FicsitContracts::Requirement& Requirement : Source.requirements)
         {
             FFICSITContractRequirement UnrealRequirement;
@@ -70,6 +80,21 @@ namespace
             UnrealRequirement.RequiredAmount = Requirement.requiredAmount;
             UnrealRequirement.DeliveredAmount = Requirement.deliveredAmount;
             Result.Requirements.Add(MoveTemp(UnrealRequirement));
+        }
+        for (const FicsitContracts::ContractStage& SourceStage : Source.stages)
+        {
+            FFICSITContractStage UnrealStage;
+            UnrealStage.StageTitle = FromUtf8(SourceStage.title);
+            for (const FicsitContracts::Requirement& Requirement : SourceStage.requirements)
+            {
+                FFICSITContractRequirement UnrealRequirement;
+                UnrealRequirement.ItemClassPath = FromUtf8(Requirement.itemClassPath);
+                UnrealRequirement.DisplayName = FromUtf8(Requirement.displayName);
+                UnrealRequirement.RequiredAmount = Requirement.requiredAmount;
+                UnrealRequirement.DeliveredAmount = Requirement.deliveredAmount;
+                UnrealStage.Requirements.Add(MoveTemp(UnrealRequirement));
+            }
+            Result.Stages.Add(MoveTemp(UnrealStage));
         }
         return Result;
     }
@@ -89,14 +114,23 @@ namespace
 
 int32 FFICSITContract::GetProgressPercent() const
 {
-    int64 Required = 0;
-    int64 Delivered = 0;
-    for (const FFICSITContractRequirement& Requirement : Requirements)
+    const auto GetRequirementsPercent = [](const TArray<FFICSITContractRequirement>& Items)
     {
-        Required += FMath::Max(0, Requirement.RequiredAmount);
-        Delivered += FMath::Min(FMath::Max(0, Requirement.DeliveredAmount), FMath::Max(0, Requirement.RequiredAmount));
-    }
-    return Required > 0 ? static_cast<int32>((Delivered * 100) / Required) : 0;
+        int64 Required = 0;
+        int64 Delivered = 0;
+        for (const FFICSITContractRequirement& Requirement : Items)
+        {
+            Required += FMath::Max(0, Requirement.RequiredAmount);
+            Delivered += FMath::Min(FMath::Max(0, Requirement.DeliveredAmount), FMath::Max(0, Requirement.RequiredAmount));
+        }
+        return Required > 0 ? static_cast<int32>((Delivered * 100) / Required) : 0;
+    };
+
+    if (Stages.Num() == 0) return GetRequirementsPercent(Requirements);
+    int64 StagePercentTotal = 0;
+    for (const FFICSITContractStage& Stage : Stages)
+        StagePercentTotal += GetRequirementsPercent(Stage.Requirements);
+    return static_cast<int32>(StagePercentTotal / Stages.Num());
 }
 
 AFICSITContractsSubsystem::AFICSITContractsSubsystem()
@@ -250,10 +284,14 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
     }
 
     const FicsitContracts::Contract ContractCopy = *ContractIterator;
+    const int32 PreviousStageIndex = static_cast<int32>(ContractCopy.currentStageIndex);
+    const FString PreviousStageTitle = FromUtf8(FicsitContracts::ContractEngine::currentStageTitle(ContractCopy));
     int32 TotalDelivered = 0;
+    bool bStageAdvanced = false;
+    FString NextStageTitle;
     int32 UnresolvedItemClasses = 0;
     int32 InventoryRemovalMismatches = 0;
-    for (const FicsitContracts::Requirement& Requirement : ContractCopy.requirements)
+    for (const FicsitContracts::Requirement& Requirement : FicsitContracts::ContractEngine::currentRequirements(ContractCopy))
     {
         const int32 Remaining = FMath::Max(0, Requirement.requiredAmount - Requirement.deliveredAmount);
         if (Remaining <= 0) continue;
@@ -286,6 +324,18 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
 
         const FicsitContracts::DeliveryResult Delivery = Engine.deliver(ContractIdUtf8, Requirement.itemClassPath, ActuallyRemoved, Now);
         TotalDelivered += Delivery.acceptedAmount;
+        if (Delivery.stageCompleted)
+        {
+            bStageAdvanced = !Delivery.completed;
+            if (bStageAdvanced)
+            {
+                const auto ActiveAfterDelivery = std::find_if(Engine.state().active.begin(), Engine.state().active.end(),
+                    [&ContractIdUtf8](const FicsitContracts::Contract& Contract) { return Contract.id == ContractIdUtf8; });
+                if (ActiveAfterDelivery != Engine.state().active.end())
+                    NextStageTitle = FromUtf8(FicsitContracts::ContractEngine::currentStageTitle(*ActiveAfterDelivery));
+            }
+            break; // One dispatch action completes at most one stage.
+        }
     }
 
     Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
@@ -305,6 +355,10 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
     { return Contract.ContractId == ContractId && Contract.bCompleted; });
     if (CompletedContract)
         OutMessage = FString::Printf(TEXT("Contract completed. FICSIT reputation +%d. Current reputation: %d (%s)."), CompletedContract->RewardReputation, Reputation, *GetRankName());
+    else if (bStageAdvanced)
+        OutMessage = FString::Printf(TEXT("Stage %d/%d complete: %s. Next: %s. Total chain progress: check /contracts."),
+            PreviousStageIndex + 1, static_cast<int32>(FicsitContracts::ContractEngine::stageCount(ContractCopy)),
+            *PreviousStageTitle, *NextStageTitle);
     else
         OutMessage = FString::Printf(TEXT("Delivered %d item(s). Contract progress: check /contracts."), TotalDelivered);
     return TotalDelivered;
@@ -321,7 +375,20 @@ FString AFICSITContractsSubsystem::FormatContract(const FFICSITContract& Contrac
         const int64 SecondsRemaining = FMath::Max<int64>(0, Contract.ExpiresAtUnix - GetUtcUnixTime());
         Result += FString::Printf(TEXT(" | %lld min left"), SecondsRemaining / 60);
     }
-    for (const FFICSITContractRequirement& Requirement : Contract.Requirements)
-        Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+    if (Contract.Stages.Num() > 0)
+    {
+        Result += FString::Printf(TEXT(" | STAGE %d/%d: %s"),
+            Contract.CurrentStageIndex + 1, Contract.Stages.Num(), *Contract.GetCurrentStageTitle());
+        if (Contract.Stages.IsValidIndex(Contract.CurrentStageIndex))
+        {
+            for (const FFICSITContractRequirement& Requirement : Contract.Stages[Contract.CurrentStageIndex].Requirements)
+                Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+        }
+    }
+    else
+    {
+        for (const FFICSITContractRequirement& Requirement : Contract.Requirements)
+            Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+    }
     return Result;
 }

@@ -25,14 +25,16 @@ Zdroje:
 2. **SML runtime plugin** (`Mods/FICSITContracts`) kompiluje tentýž engine jako součást Unreal modulu a převádí jeho data na `USTRUCT`.
 3. **World module** nastaví `bRootModule`, zaregistruje `AFICSITContractsSubsystem` a příkaz `/contracts`.
 4. **Server-authoritative subsystem** používá `SpawnOnServer_Replicate`. Autoritativní instance mění board; vlastnosti s `Replicated` se posílají klientům.
-5. **Persistence** používá `IFGSaveInterface` a SaveGame vlastnosti pro reputaci, pořadové ID, nabídky, aktivní smlouvy a historii, včetně příznaku zrušení.
+5. **Persistence** používá `IFGSaveInterface` a SaveGame vlastnosti pro reputaci, pořadové ID, nabídky, aktivní smlouvy a historii, včetně příznaku zrušení, fází a indexu aktuální fáze.
 6. **Serverové příkazy:** SML `AChatCommandSubsystem` je ve zdrojovém kódu SML nastaven na `SpawnOnServer`, takže `/contracts` příkazy jsou vykonávány na autoritativní straně. SML chat-command dokumentace potvrzuje registraci přes `UGameWorldModule::mChatCommands`. Dodávka nejdříve ověří autoritu a hlavní inventář; protože herní `UFGInventoryComponent::Remove()` vrací `void`, adaptér po odečtení znovu načte počet předmětů a do kontraktu připíše pouze pozorovaný rozdíl.
 7. **Interakce v 0.1.x je záměrně přes příkazy `/contracts`, `/contracts accept <ID>`, `/contracts deliver <ID>`, `/contracts cancel <ID>` a `/contracts history`. Zrušení aktivního kontraktu odečte 25 % odměny reputace (zaokrouhleno nahoru, minimálně 5 u kladné odměny, nejvýše však aktuální reputace) a zachová dílčí průběh v historii jako `CANCELLED`. Dodávka používá hlavní inventář hráče. Před odečtením se kontroluje autorita, dostupné množství a načtení třídy předmětu. Odečítá se nejvýše chybějící množství.
 8. **Testy** kompilují stejný portable C++ engine jako Unreal adapter, ale záměrně neimitují Unreal runtime.
 
-## Rozsah 0.1.2 a vědomá omezení
+## Rozsah 0.1.3 a vědomá omezení
 
-Verze 0.1.2 rozšiřuje základní kontraktový systém o zrušení zakázek, ale stále nejde o kompletní rozšíření s vlastní budovou. Neobsahuje nové assety, proto je `CanContainContent` v `.uplugin` nastaveno na `false`. Jakmile přidáme Dispatch Terminal, modely, hologram, UI widgety a další assety, bude třeba přidat content/Game Feature část podle aktuálního postupu SML 3.12 a vytvořit příslušný `FGGameFeatureData` asset v editoru. Dokumentace [Buildable tutorial](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/SimpleMod/buildable.html) popisuje, že buildable potřebuje descriptor, actor a hologram, nikoli pouze C++ třídu.
+Verze 0.1.3 rozšiřuje kontraktový systém o sekvenční třífázový Factory Backbone Program. Legacy zakázky bez pole `Stages` se nadále vyhodnocují jako jednofázové a ukládají do původního `Requirements` pole. Projekt stále není kompletním rozšířením s vlastní budovou. Neobsahuje nové assety, proto je `CanContainContent` v `.uplugin` nastaveno na `false`. Jakmile přidáme Dispatch Terminal, modely, hologram, UI widgety a další assety, bude třeba přidat content/Game Feature část podle aktuálního postupu SML 3.12 a vytvořit příslušný `FGGameFeatureData` asset v editoru. Dokumentace [Buildable tutorial](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/SimpleMod/buildable.html) popisuje, že buildable potřebuje descriptor, actor a hologram, nikoli pouze C++ třídu.
+
+Factory Backbone postupuje mezi fázemi Structural Base (2 000 Iron Plates), Reinforcement (500 Reinforced Iron Plates) a Powertrain (150 Motors). Každá fáze přijímá jen své výrobky; celý reputační reward se připíše až po dokončení poslední fáze. Procento postupu je průměrem dokončení fází.
 
 Kontrakty jsou nyní sdílené pro session, nikoli per-player. To je záměr pro první multiplayerový model: jeden společný FICSIT board, jedna autoritativní sada zakázek a replikovaný stav. Samostatné osobní smlouvy lze doplnit později pomocí PlayerState datového komponentu.
 

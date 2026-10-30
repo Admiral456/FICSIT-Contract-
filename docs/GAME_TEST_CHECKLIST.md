@@ -1,4 +1,4 @@
-# In-game validation checklist for 0.1.2
+# In-game validation checklist for 0.1.3
 
 This checklist is intentionally unchecked until tested in the target game.
 
@@ -23,10 +23,16 @@ This checklist is intentionally unchecked until tested in the target game.
 - [ ] Confirm a partially supplied contract stays active and reports the correct percentage.
 - [ ] Confirm a completed contract is moved to history and reputation is awarded once.
 - [ ] Confirm a repeated delivery cannot award reputation again.
+- [ ] Accept Factory Backbone Program and confirm only the Structural Base stage is shown.
+- [ ] Deliver Reinforced Iron Plates or Motors early and confirm they are not removed from inventory.
+- [ ] Complete Structural Base and confirm Reinforcement unlocks; confirm the command reports the stage transition.
+- [ ] Save/reload during Reinforcement and confirm the stage index and previous deliveries persist.
+- [ ] Complete Reinforcement and confirm Powertrain unlocks.
+- [ ] Complete Powertrain and confirm the 750 REP reward is granted exactly once.
 - [ ] Cancel a partially completed order and confirm the reputation fee and retained cancellation history.
 - [ ] Confirm cancellation cannot push reputation below zero.
 - [ ] Confirm an expired order cannot be cancelled and is labelled EXPIRED, not CANCELLED.
-- [ ] Save, exit, reload and confirm offers, active progress, reputation and history persist.
+- [ ] Save, exit, reload and confirm offers, active progress, reputation, history and multi-stage progress persist.
 - [ ] Verify a timed offer expires after its deadline and grants no reputation.
 
 ## Multiplayer / dedicated server

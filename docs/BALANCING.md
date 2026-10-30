@@ -1,4 +1,4 @@
-# Initial balance values (0.1.2)
+# Initial balance values (0.1.3)
 
 All values are currently compiled into the portable engine. They are intentionally conservative and will become configurable after the first in-game balance pass.
 
@@ -12,7 +12,7 @@ All values are currently compiled into the portable engine. They are intentional
 | Rotor Replacement Stock | 150 | 60 Rotors | 150 | Sometimes 30 minutes |
 | Motor Delivery | 500 | 150 Motors | 350 | Sometimes 40 minutes |
 | Structural Frame Order | 500 | 100 Modular Frames | 280 | Sometimes 40 minutes |
-| Factory Backbone Program | 1,000 | 2,000 Iron Plates; 500 Reinforced Iron Plates; 150 Motors | 750 | Long-term, no expiry |
+| Factory Backbone Program | 1,000 | Stage 1: 2,000 Iron Plates; Stage 2: 500 Reinforced Iron Plates; Stage 3: 150 Motors | 750 | Three sequential stages, long-term, no expiry |
 
 ## Reputation ranks
 
@@ -25,3 +25,5 @@ All values are currently compiled into the portable engine. They are intentional
 | 2,000 | Supply Chain Director |
 
 There are three available offers at a time and a maximum of three active contracts. Completed, expired and cancelled contract history is capped at the latest 50 entries. Cancelling an active contract costs 25% of its listed reputation reward (rounded up, minimum 5 for positive-reward orders); the charge is capped at the player's current reputation.
+
+The Factory Backbone Program pays its 750 reputation reward once, after the Powertrain stage is completed. Its stage progress is saved independently, and future-stage items are not accepted early.

@@ -29,6 +29,14 @@ struct FICSITCONTRACTS_API FFICSITContractRequirement
 };
 
 USTRUCT(BlueprintType)
+struct FICSITCONTRACTS_API FFICSITContractStage
+{
+    GENERATED_BODY()
+    UPROPERTY(SaveGame, BlueprintReadOnly) FString StageTitle;
+    UPROPERTY(SaveGame, BlueprintReadOnly) TArray<FFICSITContractRequirement> Requirements;
+};
+
+USTRUCT(BlueprintType)
 struct FICSITCONTRACTS_API FFICSITContract
 {
     GENERATED_BODY()
@@ -44,8 +52,16 @@ struct FICSITCONTRACTS_API FFICSITContract
     UPROPERTY(SaveGame, BlueprintReadOnly) bool bExpired = false;
     UPROPERTY(SaveGame, BlueprintReadOnly) bool bAbandoned = false;
     UPROPERTY(SaveGame, BlueprintReadOnly) int64 FinishedAtUnix = 0;
+    // Requirements is kept for legacy single-stage contracts and older saves.
     UPROPERTY(SaveGame, BlueprintReadOnly) TArray<FFICSITContractRequirement> Requirements;
+    UPROPERTY(SaveGame, BlueprintReadOnly) TArray<FFICSITContractStage> Stages;
+    UPROPERTY(SaveGame, BlueprintReadOnly) int32 CurrentStageIndex = 0;
     UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") int32 GetProgressPercent() const;
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") int32 GetStageCount() const { return Stages.Num() > 0 ? Stages.Num() : 1; }
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") FString GetCurrentStageTitle() const
+    {
+        return Stages.IsValidIndex(CurrentStageIndex) ? Stages[CurrentStageIndex].StageTitle : FString();
+    }
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFICSITContractBoardChanged);

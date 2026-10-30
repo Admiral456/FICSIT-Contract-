@@ -2,7 +2,7 @@
 
 **FICSIT Contracts** is a Satisfactory gameplay mod that adds a production-contract board, item delivery orders, company reputation and contract progression.
 
-> **Current status: 0.1.2 source alpha.** The portable contract engine, save-state validation, cancellation penalties and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
+> **Current status: 0.1.3 source alpha.** The portable contract engine, sequential multi-stage orders, save-state validation, cancellation penalties and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
 
 ## Version 0.1.x
 
@@ -15,11 +15,12 @@ The first playable slice is intentionally focused on the contract loop:
 - `/contracts accept <ID>` accepts an offer.
 - `/contracts deliver <ID>` deposits matching items from the player's main inventory. Only the amount still required is removed.
 - `/contracts cancel <ID>` abandons an active order; its history is retained and a reputation fee is charged (25% of its reward, rounded up, minimum 5 when the reward is positive, capped by current reputation).
-- Completing every requirement grants reputation once and moves the order to history.
+- Multi-stage orders unlock their requirements sequentially; future-stage products cannot be delivered early.
+- Completing every stage grants reputation once and moves the order to history.
 - Timed orders expire; expired orders do not grant reputation.
 - Reputation, serial IDs, offers, active orders and history (including cancelled orders) are saved and replicated by the Satisfactory world subsystem.
 
-The current offer catalog includes Iron Plates, Iron Rods, Wire, Cable, Reinforced Iron Plates, Rotors, Motors, Modular Frames and a multi-product long-term factory supply order.
+The current offer catalog includes Iron Plates, Iron Rods, Wire, Cable, Reinforced Iron Plates, Rotors, Motors and Modular Frames. The long-term Factory Backbone Program is a three-stage supply chain: 2,000 Iron Plates, then 500 Reinforced Iron Plates, then 150 Motors. Its 750 REP reward is paid only after the final stage.
 
 ## Repository layout
 
@@ -51,7 +52,7 @@ The current compatibility target is Satisfactory 1.2 / SML 3.12.x:
 5. Open the Starter Project in the custom editor and use Alpakit to stage/package FICSIT Contracts.
 6. Install the staged mod into a test copy of Satisfactory with the matching SML version.
 
-The inventory delivery adapter now checks the actual inventory count before crediting progress; the core engine also clamps malformed amounts, repairs a zero serial, trims oversized restored history and records penalized cancellations. This repository deliberately does not include the proprietary/custom Unreal Engine, Satisfactory game files, Starter Project, generated project files, or binary cooked assets.
+The inventory delivery adapter now checks the actual inventory count before crediting progress; the core engine also clamps malformed amounts, repairs a zero serial, trims oversized restored history, records penalized cancellations and persists multi-stage progress. Older single-stage save records remain supported through the legacy Requirements field. This repository deliberately does not include the proprietary/custom Unreal Engine, Satisfactory game files, Starter Project, generated project files, or binary cooked assets.
 
 ## In-game commands
 
@@ -77,9 +78,9 @@ ctest --test-dir build --output-on-failure
 
 GitHub Actions runs these portable tests on pushes and pull requests. **This CI job is not an Unreal Engine build** and cannot prove that the SML plugin compiles or loads in Satisfactory.
 
-## Known limitations in 0.1.2
+## Known limitations in 0.1.3
 
-- No Dispatch Terminal building, conveyor input, custom mesh, animations or dedicated graphical contract screen yet.
+- No Dispatch Terminal building, conveyor input, custom mesh, animations or dedicated graphical contract screen yet. The multi-stage chain is currently managed through chat commands.
 - The board is shared by the session rather than a separate per-player economy.
 - Item classes are resolved from vanilla asset class paths at runtime. These paths must be confirmed in the target Starter Project/game build before a packaged release.
 - Timed contracts use UTC wall-clock time, so they can expire while the game is closed.
