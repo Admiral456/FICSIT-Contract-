@@ -17,7 +17,6 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     mDisplayName = FText::FromString(TEXT("FICSIT Dispatch Terminal"));
     mDescription = FText::FromString(TEXT("A centralized FICSIT logistics console. Review production contracts, track deliveries, monitor reputation and coordinate your factory's supply chain."));
     mHologramClass = AFGBuildableHologram::StaticClass();
-    mIsUseable = true;
     mInteractWidgetSoftClass = UFICSITDispatchTerminalWidget::StaticClass();
 
     FFGClearanceData TerminalClearance;
@@ -98,7 +97,7 @@ void AFICSITDispatchTerminal::ConfigureFallbackMesh(UStaticMeshComponent* Compon
     Component->SetCastShadow(true);
 }
 
-bool AFICSITDispatchTerminal::IsUseable_Implementation() const { return mIsUseable && !IsActorBeingDestroyed(); }
+bool AFICSITDispatchTerminal::IsUseable_Implementation() const { return !IsActorBeingDestroyed(); }
 
 void AFICSITDispatchTerminal::OnUse_Implementation(AFGCharacterPlayer* ByCharacter, const FUseState& State)
 {
