@@ -4,7 +4,7 @@
 
 > **Current status: 0.1.1 source alpha.** The portable contract engine, additional save-state validation, and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
 
-## Version 0.1.0
+## Version 0.1.x
 
 The first playable slice is intentionally focused on the contract loop:
 
