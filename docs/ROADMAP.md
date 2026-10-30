@@ -20,9 +20,10 @@
 ## 0.2.0 — Logistics
 
 - [x] Native FICSIT Dispatch Terminal actor with Satisfactory use interaction.
-- [x] Native terminal board viewer for offers, active orders, reputation and history.
-- [x] Native building descriptor, build-gun recipe and Tier 5 Logistics schematic source.
-- [x] Low-poly OBJ/MTL source model and Unreal Editor asset import utility.
+- [x] Native terminal board viewer for offers, active orders, reputation and history, with progress bars and live refresh.
+- [x] Native building descriptor, build-gun recipe and Tier 5 Logistics schematic source, gated behind Oil Processing.
+- [x] Low-poly UV-mapped OBJ/MTL source model, customization-aware mesh proxy and Unreal Editor asset import utility.
+- [x] Physical collision and explicit build-clearance volume.
 - [ ] Import cooked mesh/icon and create/activate the Game Feature Data asset in the target Starter Project.
 - [ ] Compile the native buildable/widget/content classes with custom UE 5.6.1 and test build-gun placement.
 - [ ] Belt input and server-side item acceptance.
