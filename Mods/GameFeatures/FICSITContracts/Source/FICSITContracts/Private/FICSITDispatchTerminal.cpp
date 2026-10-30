@@ -77,6 +77,7 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     }
     ScreenLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("ScreenLight"));
     ScreenLight->SetupAttachment(RootComponent);
+    ScreenLight->SetMobility(EComponentMobility::Movable);
     ScreenLight->SetRelativeLocation(FVector(0,-2,172));
     ScreenLight->SetLightColor(FLinearColor(0.08f,0.62f,1.0f));
     ScreenLight->SetIntensity(420.0f);
