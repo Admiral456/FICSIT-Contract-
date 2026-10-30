@@ -26,6 +26,7 @@ struct Contract {
     bool longTerm = false;
     bool completed = false;
     bool expired = false;
+    bool abandoned = false;
     std::int64_t finishedAtUnix = 0;
     std::vector<Requirement> requirements;
 };
@@ -46,6 +47,11 @@ struct DeliveryResult {
     int reputationAwarded = 0;
 };
 
+struct AbandonResult {
+    bool contractFound = false;
+    int reputationPenalty = 0;
+};
+
 class ContractEngine {
 public:
     explicit ContractEngine(Snapshot state = {});
@@ -57,6 +63,7 @@ public:
     bool accept(const std::string& contractId, std::int64_t nowUnix);
     DeliveryResult deliver(const std::string& contractId, const std::string& itemClassPath,
                            int amount, std::int64_t nowUnix);
+    AbandonResult abandon(const std::string& contractId, std::int64_t nowUnix);
     void expire(std::int64_t nowUnix);
 
     static int progressPercent(const Contract& contract) noexcept;
