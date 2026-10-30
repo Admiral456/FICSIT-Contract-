@@ -9,4 +9,4 @@ Expected assets:
 - `/FICSITContracts/UI/TX_DispatchTerminal_256`
 - `/FICSITContracts/FICSITContracts` (FGGameFeatureData)
 
-Verify scale 1.0, generated lightmap UVs and separate material slots. Set Game Feature Initial State to Active before packaging.
+Verify scale 1.0, generated lightmap UVs and separate material slots. The editor utility assigns the game's `MI_Factory_Base_01` to Gunmetal and Steel so the main surfaces respond to the Customizer; Orange, Black and Screen retain their dedicated materials. Set Game Feature Initial State to Active before packaging.
