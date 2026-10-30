@@ -166,6 +166,32 @@ DeliveryResult ContractEngine::deliver(const std::string& contractId, const std:
     return result;
 }
 
+AbandonResult ContractEngine::abandon(const std::string& contractId, std::int64_t nowUnix) {
+    AbandonResult result;
+    expire(nowUnix);
+
+    auto iterator = std::find_if(state_.active.begin(), state_.active.end(),
+        [&contractId](const Contract& contract) { return contract.id == contractId; });
+    if (iterator == state_.active.end()) return result;
+
+    result.contractFound = true;
+    const int reward = std::max(0, iterator->rewardReputation);
+    // Cancelling is deliberately costly enough to discourage offer rerolling.
+    // Round the 25% fee up and never charge more reputation than the player has.
+    const int requestedPenalty = reward > 0 ? std::max(5, (reward + 3) / 4) : 0;
+    result.reputationPenalty = std::min(state_.reputation, requestedPenalty);
+    state_.reputation -= result.reputationPenalty;
+
+    Contract abandoned = std::move(*iterator);
+    abandoned.completed = false;
+    abandoned.expired = false;
+    abandoned.abandoned = true;
+    abandoned.finishedAtUnix = nowUnix;
+    state_.active.erase(iterator);
+    pushHistory(std::move(abandoned));
+    return result;
+}
+
 int ContractEngine::progressPercent(const Contract& contract) noexcept {
     std::int64_t required = 0, delivered = 0;
     for (const auto& requirement : contract.requirements) {
