@@ -18,6 +18,17 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     mDescription = FText::FromString(TEXT("A centralized FICSIT logistics console. Review production contracts, track deliveries, monitor reputation and coordinate your factory's supply chain."));
     mHologramClass = AFGBuildableHologram::StaticClass();
 
+    SolidCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("DispatchSolidCollision"));
+    SolidCollision->SetupAttachment(RootComponent);
+    SolidCollision->SetBoxExtent(FVector(76.0f, 52.0f, 112.0f));
+    SolidCollision->SetRelativeLocation(FVector(0.0f, 0.0f, 112.0f));
+    SolidCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    SolidCollision->SetCollisionObjectType(ECC_WorldStatic);
+    SolidCollision->SetCollisionResponseToAllChannels(ECR_Block);
+    SolidCollision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+    SolidCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+    SolidCollision->SetGenerateOverlapEvents(false);
+
     InteractionVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("DispatchInteractionVolume"));
     InteractionVolume->SetupAttachment(RootComponent);
     InteractionVolume->SetBoxExtent(FVector(105.0f, 90.0f, 125.0f));
