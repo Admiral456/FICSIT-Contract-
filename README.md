@@ -2,7 +2,7 @@
 
 **FICSIT Contracts** is a Satisfactory gameplay mod that adds a production-contract board, item delivery orders, company reputation and contract progression.
 
-> **Current status: 0.2.0 source alpha.** The portable contract engine, sequential multi-stage orders and a native FICSIT Dispatch Terminal source implementation are now in the repository. The terminal includes a native buildable actor, Satisfactory interaction widget, native building descriptor/recipe/Tier 5 schematic, owner-bound server action RCO and a low-poly OBJ/MTL source model using the customization-aware mesh proxy. Unreal asset import, custom UE compilation and in-game testing are still outstanding; this is not a ready-to-install release.
+> **Current status: 0.2.0 source alpha.** The portable contract engine, sequential multi-stage orders and a native FICSIT Dispatch Terminal source implementation are now in the repository. The terminal includes a native buildable actor, Satisfactory interaction widget, native building descriptor/recipe/Tier 5 schematic gated behind Oil Processing, owner-bound server action RCO and a low-poly OBJ/MTL source model using the customization-aware mesh proxy. Unreal asset import, custom UE compilation and in-game testing are still outstanding; this is not a ready-to-install release.
 
 ## Version 0.1.x
 
