@@ -1,4 +1,4 @@
-# Initial balance values (0.1.0)
+# Initial balance values (0.1.2)
 
 All values are currently compiled into the portable engine. They are intentionally conservative and will become configurable after the first in-game balance pass.
 
@@ -24,4 +24,4 @@ All values are currently compiled into the portable engine. They are intentional
 | 1,000 | FICSIT Coordinator |
 | 2,000 | Supply Chain Director |
 
-There are three available offers at a time and a maximum of three active contracts. Expired and completed contract history is capped at the latest 50 entries.
+There are three available offers at a time and a maximum of three active contracts. Completed, expired and cancelled contract history is capped at the latest 50 entries. Cancelling an active contract costs 25% of its listed reputation reward (rounded up, minimum 5 for positive-reward orders); the charge is capped at the player's current reputation.
