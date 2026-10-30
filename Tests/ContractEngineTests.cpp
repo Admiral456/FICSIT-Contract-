@@ -162,6 +162,15 @@ int main() {
     expect(lowRepAbandoned.reputationPenalty == 4 && lowRepEngine.state().reputation == 0,
         "abandon fee cannot push reputation below zero");
 
+    Snapshot minimumFeeState;
+    minimumFeeState.reputation = 10;
+    Contract lowReward; lowReward.id = "FC-LOW-REWARD"; lowReward.rewardReputation = 1;
+    lowReward.requirements.push_back({"item", "Test Item", 1, 0});
+    minimumFeeState.active.push_back(lowReward);
+    ContractEngine minimumFeeEngine(minimumFeeState);
+    expect(minimumFeeEngine.abandon("FC-LOW-REWARD", now + 13).reputationPenalty == 5,
+        "abandon fee has a five-reputation minimum when reward is positive");
+
     Snapshot expiredAbandonState;
     Contract alreadyExpired; alreadyExpired.id = "FC-ALREADY-EXPIRED";
     alreadyExpired.expiresAtUnix = now + 1;
