@@ -20,6 +20,8 @@ def main() -> int:
         errors.append("Version must be a positive, monotonically incremented plugin revision.")
     if not sem_version.startswith("0.2.0"):
         errors.append("The source descriptor is expected to describe the 0.2.0 alpha.")
+    if descriptor.get("GameFeature") is not True:
+        errors.append("The SML Game Feature plugin must set GameFeature=true.")
     if descriptor.get("CanContainContent") is not True:
         errors.append("The content-bearing Dispatch Terminal plugin must set CanContainContent=true.")
     if descriptor.get("GameVersion") != ">=491125":
