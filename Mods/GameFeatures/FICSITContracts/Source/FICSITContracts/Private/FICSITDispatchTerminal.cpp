@@ -98,7 +98,7 @@ void AFICSITDispatchTerminal::ConfigureFallbackMesh(UStaticMeshComponent* Compon
     Component->SetCastShadow(true);
 }
 
-bool AFICSITDispatchTerminal::IsUseable_Implementation() const { return !IsActorBeingDestroyed(); }
+bool AFICSITDispatchTerminal::IsUseable_Implementation() const { return mIsUseable && !IsActorBeingDestroyed(); }
 
 void AFICSITDispatchTerminal::OnUse_Implementation(AFGCharacterPlayer* ByCharacter, const FUseState& State)
 {
