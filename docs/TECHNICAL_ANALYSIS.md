@@ -19,20 +19,20 @@ Zdroje:
 - [SML source: ModSubsystem.h](https://github.com/satisfactorymodding/SatisfactoryModLoader/blob/master/Mods/SML/Source/SML/Public/Subsystem/ModSubsystem.h)
 - [SML source: GameWorldModule.h](https://github.com/satisfactorymodding/SatisfactoryModLoader/blob/master/Mods/SML/Source/SML/Public/Module/GameWorldModule.h)
 
-## Zvolená architektura 0.1.0
+## Zvolená architektura 0.1.2
 
-1. **Portable domain engine** (`Source/FICSITContractsCore`) obsahuje generování nabídek, přijímání, částečné dodávky, dokončení, expiraci, reputaci a omezenou historii. Nepoužívá Unreal typy, takže jde sestavit a testovat samostatně.
+1. **Portable domain engine** (`Source/FICSITContractsCore`) obsahuje generování nabídek, přijímání, částečné dodávky, dokončení, expiraci, penalizované zrušení, reputaci a omezenou historii. Nepoužívá Unreal typy, takže jde sestavit a testovat samostatně.
 2. **SML runtime plugin** (`Mods/FICSITContracts`) kompiluje tentýž engine jako součást Unreal modulu a převádí jeho data na `USTRUCT`.
 3. **World module** nastaví `bRootModule`, zaregistruje `AFICSITContractsSubsystem` a příkaz `/contracts`.
 4. **Server-authoritative subsystem** používá `SpawnOnServer_Replicate`. Autoritativní instance mění board; vlastnosti s `Replicated` se posílají klientům.
-5. **Persistence** používá `IFGSaveInterface` a SaveGame vlastnosti pro reputaci, pořadové ID, nabídky, aktivní smlouvy a historii.
+5. **Persistence** používá `IFGSaveInterface` a SaveGame vlastnosti pro reputaci, pořadové ID, nabídky, aktivní smlouvy a historii, včetně příznaku zrušení.
 6. **Serverové příkazy:** SML `AChatCommandSubsystem` je ve zdrojovém kódu SML nastaven na `SpawnOnServer`, takže `/contracts` příkazy jsou vykonávány na autoritativní straně. SML chat-command dokumentace potvrzuje registraci přes `UGameWorldModule::mChatCommands`. Dodávka nejdříve ověří autoritu a hlavní inventář; protože herní `UFGInventoryComponent::Remove()` vrací `void`, adaptér po odečtení znovu načte počet předmětů a do kontraktu připíše pouze pozorovaný rozdíl.
-7. **Dodávka v 0.1** je záměrně přes příkaz `/contracts deliver <ID>` a hlavní inventář hráče. Před odečtením se kontroluje autorita, dostupné množství a načtení třídy předmětu. Odečítá se nejvýše chybějící množství.
+7. **Interakce v 0.1.x je záměrně přes příkazy `/contracts`, `/contracts accept <ID>`, `/contracts deliver <ID>`, `/contracts cancel <ID>` a `/contracts history`. Zrušení aktivního kontraktu odečte 25 % odměny reputace (zaokrouhleno nahoru, minimálně 5 u kladné odměny, nejvýše však aktuální reputace) a zachová dílčí průběh v historii jako `CANCELLED`. Dodávka používá hlavní inventář hráče. Před odečtením se kontroluje autorita, dostupné množství a načtení třídy předmětu. Odečítá se nejvýše chybějící množství.
 8. **Testy** kompilují stejný portable C++ engine jako Unreal adapter, ale záměrně neimitují Unreal runtime.
 
-## Rozsah 0.1.0 a vědomá omezení
+## Rozsah 0.1.2 a vědomá omezení
 
-Verze 0.1.0 je první funkční řez kontraktového systému, nikoli kompletní rozšíření s vlastní budovou. Neobsahuje nové assety, proto je `CanContainContent` v `.uplugin` nastaveno na `false`. Jakmile přidáme Dispatch Terminal, modely, UI widgety a další assety, bude třeba přidat content/Game Feature část podle aktuálního postupu SML 3.12 a vytvořit příslušný `FGGameFeatureData` asset v editoru.
+Verze 0.1.2 rozšiřuje základní kontraktový systém o zrušení zakázek, ale stále nejde o kompletní rozšíření s vlastní budovou. Neobsahuje nové assety, proto je `CanContainContent` v `.uplugin` nastaveno na `false`. Jakmile přidáme Dispatch Terminal, modely, hologram, UI widgety a další assety, bude třeba přidat content/Game Feature část podle aktuálního postupu SML 3.12 a vytvořit příslušný `FGGameFeatureData` asset v editoru. Dokumentace [Buildable tutorial](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/SimpleMod/buildable.html) popisuje, že buildable potřebuje descriptor, actor a hologram, nikoli pouze C++ třídu.
 
 Kontrakty jsou nyní sdílené pro session, nikoli per-player. To je záměr pro první multiplayerový model: jeden společný FICSIT board, jedna autoritativní sada zakázek a replikovaný stav. Samostatné osobní smlouvy lze doplnit později pomocí PlayerState datového komponentu.
 
