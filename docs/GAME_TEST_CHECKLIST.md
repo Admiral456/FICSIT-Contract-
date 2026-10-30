@@ -65,3 +65,10 @@ This checklist is intentionally unchecked until tested in the target game.
 - [ ] Confirm a second player sees the same board and no duplicate contract state is created by a second terminal.
 - [ ] Save/reload with one or more terminals placed and confirm they remain usable.
 - [ ] Confirm chat commands still perform accept/deliver/cancel on the authoritative host.
+
+- [ ] Verify the terminal's gunmetal/steel surfaces respond to the Customizer while orange, black and screen details retain their materials.
+- [ ] Verify the terminal's clearance box prevents overlapping placement and its solid collision blocks player movement.
+- [ ] Use Accept from a client and confirm the server updates the shared board for all players.
+- [ ] Use Deliver from a client and confirm only that player's main inventory is consumed, never another player's inventory or a client-side item count.
+- [ ] Use Cancel from a client and confirm the server applies the configured reputation penalty exactly once.
+- [ ] Confirm the UI refreshes on all clients after a contract state change.
