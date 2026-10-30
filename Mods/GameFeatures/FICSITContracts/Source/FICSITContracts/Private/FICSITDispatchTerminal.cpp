@@ -1,7 +1,6 @@
 #include "FICSITDispatchTerminal.h"
 #include "FICSITDispatchTerminalWidget.h"
 #include "FGCharacterPlayer.h"
-#include "FGHUD.h"
 #include "Hologram/FGBuildableHologram.h"
 #include "FGColoredInstanceMeshProxy.h"
 #include "FGClearanceData.h"
@@ -18,6 +17,8 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     mDisplayName = FText::FromString(TEXT("FICSIT Dispatch Terminal"));
     mDescription = FText::FromString(TEXT("A centralized FICSIT logistics console. Review production contracts, track deliveries, monitor reputation and coordinate your factory's supply chain."));
     mHologramClass = AFGBuildableHologram::StaticClass();
+    mIsUseable = true;
+    mInteractWidgetSoftClass = UFICSITDispatchTerminalWidget::StaticClass();
 
     FFGClearanceData TerminalClearance;
     TerminalClearance.Type = EClearanceType::CT_Default;
@@ -102,8 +103,5 @@ bool AFICSITDispatchTerminal::IsUseable_Implementation() const { return !IsActor
 void AFICSITDispatchTerminal::OnUse_Implementation(AFGCharacterPlayer* ByCharacter, const FUseState& State)
 {
     if (!IsValid(ByCharacter)) return;
-    APlayerController* Controller = Cast<APlayerController>(ByCharacter->GetController());
-    if (!Controller || !Controller->IsLocalPlayerController()) return;
-    if (AFGHUD* HUD = Cast<AFGHUD>(Controller->GetHUD()))
-        HUD->OpenInteractUI(UFICSITDispatchTerminalWidget::StaticClass(), this);
+    Super::OnUse_Implementation(ByCharacter, State);
 }
