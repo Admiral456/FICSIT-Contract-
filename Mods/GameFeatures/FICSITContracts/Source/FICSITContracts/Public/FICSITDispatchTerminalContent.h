@@ -4,6 +4,7 @@
 #include "FGRecipe.h"
 #include "FGSchematic.h"
 #include "Unlocks/FGUnlockRecipe.h"
+#include "AvailabilityDependencies/FGSchematicPurchasedDependency.h"
 #include "FICSITDispatchTerminalContent.generated.h"
 UCLASS()
 class FICSITCONTRACTS_API UFICSITDispatchTerminalDescriptor : public UFGBuildingDescriptor
@@ -14,6 +15,14 @@ class FICSITCONTRACTS_API UFICSITDispatchTerminalRecipe : public UFGRecipe
 UCLASS()
 class FICSITCONTRACTS_API UFICSITDispatchTerminalRecipeUnlock : public UFGUnlockRecipe
 { GENERATED_BODY() public: UFICSITDispatchTerminalRecipeUnlock(); };
+UCLASS()
+class FICSITCONTRACTS_API UFICSITDispatchTerminalPrerequisite : public UFGSchematicPurchasedDependency
+{
+    GENERATED_BODY()
+public:
+    UFICSITDispatchTerminalPrerequisite();
+};
+
 UCLASS()
 class FICSITCONTRACTS_API UFICSITDispatchTerminalSchematic : public UFGSchematic
 { GENERATED_BODY() public: UFICSITDispatchTerminalSchematic(); };
