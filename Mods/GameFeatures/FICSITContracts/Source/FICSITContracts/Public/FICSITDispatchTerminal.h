@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "Buildables/FGBuildable.h"
 #include "FICSITDispatchTerminal.generated.h"
+class UFGColoredInstanceMeshProxy;
 class UBoxComponent;
 class UPointLightComponent;
 class UStaticMeshComponent;
@@ -19,7 +20,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
     TObjectPtr<UBoxComponent> InteractionVolume;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
-    TObjectPtr<UStaticMeshComponent> ImportedTerminalMesh;
+    TObjectPtr<UFGColoredInstanceMeshProxy> ImportedTerminalMesh;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
     TObjectPtr<UStaticMeshComponent> FallbackBase;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
