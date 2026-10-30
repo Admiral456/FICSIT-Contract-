@@ -8,6 +8,7 @@
 - Repair a zero next-contract serial and trim restored history to the 50-entry limit.
 - Expand automated tests for invalid deliveries, progress restore, active-contract limits, offer expiry, malformed save state and history trimming.
 - Avoid unnecessary repeated board replication when all unlocked templates are already offered or active.
+- Run portable C++ CI checks on both Ubuntu and Windows; update checkout action to v7.
 
 This remains a source alpha. The SML plugin has not yet been compiled with the target custom Unreal Engine or tested inside Satisfactory.
 
