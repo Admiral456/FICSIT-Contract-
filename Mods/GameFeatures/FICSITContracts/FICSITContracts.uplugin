@@ -8,6 +8,7 @@
   "Category": "Gameplay",
   "CreatedBy": "Admiral456",
   "CanContainContent": true,
+  "GameFeature": true,
   "IsBetaVersion": true,
   "Installed": false,
   "GameVersion": ">=491125",
