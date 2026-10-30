@@ -3,6 +3,7 @@
 #include "FGCharacterPlayer.h"
 #include "FGHUD.h"
 #include "Hologram/FGBuildableHologram.h"
+#include "FGColoredInstanceMeshProxy.h"
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -27,7 +28,7 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     InteractionVolume->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     InteractionVolume->SetGenerateOverlapEvents(false);
 
-    ImportedTerminalMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ImportedTerminalMesh"));
+    ImportedTerminalMesh = CreateDefaultSubobject<UFGColoredInstanceMeshProxy>(TEXT("ImportedTerminalMesh"));
     ImportedTerminalMesh->SetupAttachment(RootComponent);
     ImportedTerminalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ImportedTerminalMesh->SetCastShadow(true);
