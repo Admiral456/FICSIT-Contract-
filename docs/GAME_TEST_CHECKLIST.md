@@ -57,7 +57,7 @@ This checklist is intentionally unchecked until tested in the target game.
 - [ ] Run the asset import utility in the SML 3.12 Starter Project.
 - [ ] Confirm the `FICSITContracts` Game Feature Data asset exists and Initial State is Active.
 - [ ] Compile Development Editor with custom UE 5.6.1 and resolve all UHT/compiler warnings.
-- [ ] Confirm FICSIT Dispatch Network appears in the Tier 5 Logistics schematic list.
+- [ ] Confirm FICSIT Dispatch Network stays hidden before Oil Processing and appears in the Tier 5 Logistics schematic list after Oil Processing is purchased.
 - [ ] Purchase the schematic and confirm the build recipe appears in the build gun under Trading Post / Progression.
 - [ ] Build the terminal and verify the hologram, placement clearance, dismantle refund and paint/customizer behavior.
 - [ ] Look at the terminal and press E; confirm the Satisfactory interaction widget opens and closes correctly.
