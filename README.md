@@ -26,7 +26,8 @@ The current offer catalog includes Iron Plates, Iron Rods, Wire, Cable, Reinforc
 
 ```text
 Source/FICSITContractsCore/        Portable contract rules shared with UE and tests
-Mods/FICSITContracts/              SML C++ runtime plugin
+Mods/GameFeatures/FICSITContracts/ SML content-bearing Game Feature plugin
+Mods/FICSITContracts/ContentSource/ Source OBJ/MTL model assets
 Tests/                             Portable C++ tests
 .github/workflows/                 GitHub Actions validation
 docs/                              Compatibility notes, roadmap and test checklist
