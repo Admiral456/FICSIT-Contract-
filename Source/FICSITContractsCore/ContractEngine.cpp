@@ -178,7 +178,7 @@ AbandonResult ContractEngine::abandon(const std::string& contractId, std::int64_
     const int reward = std::max(0, iterator->rewardReputation);
     // Cancelling is deliberately costly enough to discourage offer rerolling.
     // Round the 25% fee up and never charge more reputation than the player has.
-    const int requestedPenalty = reward > 0 ? std::max(5, (reward + 3) / 4) : 0;
+    const int requestedPenalty = reward > 0 ? std::max(5, reward / 4 + (reward % 4 != 0 ? 1 : 0)) : 0;
     result.reputationPenalty = std::min(state_.reputation, requestedPenalty);
     state_.reputation -= result.reputationPenalty;
 
