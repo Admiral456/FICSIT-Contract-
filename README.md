@@ -2,7 +2,7 @@
 
 **FICSIT Contracts** is a Satisfactory gameplay mod that adds a production-contract board, item delivery orders, company reputation and contract progression.
 
-> **Current status: 0.1.0 source alpha.** The portable contract engine and its automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
+> **Current status: 0.1.1 source alpha.** The portable contract engine, additional save-state validation, and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
 
 ## Version 0.1.0
 
@@ -50,7 +50,7 @@ The current compatibility target is Satisfactory 1.2 / SML 3.12.x:
 5. Open the Starter Project in the custom editor and use Alpakit to stage/package FICSIT Contracts.
 6. Install the staged mod into a test copy of Satisfactory with the matching SML version.
 
-This repository deliberately does not include the proprietary/custom Unreal Engine, Satisfactory game files, Starter Project, generated project files, or binary cooked assets.
+The inventory delivery adapter now checks the actual inventory count before crediting progress; the core engine also clamps malformed amounts, repairs a zero serial, and trims oversized restored history. This repository deliberately does not include the proprietary/custom Unreal Engine, Satisfactory game files, Starter Project, generated project files, or binary cooked assets.
 
 ## In-game commands
 
