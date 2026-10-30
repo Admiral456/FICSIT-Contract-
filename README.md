@@ -2,7 +2,7 @@
 
 **FICSIT Contracts** is a Satisfactory gameplay mod that adds a production-contract board, item delivery orders, company reputation and contract progression.
 
-> **Current status: 0.1.1 source alpha.** The portable contract engine, additional save-state validation, and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
+> **Current status: 0.1.2 source alpha.** The portable contract engine, save-state validation, cancellation penalties and expanded automated tests are implemented. The SML/Unreal C++ integration is prepared in this repository, but it has not yet been compiled with the Satisfactory custom Unreal Engine or tested inside the game. Do not treat this repository as a ready-to-install release yet.
 
 ## Version 0.1.x
 
@@ -14,9 +14,10 @@ The first playable slice is intentionally focused on the contract loop:
 - `/contracts` displays reputation, rank, available orders and active progress.
 - `/contracts accept <ID>` accepts an offer.
 - `/contracts deliver <ID>` deposits matching items from the player's main inventory. Only the amount still required is removed.
+- `/contracts cancel <ID>` abandons an active order; its history is retained and a reputation fee is charged (25% of its reward, rounded up, minimum 5 when the reward is positive, capped by current reputation).
 - Completing every requirement grants reputation once and moves the order to history.
 - Timed orders expire; expired orders do not grant reputation.
-- Reputation, serial IDs, offers, active orders and history are saved and replicated by the Satisfactory world subsystem.
+- Reputation, serial IDs, offers, active orders and history (including cancelled orders) are saved and replicated by the Satisfactory world subsystem.
 
 The current offer catalog includes Iron Plates, Iron Rods, Wire, Cable, Reinforced Iron Plates, Rotors, Motors, Modular Frames and a multi-product long-term factory supply order.
 
@@ -50,7 +51,7 @@ The current compatibility target is Satisfactory 1.2 / SML 3.12.x:
 5. Open the Starter Project in the custom editor and use Alpakit to stage/package FICSIT Contracts.
 6. Install the staged mod into a test copy of Satisfactory with the matching SML version.
 
-The inventory delivery adapter now checks the actual inventory count before crediting progress; the core engine also clamps malformed amounts, repairs a zero serial, and trims oversized restored history. This repository deliberately does not include the proprietary/custom Unreal Engine, Satisfactory game files, Starter Project, generated project files, or binary cooked assets.
+The inventory delivery adapter now checks the actual inventory count before crediting progress; the core engine also clamps malformed amounts, repairs a zero serial, trims oversized restored history and records penalized cancellations. This repository deliberately does not include the proprietary/custom Unreal Engine, Satisfactory game files, Starter Project, generated project files, or binary cooked assets.
 
 ## In-game commands
 
@@ -59,7 +60,8 @@ The inventory delivery adapter now checks the actual inventory count before cred
 | `/contracts` | Show offers, active contracts, progress, reputation and rank |
 | `/contracts accept FC-000001` | Accept the offer with the shown ID |
 | `/contracts deliver FC-000001` | Deliver matching items from the player's main inventory |
-| `/contracts history` | Show the latest completed and expired contracts |
+| `/contracts cancel FC-000001` | Cancel an active order with a reputation penalty |
+| `/contracts history` | Show the latest completed, expired and cancelled contracts |
 
 The command IDs shown by the game are examples; use the IDs on your own board.
 
@@ -75,7 +77,7 @@ ctest --test-dir build --output-on-failure
 
 GitHub Actions runs these portable tests on pushes and pull requests. **This CI job is not an Unreal Engine build** and cannot prove that the SML plugin compiles or loads in Satisfactory.
 
-## Known limitations in 0.1.0
+## Known limitations in 0.1.2
 
 - No Dispatch Terminal building, conveyor input, custom mesh, animations or dedicated graphical contract screen yet.
 - The board is shared by the session rather than a separate per-player economy.
