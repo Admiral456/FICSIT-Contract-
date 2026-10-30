@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Components/ScrollBox.h"
+#include "Components/ProgressBar.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
@@ -108,7 +109,7 @@ void UFICSITDispatchTerminalWidget::AddSection(const FText& Heading)
 }
 
 void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,const FText& ContractText,
-    bool bEmphasize,FName ContractId,EDispatchAction Action)
+    bool bEmphasize,FName ContractId,EDispatchAction Action,int32 ProgressPercent)
 {
     if (!BoardContent || !WidgetTree) return;
     UBorder* Card = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
@@ -127,6 +128,13 @@ void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,con
     Details->SetAutoWrapText(true);
     Details->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f,0.91f,0.94f)));
     CardContent->AddChildToVerticalBox(Details);
+    if (ProgressPercent >= 0)
+    {
+        UProgressBar* Progress = WidgetTree->ConstructWidget<UProgressBar>(UProgressBar::StaticClass());
+        Progress->SetPercent(FMath::Clamp(ProgressPercent,0,100) / 100.0f);
+        Progress->SetFillColorAndOpacity(FLinearColor(0.08f,0.66f,0.91f));
+        CardContent->AddChildToVerticalBox(Progress);
+    }
 
     if (Action != EDispatchAction::None && !ContractId.IsNone())
     {
@@ -138,6 +146,11 @@ void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,con
             UTextBlock* ButtonLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
             ButtonLabel->SetText(FText::FromString(LabelText));
             Button->SetContent(ButtonLabel);
+            Button->SetBackgroundColor(ButtonAction == EDispatchAction::Accept
+                ? FLinearColor(0.72f,0.25f,0.06f,1.0f)
+                : ButtonAction == EDispatchAction::Deliver
+                    ? FLinearColor(0.04f,0.32f,0.48f,1.0f)
+                    : FLinearColor(0.48f,0.08f,0.07f,1.0f));
             Button->OnClicked.AddLambda([this, ContractId, ButtonAction]()
             {
                 SendContractAction(ContractId,ButtonAction);
@@ -198,7 +211,7 @@ void UFICSITDispatchTerminalWidget::RefreshBoard()
         AddContractEntry(FText::FromString(TEXT("NO ACTIVE ORDERS")),FText::FromString(TEXT("Accept an available contract to begin a new logistics operation.")),false);
     else
         for (const FFICSITContract& Contract:Active)
-            AddContractEntry(FText::FromString(TEXT("IN PROGRESS")),FText::FromString(Board->FormatContract(Contract)),true,Contract.ContractId,EDispatchAction::Deliver);
+            AddContractEntry(FText::FromString(TEXT("IN PROGRESS")),FText::FromString(Board->FormatContract(Contract)),true,Contract.ContractId,EDispatchAction::Deliver,Contract.GetProgressPercent());
 
     AddSection(FText::FromString(TEXT("AVAILABLE FICSIT CONTRACTS")));
     if (Offers.IsEmpty())
