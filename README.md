@@ -67,11 +67,13 @@ The design catalog currently contains:
 - **Six new Dispatch Terminal research chapters** and **three Space Elevator extensions (VI–VIII)**.
 - **96 planned unlocks** across buildings, miners, belts/lifts, storage, power, automation, weapons, ammunition, equipment, vehicles, blueprints, scanners and defense.
 - **Four fictional resource families**: Ferravium, Cryonite, Asterite and Gravionite.
-- **54 proposed production/equipment recipes** with per-cycle inputs, outputs and cycle times.
+- **56 proposed production/equipment recipes** with per-cycle inputs, outputs and cycle times.
 - New weapons including Precision Rebar Rifle, Heavy Rebar Repeater, Cryo Projector, Photonic Rifle and Gravitic Launcher.
 - Blueprint Designer Mk4 and Mk5 as extensions beyond the existing vanilla Mk3.
+- A first native **Ferravium processing source prototype**: ore, concentrate and ingot descriptors; recovery/washing/smelting recipes; a 90 MW manufacturer; smelter build recipe; and a Phase-I-gated Frontier Survey schematic.
+- Ferravium ore, concentrate, ingot and smelter OBJ/MTL source meshes, plus a dedicated Unreal Editor icon/mesh importer.
 
-A portable C++ research state machine now enforces the ordered unlock gates and is covered by cross-platform regression tests. The SML runtime adapter, saved/replicated state, live schematic purchases and actual game events are still pending. **Implementation status:** this is a design/data catalog, not yet live game content. The JSON validator checks phase references, unique IDs, recipe structure, Space Elevator gates and whether every Elevator requirement has a producing recipe. Actual schematics, unlock objects, item descriptors, buildables, equipment, models and in-game behavior still need to be implemented and tested.
+A portable C++ research state machine enforces the ordered unlock gates; the SML subsystem saves and replicates progression state, and the Dispatch Terminal plus `/contracts progression` display it. The first Ferravium slice now has native C++ descriptor, recipe, manufacturer, buildable and schematic classes, with source meshes and a separate Unreal Editor importer. **Implementation status:** the wider catalogue is still a design/data expansion, and the Ferravium slice is source-prototype only. The temporary refinery recovery recipe is a test source, not a naturally placed world deposit. The actual vanilla Phase V completion callback, Unreal/UHT compile, content import, Alpakit packaging and in-game tests remain outstanding.
 
 The original vanilla Blueprint Designer already has Mk1, Mk2 and Mk3; this project intentionally adds Mk4/Mk5 rather than duplicating the existing tiers. New resource nodes in the vanilla World Partition map, custom weapon/equipment replication, defensive AI and quantum cargo transfer are called out as technical prototypes in the design document.
 
@@ -80,11 +82,11 @@ The original vanilla Blueprint Designer already has Mk1, Mk2 and Mk3; this proje
 ```text
 Source/FICSITContractsCore/        Portable contract rules shared with UE and tests
 Mods/GameFeatures/FICSITContracts/ SML content-bearing Game Feature plugin
-Mods/FICSITContracts/ContentSource/ OBJ/MTL terminal model source assets
+Mods/FICSITContracts/ContentSource/ OBJ/MTL terminal and Ferravium model sources
 Tests/                             Portable C++ tests
 .github/workflows/                 GitHub Actions validation
 docs/                              Compatibility notes, balance, roadmap and test checklist
-Tools/Unreal/                      Unreal Editor asset import utility
+Tools/Unreal/                      Unreal Editor asset import utilities for the terminal and Ferravium
 scripts/                           Static source and asset validation
 ```
 
