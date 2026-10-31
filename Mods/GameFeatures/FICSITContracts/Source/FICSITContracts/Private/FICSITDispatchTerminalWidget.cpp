@@ -72,13 +72,17 @@ void UFICSITDispatchTerminalWidget::NativeConstruct()
 
     SummaryText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DispatchSummary"));
     SummaryText->SetAutoWrapText(true);
-    SummaryText->SetColorAndOpacity(FSlateColor(FLinearColor(0.35f,0.82f,0.97f)));\n    FSlateFontInfo SummaryFont = SummaryText->GetFont();\n    SummaryFont.Size = 15;\n    SummaryText->SetFont(SummaryFont);
+    SummaryText->SetColorAndOpacity(FSlateColor(FLinearColor(0.35f,0.82f,0.97f)));
+    FSlateFontInfo SummaryFont = SummaryText->GetFont();
+    SummaryFont.Size = 15;
+    SummaryText->SetFont(SummaryFont);
     MainColumn->AddChildToVerticalBox(SummaryText);
 
     UButton* RefreshButton = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("RefreshBoardButton"));
     UTextBlock* RefreshLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
     RefreshLabel->SetText(FText::FromString(TEXT("SYNC DISPATCH NETWORK")));
-    RefreshButton->SetContent(RefreshLabel);\n    RefreshButton->SetBackgroundColor(FLinearColor(0.56f,0.22f,0.055f,1.0f));
+    RefreshButton->SetContent(RefreshLabel);
+    RefreshButton->SetBackgroundColor(FLinearColor(0.56f,0.22f,0.055f,1.0f));
     RefreshButton->OnClicked.AddDynamic(this,&UFICSITDispatchTerminalWidget::RefreshBoard);
     MainColumn->AddChildToVerticalBox(RefreshButton);
 
@@ -142,13 +146,19 @@ void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,con
 
     UTextBlock* Label = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
     Label->SetText(GroupLabel);
-    Label->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f,0.43f,0.09f)));\n    FSlateFontInfo LabelFont = Label->GetFont();\n    LabelFont.Size = 13;\n    Label->SetFont(LabelFont);
+    Label->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f,0.43f,0.09f)));
+    FSlateFontInfo LabelFont = Label->GetFont();
+    LabelFont.Size = 13;
+    Label->SetFont(LabelFont);
     CardContent->AddChildToVerticalBox(Label);
 
     UTextBlock* Details = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
     Details->SetText(ContractText);
     Details->SetAutoWrapText(true);
-    Details->SetColorAndOpacity(FSlateColor(FLinearColor(0.90f,0.94f,0.97f)));\n    FSlateFontInfo DetailsFont = Details->GetFont();\n    DetailsFont.Size = 15;\n    Details->SetFont(DetailsFont);
+    Details->SetColorAndOpacity(FSlateColor(FLinearColor(0.90f,0.94f,0.97f)));
+    FSlateFontInfo DetailsFont = Details->GetFont();
+    DetailsFont.Size = 15;
+    Details->SetFont(DetailsFont);
     CardContent->AddChildToVerticalBox(Details);
     if (ProgressPercent >= 0)
     {
