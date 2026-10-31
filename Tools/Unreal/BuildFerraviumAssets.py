@@ -11,6 +11,7 @@ RESOURCE_ROOT = os.path.join(SOURCE_ROOT, "Resources", "Ferravium")
 MESH_ROOT = os.path.join(RESOURCE_ROOT, "Mesh")
 ICON_ROOT = os.path.join(RESOURCE_ROOT, "UI")
 SMELTER_ROOT = os.path.join(SOURCE_ROOT, "Buildables", "FerraviumSmelter")
+ADVANCED_FOUNDRY_ROOT = os.path.join(SOURCE_ROOT, "Buildables", "AdvancedAlloyFoundry")
 MOUNT = "/FICSITContracts"
 
 
@@ -143,6 +144,27 @@ def make_icon(kind, path):
         line(45, 109, 202, 83, (239, 246, 251), 3)
         for px, py in ((47, 126), (215, 115), (39, 181), (205, 164)):
             circle(px, py, 4, (205, 223, 236))
+    elif kind == "advanced_foundry":
+        # Tall multi-stage alloy furnace with a cyan inspection chamber and twin stacks.
+        rect(31, 112, 225, 218, black)
+        rect(39, 99, 217, 199, steel)
+        rect(53, 106, 202, 190, dark)
+        rect(66, 115, 190, 180, (72, 98, 123))
+        rect(83, 126, 178, 166, (19, 31, 45))
+        rect(91, 132, 170, 158, cyan)
+        rect(40, 188, 216, 208, orange)
+        rect(49, 61, 96, 111, dark)
+        rect(160, 61, 207, 111, dark)
+        rect(60, 35, 83, 66, steel)
+        rect(172, 35, 195, 66, steel)
+        rect(55, 30, 88, 38, orange)
+        rect(167, 30, 200, 38, orange)
+        rect(25, 122, 43, 177, black)
+        rect(213, 122, 231, 177, black)
+        rect(29, 130, 39, 151, cyan)
+        rect(217, 130, 227, 151, cyan)
+        for x in range(54, 208, 22):
+            line(x, 204, x + 10, 204, black, 4)
     else:
         # Furnace silhouette, heat window, twin exhausts and FICSIT-style hazard trim.
         rect(44, 105, 212, 211, black)
@@ -212,6 +234,10 @@ require(os.path.isfile(os.path.join(MESH_ROOT, "TitanAlloyBeam.obj")),
         "TitanAlloyBeam.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(SMELTER_ROOT, "Ferravium.mtl")),
         "Ferravium.mtl sidecar is missing from the smelter folder.")
+require(os.path.isfile(os.path.join(ADVANCED_FOUNDRY_ROOT, "AdvancedAlloyFoundry.obj")),
+        "AdvancedAlloyFoundry.obj is missing from the buildable source folder.")
+require(os.path.isfile(os.path.join(ADVANCED_FOUNDRY_ROOT, "AdvancedAlloyFoundry.mtl")),
+        "AdvancedAlloyFoundry.mtl sidecar is missing from the buildable source folder.")
 
 os.makedirs(ICON_ROOT, exist_ok=True)
 icon_specs = [
@@ -221,6 +247,7 @@ icon_specs = [
     ("titan_alloy", "TX_TitanAlloyIngot_256"),
     ("titan_beam", "TX_TitanAlloyBeam_256"),
     ("smelter", "TX_FerraviumSmelter_256"),
+    ("advanced_foundry", "TX_AdvancedAlloyFoundry_256"),
 ]
 for kind, name in icon_specs:
     make_icon(kind, os.path.join(ICON_ROOT, name + ".png"))
@@ -229,6 +256,7 @@ asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
 resource_mesh_path = MOUNT + "/Resources/Ferravium/Mesh"
 resource_ui_path = MOUNT + "/Resources/Ferravium/UI"
 smelter_mesh_path = MOUNT + "/Buildables/FerraviumSmelter"
+advanced_foundry_mesh_path = MOUNT + "/Buildables/AdvancedAlloyFoundry"
 
 for filename, destination, name in [
     (os.path.join(MESH_ROOT, "FerraviumOre.obj"), resource_mesh_path, "SM_FerraviumOre"),
@@ -237,6 +265,7 @@ for filename, destination, name in [
     (os.path.join(MESH_ROOT, "TitanAlloyIngot.obj"), resource_mesh_path, "SM_TitanAlloyIngot"),
     (os.path.join(MESH_ROOT, "TitanAlloyBeam.obj"), resource_mesh_path, "SM_TitanAlloyBeam"),
     (os.path.join(SMELTER_ROOT, "FerraviumSmelter.obj"), smelter_mesh_path, "SM_FerraviumSmelter"),
+    (os.path.join(ADVANCED_FOUNDRY_ROOT, "AdvancedAlloyFoundry.obj"), advanced_foundry_mesh_path, "SM_AdvancedAlloyFoundry"),
 ]:
     import_asset(asset_tools, filename, destination, name)
 
