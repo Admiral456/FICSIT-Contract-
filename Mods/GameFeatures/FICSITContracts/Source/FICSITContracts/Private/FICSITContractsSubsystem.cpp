@@ -266,15 +266,23 @@ void AFICSITContractsSubsystem::HandleSchematicPurchased(
     AFGCharacterPlayer* /*PurchaseInstigator*/)
 {
     if (!HasAuthority() || !PurchasedSchematic) return;
-    if (PurchasedSchematic != UFICSITFrontierSurveySchematic::StaticClass()) return;
+
+    int32 ResearchPhase = 0;
+    if (PurchasedSchematic == UFICSITFrontierSurveySchematic::StaticClass())
+        ResearchPhase = 1;
+    else if (PurchasedSchematic == UFICSITAdvancedMetallurgySchematic::StaticClass())
+        ResearchPhase = 2;
+    else
+        return;
 
     AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
     if (!SchematicManager || !SchematicManager->IsSchematicPurchased(PurchasedSchematic)) return;
 
-    if (CompleteTerminalResearchPhase(1))
+    if (CompleteTerminalResearchPhase(ResearchPhase))
     {
         UE_LOG(LogTemp, Log,
-            TEXT("FICSIT Contracts: Terminal Research Phase I completed by purchasing Frontier Survey."));
+            TEXT("FICSIT Contracts: Terminal Research Phase %d completed by purchasing %s."),
+            ResearchPhase, *GetNameSafe(PurchasedSchematic.Get()));
     }
 }
 
@@ -285,10 +293,14 @@ void AFICSITContractsSubsystem::RefreshPurchasedSchematicProgression()
     AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
     if (!SchematicManager) return;
 
-    TArray<TSubclassOf<UFGSchematic>> PurchasedSchematics;
-    SchematicManager->GetAllPurchasedSchematics(PurchasedSchematics);
-    for (const TSubclassOf<UFGSchematic>& Schematic : PurchasedSchematics)
-        HandleSchematicPurchased(Schematic, nullptr);
+    // Reconcile in progression order so the result does not depend on the
+    // schematic manager's internal array ordering when multiple milestones
+    // were purchased before this mod was installed.
+    if (SchematicManager->IsSchematicPurchased(UFICSITFrontierSurveySchematic::StaticClass()))
+        HandleSchematicPurchased(UFICSITFrontierSurveySchematic::StaticClass(), nullptr);
+
+    if (SchematicManager->IsSchematicPurchased(UFICSITAdvancedMetallurgySchematic::StaticClass()))
+        HandleSchematicPurchased(UFICSITAdvancedMetallurgySchematic::StaticClass(), nullptr);
 }
 
 void AFICSITContractsSubsystem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
