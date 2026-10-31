@@ -416,7 +416,7 @@ Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy
 
 1. Zkopíruj `Mods/GameFeatures/FICSITContracts`, `Mods/FICSITContracts/ContentSource` a `Tools/Unreal` do Satisfactory Modding Starter Projectu.
 2. V Unreal Editoru spusť `Tools/Unreal/BuildFICSITContractsAssets.py` pro vytvoření původního Dispatch Terminal mesh/icon a Game Feature Data assetu.
-3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy položek, Ferravium Smelteru, Advanced Alloy Foundry a osmi ikonami.
+3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy/Reinforced Titan Frame položek, Ferravium Smelteru, Advanced Alloy Foundry a osmi ikon.
 4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium`, `/FICSITContracts/Buildables/FerraviumSmelter` a `/FICSITContracts/Buildables/AdvancedAlloyFoundry`, včetně `SM_TitanAlloyIngot`, `SM_TitanAlloyBeam`, `SM_ReinforcedTitanFrame`, `SM_AdvancedAlloyFoundry` a odpovídajících ikon.
 5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
 
@@ -427,7 +427,7 @@ První native source slice obsahuje:
 - Nativní `AFICSITFerraviumSmelter : AFGBuildableManufacturer` se vstupním a výstupním conveyor connection.
 - Buildable descriptor, Build Gun recept a `Frontier Survey` schematic.
 - Recipe unlock, který zpřístupňuje recovery, washing, smelting i konstrukci pece.
-- Zdrojové OBJ/MTL modely a Editor importér pro modely a čtyři ikony.
+- Zdrojové OBJ/MTL modely a Editor importér pro základní Ferravium modely a čtyři základní ikony; společný importér nyní generuje celkem osm ikon pro všechny implementované prototypy.
 
 **Omezení první iterace:** přirozené Ferravium resource nodes ještě nejsou umístěné v herním světě. Prozatím se ruda získává přes recept Ferravium Recovery ve vanilla Oil Refinery. Je to pouze testovací bootstrap cesta, nikoli náhrada finální hlubinné těžby. Frontier Survey je navíc záměrně skrytý, dokud nebude skutečná vanilla Space Elevator Phase V událost volat serverovou metodu, která zpřístupní Terminal I.
 
