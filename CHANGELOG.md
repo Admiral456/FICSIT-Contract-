@@ -9,6 +9,9 @@
 - Design Blueprint Designer Mk4/Mk5 as extensions beyond the vanilla Mk3.
 - Add CI validation for phase order, unique IDs, unlock references, recipe references, elevator gates and production of every Elevator requirement.
 - Record implementation risks for World Partition resource nodes, ore scanner registration, custom equipment/weapons, AI drones and quantum material transfer.
+- Implement a portable C++ state machine for Terminal I–VI and Elevator VI–VIII, with snapshot normalization and regression tests.
+- Compile-check the same portable core wrapper used by the SML module on Linux and Windows.
+- Correct the `/contracts` summary to show the four-slot active-contract limit and guard it in static validation.
 
 **Design only:** the catalog and validation do not register live schematics, items, weapons, buildings or recipes. Runtime integration and in-game testing remain pending.
 
