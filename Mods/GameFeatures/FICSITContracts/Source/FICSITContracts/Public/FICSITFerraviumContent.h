@@ -88,6 +88,15 @@ private:
     TObjectPtr<UFGFactoryConnectionComponent> OutputConnection;
 };
 
+/** Heavy-duty rotating assembly used by high-load industrial machinery. */
+UCLASS()
+class FICSITCONTRACTS_API UFICSITHeavyIndustrialRotorDescriptor : public UFGItemDescriptor
+{
+    GENERATED_BODY()
+public:
+    UFICSITHeavyIndustrialRotorDescriptor();
+};
+
 /** Dedicated heavy-industry manufacturer for Titan Alloy production. */
 UCLASS()
 class FICSITCONTRACTS_API AFICSITAdvancedAlloyFoundry : public AFGBuildableManufacturer
@@ -188,6 +197,15 @@ class FICSITCONTRACTS_API UFICSITReinforcedTitanFrameRecipe : public UFGRecipe
     GENERATED_BODY()
 public:
     UFICSITReinforcedTitanFrameRecipe();
+};
+
+/** Manufacturer Mk1 bootstrap recipe for the Heavy Industrial Rotor. */
+UCLASS()
+class FICSITCONTRACTS_API UFICSITHeavyIndustrialRotorRecipe : public UFGRecipe
+{
+    GENERATED_BODY()
+public:
+    UFICSITHeavyIndustrialRotorRecipe();
 };
 
 UCLASS()
