@@ -106,6 +106,10 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Run `RCP_TITAN_BEAM_BOOTSTRAP` in the Advanced Alloy Foundry: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle.
 - [ ] Verify the bootstrap beam recipe remains separate from the final planned `RCP_TITAN_BEAM` Industrial Press recipe (30 ingots -> 15 beams / 8 seconds).
 - [ ] Run the Reinforced Titan Frame bootstrap in Manufacturer Mk1: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second cycle.
+- [ ] Run the Heavy Industrial Rotor bootstrap in Manufacturer Mk1: 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors -> 2 Heavy Industrial Rotors per 18-second cycle.
+- [ ] Verify the planned `RCP_HEAVY_ROTOR` Heavy-Duty Assembler recipe remains separate from `RCP_HEAVY_ROTOR_BOOTSTRAP`.
+- [ ] Verify Heavy Industrial Rotor uses its dedicated imported rotor mesh and icon and retains the 116 × 106 × 106 cm source envelope.
+- [ ] Save/reload during Heavy Industrial Rotor production; confirm item metadata and partial Manufacturer Mk1 progress persist.
 - [ ] Verify the planned `RCP_REINFORCED_TITAN_FRAME` Heavy-Duty Assembler recipe remains separate from `RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP`.
 - [ ] Confirm the Reinforced Titan Frame recipe is unlocked by Advanced Metallurgy and is available in vanilla Manufacturer Mk1 as the 24-second bootstrap.
 - [ ] Save/reload while manufacturing Reinforced Titan Frames; verify item mesh, icon, inventory and partial manufacturer progress persist.
@@ -119,7 +123,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 
 ### Ferravium source prototype (pending target-game test)
 
-- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium, Titan Alloy and Reinforced Titan Frame item meshes, the Ferravium Smelter and Advanced Alloy Foundry, plus all eight generated icons, import under the expected plugin mount.
+- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium, Titan Alloy and Reinforced Titan Frame item meshes, the Ferravium Smelter and Advanced Alloy Foundry, plus all nine generated icons, import under the expected plugin mount.
 - [ ] Confirm the native ore, concentrate and ingot descriptors load without missing mesh/icon/category warnings.
 - [ ] Confirm Frontier Survey remains hidden before vanilla Space Elevator Phase V and Terminal I are available.
 - [ ] After the vanilla final-game event integration is verified in-game, confirm Frontier Survey appears and can be purchased only once; confirm its purchase marks Terminal I complete.
