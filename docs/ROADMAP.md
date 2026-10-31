@@ -56,20 +56,25 @@
 - [x] Add validation for unique unlock/recipe IDs, phase ownership, catalog references, elevator gates and required component production.
 - [ ] Implement a runtime catalog loader and a server-authoritative research/unlock registry.
 - [x] Add SaveGame properties and server replication for Terminal I–VI and Space Elevator VI–VIII completion state.
-- [ ] Build the remaining catalog-wide UFGSchematic/UFGUnlock registration layer; only the first Ferravium schematic is currently prototyped natively.
+- [ ] Build the remaining catalog-wide UFGSchematic/UFGUnlock registration layer; only Frontier Survey and Advanced Metallurgy have native milestone prototypes so far.
 - [x] Add native Ferravium Ore, Concentrate and Ingot descriptors plus recovery, washing and smelting recipe classes.
 - [x] Add the native AFICSITFerraviumSmelter manufacturer, factory input/output ports, buildable descriptor, Build Gun recipe and 90 MW base power setting.
 - [x] Add the Frontier Survey schematic source and a prerequisite that waits for the saved Phase V / Terminal I state.
+- [x] Add the Advanced Metallurgy / Terminal II schematic, gated by purchased Frontier Survey and the saved Phase II availability state.
+- [x] Add the native Titan Alloy Ingot descriptor and the 8-second Foundry Mk1 bootstrap recipe (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots).
+- [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
 - [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium item/smelter meshes and four icons.
-- [ ] Import Ferravium assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete refinery-to-ingot loop in game.
+- [ ] Import Ferravium and Titan Alloy assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
 - [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
+- [ ] Implement the dedicated Advanced Alloy Foundry; the first Titan Alloy recipe intentionally bootstraps on the vanilla Foundry Mk1.
 - [ ] Resolve a supported new resource deposit/node path and ore scanner integration.
 - [x] Add read-only Terminal/Space Elevator phase status to the Dispatch Terminal and `/contracts progression`.
 - [x] Bind the server subsystem to `AFGGamePhaseManager::mOnGameCompleted`; reconcile saves where the vanilla Project Assembly finale is already complete.
 - [x] Bind to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`, verify purchase state, and reconcile existing purchased schematics for the implemented Frontier Survey → Terminal I transition.
-- [ ] Add actual schematic content and purchase mappings for Terminal II–VI and Space Elevator VI–VIII before marking those progression transitions implemented.
+- [x] Add the first two native milestone schematics and map their confirmed purchases to Terminal I/II completion.
+- [ ] Add actual schematic content and purchase mappings for Terminal III–VI and Space Elevator VI–VIII before marking those progression transitions implemented.
 - [ ] Add a full research UI with category filters, item costs, unlock descriptions and purchase actions.
 
 ## 0.4.0 — Expanded gameplay
