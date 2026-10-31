@@ -627,6 +627,10 @@ def main() -> int:
             ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
         ),
         (
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/ReinforcedTitanFrame.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ),
+        (
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ),
