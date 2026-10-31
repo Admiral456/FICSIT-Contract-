@@ -177,7 +177,8 @@ AFICSITFerraviumSmelter::AFICSITFerraviumSmelter()
         }
     }
 
-    // Keep the canonical Input0/Output0 component names used by vanilla machines.\n    InputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Input0"));
+    // Keep the canonical Input0/Output0 component names used by vanilla machines.
+    InputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Input0"));
     InputConnection->SetupAttachment(RootComponent);
     InputConnection->SetRelativeLocation(FVector(-155.0f, 0.0f, 76.0f));
     InputConnection->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
