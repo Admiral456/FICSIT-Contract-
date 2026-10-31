@@ -255,23 +255,37 @@ FString AFICSITContractsSubsystem::GetEndgameProgressionSummary() const
         return bComplete ? TEXT("COMPLETE") : (bAvailable ? TEXT("AVAILABLE") : TEXT("LOCKED"));
     };
 
+    static const TCHAR* TerminalPhaseNames[] = {
+        TEXT("Frontier Survey"),
+        TEXT("Advanced Metallurgy"),
+        TEXT("Cryogenic Systems"),
+        TEXT("Photonic Manufacturing"),
+        TEXT("Gravitic Engineering"),
+        TEXT("Interplanetary Logistics")
+    };
+    static const TCHAR* ElevatorPhaseNames[] = {
+        TEXT("Frontier Expansion"),
+        TEXT("Planetary Network"),
+        TEXT("Orbital Assembly")
+    };
+
     FString Result = TEXT("FICSIT ENDGAME RESEARCH // SERVER-SAVED PROGRESSION");
-    Result += FString::Printf(TEXT("\nVANILLA SPACE ELEVATOR V: %s"),
+    Result += FString::Printf(TEXT("\nVANILLA SPACE ELEVATOR V // FINAL PROJECT: %s"),
         Progression.state().vanillaSpaceElevatorPhase5Complete ? TEXT("CONFIRMED") : TEXT("NOT CONFIRMED"));
 
     for (int32 Phase = 1; Phase <= 6; ++Phase)
     {
         const bool bComplete = Progression.isTerminalPhaseComplete(Phase);
         const bool bAvailable = Progression.canResearchTerminalPhase(Phase);
-        Result += FString::Printf(TEXT("\nTERMINAL %02d // %s"),
-            Phase, GetStatus(bComplete, bAvailable));
+        Result += FString::Printf(TEXT("\nTERMINAL %02d // %s // %s"),
+            Phase, TerminalPhaseNames[Phase - 1], GetStatus(bComplete, bAvailable));
     }
     for (int32 Phase = 6; Phase <= 8; ++Phase)
     {
         const bool bComplete = Progression.isElevatorPhaseComplete(Phase);
         const bool bAvailable = Progression.canCompleteElevatorPhase(Phase);
-        Result += FString::Printf(TEXT("\nSPACE ELEVATOR %02d // %s"),
-            Phase, GetStatus(bComplete, bAvailable));
+        Result += FString::Printf(TEXT("\nSPACE ELEVATOR %02d // %s // %s"),
+            Phase, ElevatorPhaseNames[Phase - 6], GetStatus(bComplete, bAvailable));
     }
 
     const int32 AvailableTerminal = Progression.availableTerminalPhase();
