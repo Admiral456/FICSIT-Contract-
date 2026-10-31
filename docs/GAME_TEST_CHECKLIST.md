@@ -84,6 +84,21 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Confirm the vanilla Phase V flag is only recorded after the actual game completion event is integrated; until then it must remain unconfirmed.
 - [ ] Save/reload and verify completed schematics and unlock state persist in multiplayer.
 
+### Ferravium source prototype (pending target-game test)
+
+- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify all Ferravium meshes/icons import under the expected plugin mount.
+- [ ] Confirm the native ore, concentrate and ingot descriptors load without missing mesh/icon/category warnings.
+- [ ] Confirm Frontier Survey remains hidden before vanilla Space Elevator Phase V and Terminal I are available.
+- [ ] After the real Phase V callback is connected, confirm Frontier Survey appears and can be purchased only once.
+- [ ] Build the Ferravium Smelter and verify placement clearance, collision, dismantle refund and power connection.
+- [ ] Confirm the smelter consumes 90 MW at base potential and that overclocking behaves correctly.
+- [ ] Connect an input belt and output belt; verify the conveyor ports snap, orient and transfer items in the expected directions.
+- [ ] Run Ferravium Recovery in the vanilla Oil Refinery: 120 Bauxite Ore + 30 Coal + 60 Water -> 60 Ferravium Ore per 18-second cycle.
+- [ ] Run Ferravium Washing in the Oil Refinery: 60 Ferravium Ore + 30 Water -> 45 Ferravium Concentrate per 12-second cycle.
+- [ ] Run Ferravium Ingot in the custom smelter: 45 Ferravium Concentrate + 30 Coal -> 30 Ferravium Ingots per 10-second cycle.
+- [ ] Save/reload with the smelter active and confirm recipe, input/output inventory and partial production progress persist.
+- [ ] Verify the refinery recovery recipe is only a temporary source; do not mark natural Ferravium node spawning/scanner support as complete.
+
 ### Custom resources and production
 
 - [ ] Spawn and harvest Ferravium in a supported vanilla-world resource/deposit path.
