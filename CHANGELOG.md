@@ -21,6 +21,7 @@
 - Add native Titan Alloy Ingot and Titan Alloy Beam descriptors, plus a dedicated Advanced Alloy Foundry manufacturer/buildable, Build Gun recipe and source model; assign the 8-second ingot and 12-second beam recipes to the custom 125 MW machine.
 - Generate Titan Alloy Ingot and I-section Beam plus Reinforced Titan Frame OBJ meshes, a detailed Advanced Alloy Foundry OBJ/MTL model and separate UI icon sources; extend the Unreal import utility and static validation for all new assets.
 - Add the native Reinforced Titan Frame descriptor and 24-second Manufacturer Mk1 bootstrap recipe (8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames), with its own open-cage OBJ mesh and generated icon; keep the planned Heavy-Duty Assembler recipe separate.
+- Extend the manifest validator to check the Reinforced Titan Frame's exact 92 × 64 × 64 cm mesh envelope, MTL slots, recipe inputs/outputs and Terminal II mapping.
 - Keep the planned Industrial Press beam recipe (`RCP_TITAN_BEAM`) separate from the native Advanced Alloy Foundry beam bootstrap (`RCP_TITAN_BEAM_BOOTSTRAP`) in the machine-readable catalog.
 - Reconcile Frontier Survey and Advanced Metallurgy purchases in progression order and map the confirmed Advanced Metallurgy purchase to Terminal II completion.
 - Reconcile existing purchased schematics on load, retry manager binding during early world startup, and remove dynamic delegate bindings during `EndPlay`.
