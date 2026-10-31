@@ -2822,10 +2822,10 @@
       "deferred": [
         "Custom UE 5.6.1/UHT compilation and Alpakit packaging",
         "In-game recipe discovery, belt production, save/load and multiplayer tests",
-        "Heavy-Duty Assembler and its final Heavy Industrial Rotor recipe; Hardended Rebar, Ferravium Structural Matrix and remaining Phase II recipes beyond the rotor bootstrap"
+        "Heavy-Duty Assembler and its final Heavy Industrial Rotor recipe; Hardened Rebar, Ferravium Structural Matrix and remaining Phase II recipes beyond the rotor bootstrap"
       ],
       "bootstrapMachine": "Advanced Alloy Foundry",
-      "note": "Titan Alloy Ingots and Beams are made in the custom 125 MW Advanced Alloy Foundry. Reinforced Titan Frames are assembled in the vanilla Manufacturer Mk1 as a compatibility bootstrap. The planned Heavy-Duty Assembler recipe remains separate from RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP. The dedicated Heavy-Duty Assembler and remaining Phase II production chain are not implemented. Heavy Industrial Rotors are currently assembled in vanilla Manufacturer Mk1 as a bootstrap (12 Titan Alloy Ingots + 6 Rotors + 2 Motors -> 2 Heavy Industrial Rotors / 18 s); the planned Heavy-Duty Assembler recipe RCP_HEAVY_ROTOR remains separate.",
+      "note": "Titan Alloy Ingots and Beams are made in the custom 125 MW Advanced Alloy Foundry. Reinforced Titan Frames are assembled in the vanilla Manufacturer Mk1 as a compatibility bootstrap. The planned Heavy-Duty Assembler recipe remains separate from RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP. The dedicated Heavy-Duty Assembler and remaining Phase II production chain are not implemented. Heavy Industrial Rotor is available through a Manufacturer Mk1 bootstrap while its final Heavy-Duty Assembler recipe remains design-only. Heavy Industrial Rotors are currently assembled in vanilla Manufacturer Mk1 as a bootstrap (12 Titan Alloy Ingots + 6 Rotors + 2 Motors -> 2 Heavy Industrial Rotors / 18 s); the planned Heavy-Duty Assembler recipe RCP_HEAVY_ROTOR remains separate.",
       "bootstrapRecipes": [
         {
           "id": "RCP_TITAN_ALLOY",
