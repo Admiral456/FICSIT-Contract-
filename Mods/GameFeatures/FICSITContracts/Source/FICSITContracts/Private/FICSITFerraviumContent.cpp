@@ -28,6 +28,7 @@ namespace
     constexpr const TCHAR* TitanAlloyIngotMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyIngot.SM_TitanAlloyIngot");
     constexpr const TCHAR* TitanAlloyBeamMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyBeam.SM_TitanAlloyBeam");
     constexpr const TCHAR* ReinforcedTitanFrameMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_ReinforcedTitanFrame.SM_ReinforcedTitanFrame");
+    constexpr const TCHAR* HeavyIndustrialRotorMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_HeavyIndustrialRotor.SM_HeavyIndustrialRotor");
     constexpr const TCHAR* SmelterMeshPath = TEXT("/FICSITContracts/Buildables/FerraviumSmelter/SM_FerraviumSmelter.SM_FerraviumSmelter");
     constexpr const TCHAR* AdvancedAlloyFoundryMeshPath = TEXT("/FICSITContracts/Buildables/AdvancedAlloyFoundry/SM_AdvancedAlloyFoundry.SM_AdvancedAlloyFoundry");
 
@@ -175,6 +176,25 @@ UFICSITReinforcedTitanFrameDescriptor::UFICSITReinforcedTitanFrameDescriptor()
     mRadioactiveDecay = 0.0f;
     mConveyorMesh = LoadObject<UStaticMesh>(nullptr, ReinforcedTitanFrameMeshPath);
     mSmallIcon = LoadFerraviumIcon(TEXT("TX_ReinforcedTitanFrame_256"));
+    mPersistentBigIcon = mSmallIcon;
+    mCategory = LoadClass<UFGCategory>(nullptr,
+        TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_SteelParts.Cat_SteelParts_C"));
+}
+
+
+UFICSITHeavyIndustrialRotorDescriptor::UFICSITHeavyIndustrialRotorDescriptor()
+{
+    mUseDisplayNameAndDescription = true;
+    mDisplayName = FText::FromString(TEXT("Heavy Industrial Rotor"));
+    mDescription = FText::FromString(TEXT("A reinforced high-inertia rotor with Titan Alloy hubs and a precision-balanced multi-spoke core."));
+    mAbbreviatedDisplayName = FText::FromString(TEXT("H-ROTOR"));
+    mForm = EResourceForm::RF_SOLID;
+    mStackSize = EStackSize::SS_BIG;
+    mCanBeDiscarded = true;
+    mRememberPickUp = true;
+    mRadioactiveDecay = 0.0f;
+    mConveyorMesh = LoadObject<UStaticMesh>(nullptr, HeavyIndustrialRotorMeshPath);
+    mSmallIcon = LoadFerraviumIcon(TEXT("TX_HeavyIndustrialRotor_256"));
     mPersistentBigIcon = mSmallIcon;
     mCategory = LoadClass<UFGCategory>(nullptr,
         TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_SteelParts.Cat_SteelParts_C"));
@@ -462,6 +482,21 @@ UFICSITReinforcedTitanFrameRecipe::UFICSITReinforcedTitanFrameRecipe()
 }
 
 
+UFICSITHeavyIndustrialRotorRecipe::UFICSITHeavyIndustrialRotorRecipe()
+{
+    mDisplayNameOverride = true;
+    mDisplayName = FText::FromString(TEXT("Heavy Industrial Rotor"));
+    mManufactoringDuration = 18.0f;
+    mManualManufacturingMultiplier = 1.0f;
+    mProduct.Emplace(UFICSITHeavyIndustrialRotorDescriptor::StaticClass(), 2);
+
+    AddItem(mIngredients, TEXT("/Script/FICSITContracts.FICSITTitanAlloyIngotDescriptor"), 12);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/Rotor/Desc_Rotor.Desc_Rotor_C"), 6);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C"), 2);
+    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C"));
+}
+
+
 UFICSITFerraviumRecipeUnlock::UFICSITFerraviumRecipeUnlock()
 {
     mRecipes.Add(UFICSITFerraviumRecoveryRecipe::StaticClass());
@@ -476,6 +511,7 @@ UFICSITTitanAlloyRecipeUnlock::UFICSITTitanAlloyRecipeUnlock()
     mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass());
     mRecipes.Add(UFICSITReinforcedTitanFrameRecipe::StaticClass());
     mRecipes.Add(UFICSITAdvancedAlloyFoundryBuildRecipe::StaticClass());
+    mRecipes.Add(UFICSITHeavyIndustrialRotorRecipe::StaticClass());
 }
 
 UFICSITFrontierSurveyPrerequisite::UFICSITFrontierSurveyPrerequisite()
