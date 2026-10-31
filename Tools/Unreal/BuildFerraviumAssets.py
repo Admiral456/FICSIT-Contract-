@@ -147,17 +147,17 @@ def make_icon(kind, path):
             circle(px, py, 4, (205, 223, 236))
     elif kind == "heavy_rotor":
         # High-inertia six-spoke rotor with cyan balance marks and reinforced hubs.
-        circle(128, 128, 83, (35, 52, 68), 23)
-        circle(128, 128, 72, steel, 12)
-        circle(128, 128, 52, black, 10)
+        circle(128, 128, 83, (35, 52, 68))
+        circle(128, 128, 72, steel)
+        circle(128, 128, 52, black)
         for angle in range(0, 360, 60):
             rad = math.radians(angle)
             inner = (128 + int(math.cos(rad) * 23), 128 + int(math.sin(rad) * 23))
             outer = (128 + int(math.cos(rad) * 67), 128 + int(math.sin(rad) * 67))
             line(inner[0], inner[1], outer[0], outer[1], pale, 16)
             line(inner[0] + 3, inner[1] + 3, outer[0] + 3, outer[1] + 3, steel, 6)
-        circle(128, 128, 34, (27, 41, 56), 10)
-        circle(128, 128, 24, (94, 124, 150), 9)
+        circle(128, 128, 34, (27, 41, 56))
+        circle(128, 128, 24, (94, 124, 150))
         circle(128, 128, 12, cyan)
         for px, py in ((128, 43), (202, 85), (202, 171), (128, 213), (54, 171), (54, 85)):
             circle(px, py, 5, orange)
