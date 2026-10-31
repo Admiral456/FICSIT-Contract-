@@ -78,6 +78,8 @@ def main() -> int:
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyBeam.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Buildables/AdvancedAlloyFoundry/AdvancedAlloyFoundry.mtl",
+        ROOT / "Mods/FICSITContracts/ContentSource/Buildables/AdvancedAlloyFoundry/AdvancedAlloyFoundry.obj",
         ROOT / "Tools/Unreal/BuildFerraviumAssets.py",
     ]
 
@@ -344,8 +346,26 @@ def main() -> int:
                 for output in (titan_recipe or {}).get("outputs", [])
             ):
                 errors.append("The Phase II Titan Alloy recipe must produce Titan Alloy Ingots.")
-            if titan_alloy_slice and titan_alloy_slice.get("bootstrapMachine") != "Vanilla Foundry Mk1":
-                errors.append("The Titan Alloy prototype must explicitly document its vanilla Foundry bootstrap.")
+            if titan_alloy_slice and titan_alloy_slice.get("bootstrapMachine") != "Advanced Alloy Foundry":
+                errors.append("Titan Alloy production must use the native Advanced Alloy Foundry.")
+            foundry_unlock = unlock_by_id.get("ADVANCED_ALLOY_FOUNDRY")
+            if not foundry_unlock or foundry_unlock.get("status") != "native_source_prototype":
+                errors.append("Advanced Alloy Foundry must be tracked as an implemented Phase II buildable.")
+            if foundry_unlock and foundry_unlock.get("sourceSliceId") != "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP":
+                errors.append("Advanced Alloy Foundry must reference the Titan Alloy source implementation slice.")
+            foundry_build_recipe = recipe_by_id.get("RCP_ADVANCED_ALLOY_FOUNDRY_BUILD")
+            if not foundry_build_recipe or not any(
+                output.get("itemId") == "ADVANCED_ALLOY_FOUNDRY"
+                for output in (foundry_build_recipe or {}).get("outputs", [])
+            ):
+                errors.append("Advanced Alloy Foundry must have a Build Gun recipe that creates the building.")
+            if foundry_build_recipe and (
+                foundry_build_recipe.get("recipeKind") != "build_gun"
+                or foundry_build_recipe.get("cycleSeconds") != 0
+            ):
+                errors.append("Advanced Alloy Foundry construction must be an instant Build Gun recipe.")
+            if titan_recipe and titan_recipe.get("machine") != "Advanced Alloy Foundry":
+                errors.append("Titan Alloy Ingot production must use the Advanced Alloy Foundry.")
 
             beam_unlock = unlock_by_id.get("TITAN_ALLOY_BEAM")
             if not beam_unlock or beam_unlock.get("status") != "native_source_prototype":
@@ -363,8 +383,8 @@ def main() -> int:
             if titan_alloy_slice and len(titan_alloy_slice.get("bootstrapRecipes", [])) < 2:
                 errors.append("Both Titan Alloy Foundry bootstrap recipes must be documented.")
             if beam_recipe:
-                if beam_recipe.get("machine") != "Vanilla Foundry Mk1 (native prototype bootstrap)" or beam_recipe.get("cycleSeconds") != 12:
-                    errors.append("Titan Alloy Beam bootstrap must retain the 12-second vanilla Foundry process.")
+                if beam_recipe.get("machine") != "Advanced Alloy Foundry" or beam_recipe.get("cycleSeconds") != 12:
+                    errors.append("Titan Alloy Beam must retain the 12-second Advanced Alloy Foundry process.")
                 expected_beam_inputs = {"TITAN_ALLOY_INGOT": 30, "VANILLA_STEEL_PIPE": 60}
                 actual_beam_inputs = {item.get("itemId"): item.get("amount") for item in beam_recipe.get("inputs", [])}
                 if actual_beam_inputs != expected_beam_inputs:
@@ -583,6 +603,10 @@ def main() -> int:
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ),
+        (
+            ROOT / "Mods/FICSITContracts/ContentSource/Buildables/AdvancedAlloyFoundry/AdvancedAlloyFoundry.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Buildables/AdvancedAlloyFoundry/AdvancedAlloyFoundry.mtl",
+        ),
     )
     for obj_file, material_file in ferravium_mesh_pairs:
         if not obj_file.is_file() or not material_file.is_file():
@@ -633,6 +657,22 @@ def main() -> int:
                     errors.append("Ferravium Smelter mesh exceeds the buildable Y clearance.")
                 if bounds[2][0] < 0.0 or bounds[2][1] > 255.0:
                     errors.append("Ferravium Smelter mesh exceeds the buildable Z clearance.")
+        elif obj_file.name == "AdvancedAlloyFoundry.obj":
+            positions = []
+            for line in obj_lines:
+                if line.startswith("v "):
+                    try:
+                        positions.append(tuple(float(value) for value in line.split()[1:4]))
+                    except (ValueError, IndexError):
+                        errors.append("Advanced Alloy Foundry OBJ contains a malformed vertex.")
+            if positions:
+                bounds = [
+                    (min(point[axis] for point in positions), max(point[axis] for point in positions))
+                    for axis in range(3)
+                ]
+                expected_extents = ((-222.0, 222.0), (-158.0, 158.0), (0.0, 315.0))
+                if bounds != list(expected_extents):
+                    errors.append("Advanced Alloy Foundry mesh must retain its 444 x 316 x 315 cm clearance envelope.")
         elif obj_file.name == "TitanAlloyBeam.obj":
             positions = []
             for line in obj_lines:
@@ -667,6 +707,9 @@ def main() -> int:
             "UFICSITTitanAlloyRecipe",
             "UFICSITTitanAlloyBeamRecipe",
             "UFICSITTitanAlloyRecipeUnlock",
+            "AFICSITAdvancedAlloyFoundry",
+            "UFICSITAdvancedAlloyFoundryDescriptor",
+            "UFICSITAdvancedAlloyFoundryBuildRecipe",
             "UFICSITAdvancedMetallurgyPrerequisite",
             "UFICSITAdvancedMetallurgySchematic",
             "AFICSITFerraviumSmelter",
@@ -693,16 +736,24 @@ def main() -> int:
             "mRecipes.Add(UFICSITTitanAlloyRecipe::StaticClass())",
             "UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()",
             "mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass())",
+            "mRecipes.Add(UFICSITAdvancedAlloyFoundryBuildRecipe::StaticClass())",
+            "UFICSITAdvancedAlloyFoundry::UFICSITAdvancedAlloyFoundry()",
+            "UFICSITAdvancedAlloyFoundryDescriptor::UFICSITAdvancedAlloyFoundryDescriptor()",
+            "UFICSITAdvancedAlloyFoundryBuildRecipe::UFICSITAdvancedAlloyFoundryBuildRecipe()",
+            "Power->SetPropertyValue_InContainer(this, 125.0f)",
+            'CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Input0"))',
+            'CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Output0"))',
+            "mProducedIn.Add(TSoftClassPtr<UObject>(AFICSITAdvancedAlloyFoundry::StaticClass()))",
+            "UFICSITAdvancedAlloyFoundryDescriptor::StaticClass()",
             "UFICSITTitanAlloyBeamDescriptor::StaticClass()",
             "mManufactoringDuration = 12.0f",
             "mProduct.Emplace(UFICSITTitanAlloyBeamDescriptor::StaticClass(), 30)",
             'FICSITTitanAlloyIngotDescriptor"), 30)',
             'Desc_SteelPipe.Desc_SteelPipe_C"), 60)',
-            "AddProducer(mProducedIn, TEXT(\"/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C\"))",
-            "Desc_SteelPipe.Desc_SteelPipe_C",
             "SM_TitanAlloyBeam.SM_TitanAlloyBeam",
             "Desc_SteelIngot.Desc_SteelIngot_C",
-            "Build_FoundryMk1.Build_FoundryMk1_C",
+            "SM_AdvancedAlloyFoundry.SM_AdvancedAlloyFoundry",
+            "TX_AdvancedAlloyFoundry_256",
             "GetAvailableTerminalResearchPhase() == 2",
             "UFICSITFrontierSurveySchematic::StaticClass()",
             "UFICSITDispatchTerminalSchematic::StaticClass()",
@@ -728,6 +779,9 @@ def main() -> int:
             "TitanAlloyIngot.obj",
             "TitanAlloyBeam.obj",
             "FerraviumSmelter.obj",
+            "AdvancedAlloyFoundry.obj",
+            "AdvancedAlloyFoundry.mtl",
+            "TX_AdvancedAlloyFoundry_256",
             "TX_FerraviumOre_256",
             "TX_FerraviumConcentrate_256",
             "TX_FerraviumIngot_256",
