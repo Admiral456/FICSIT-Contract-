@@ -1,6 +1,7 @@
 #include "FICSITDispatchTerminal.h"
 #include "FICSITDispatchTerminalWidget.h"
 #include "FGCharacterPlayer.h"
+#include "FGHUD.h"
 #include "Hologram/FGBuildableHologram.h"
 #include "FGColoredInstanceMeshProxy.h"
 #include "FGClearanceData.h"
@@ -17,7 +18,6 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
     mDisplayName = FText::FromString(TEXT("FICSIT Dispatch Terminal"));
     mDescription = FText::FromString(TEXT("A centralized FICSIT logistics console. Review production contracts, track deliveries, monitor reputation and coordinate your factory's supply chain."));
     mHologramClass = AFGBuildableHologram::StaticClass();
-    mInteractWidgetSoftClass = UFICSITDispatchTerminalWidget::StaticClass();
 
     FFGClearanceData TerminalClearance;
     TerminalClearance.Type = EClearanceType::CT_Default;
@@ -97,10 +97,22 @@ void AFICSITDispatchTerminal::ConfigureFallbackMesh(UStaticMeshComponent* Compon
     Component->SetCastShadow(true);
 }
 
-bool AFICSITDispatchTerminal::IsUseable_Implementation() const { return !IsActorBeingDestroyed(); }
+bool AFICSITDispatchTerminal::IsUseable_Implementation() const
+{
+    return !IsActorBeingDestroyed();
+}
 
 void AFICSITDispatchTerminal::OnUse_Implementation(AFGCharacterPlayer* ByCharacter, const FUseState& State)
 {
-    if (!IsValid(ByCharacter)) return;
-    Super::OnUse_Implementation(ByCharacter, State);
+    if (!IsValid(ByCharacter) || IsActorBeingDestroyed()) return;
+
+    // AFGBuildable keeps its default interaction-widget class private. Open the
+    // same native Satisfactory interact UI explicitly for this custom buildable.
+    APlayerController* Controller = Cast<APlayerController>(ByCharacter->GetController());
+    if (!Controller || !Controller->IsLocalPlayerController()) return;
+
+    if (AFGHUD* HUD = Cast<AFGHUD>(Controller->GetHUD()))
+    {
+        HUD->OpenInteractUI(UFICSITDispatchTerminalWidget::StaticClass(), this);
+    }
 }

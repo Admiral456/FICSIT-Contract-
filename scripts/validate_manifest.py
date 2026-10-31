@@ -71,26 +71,69 @@ def main() -> int:
         for path in source_assets if not path.is_file()
     )
 
-    # Assert the safety-critical terminal integration is present in source.
+    # Assert that the native buildable, UI and network action path stay connected.
     terminal_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITDispatchTerminal.cpp"
     widget_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITDispatchTerminalWidget.cpp"
+    widget_header = PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITDispatchTerminalWidget.h"
     rco_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsRemoteCallObject.cpp"
+    rco_header = PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsRemoteCallObject.h"
     schematic_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITDispatchTerminalContent.cpp"
+
     if terminal_source.is_file():
         terminal_text = terminal_source.read_text(encoding="utf-8")
-        for required in ("UFGColoredInstanceMeshProxy", "AFGBuildableHologram::StaticClass()", "mClearanceData.Add"):
+        for required in (
+            "UFGColoredInstanceMeshProxy",
+            "AFGBuildableHologram::StaticClass()",
+            "mClearanceData.Add",
+            "HUD->OpenInteractUI",
+        ):
             if required not in terminal_text:
                 errors.append(f"Dispatch Terminal actor is missing required integration: {required}")
+        if "mInteractWidgetSoftClass" in terminal_text:
+            errors.append("Dispatch Terminal must not access AFGBuildable's private interaction-widget property.")
+
     if widget_source.is_file():
         widget_text = widget_source.read_text(encoding="utf-8")
-        for required in ("Server_AcceptContract", "Server_DeliverContract", "Server_CancelContract", "SetPercent"):
+        for required in (
+            "Server_AcceptContract",
+            "Server_DeliverContract",
+            "Server_CancelContract",
+            "SetPercent",
+            "OnClicked.AddDynamic",
+            "ActionHandlers.Reset",
+            "mInteractObject",
+        ):
             if required not in widget_text:
                 errors.append(f"Dispatch Terminal UI is missing required feature: {required}")
+        if "OnClicked.AddLambda" in widget_text:
+            errors.append("UButton dynamic OnClicked delegates must not use AddLambda.")
+
+    if widget_header.is_file():
+        widget_header_text = widget_header.read_text(encoding="utf-8")
+        if "UFICSITDispatchTerminalActionHandler" not in widget_header_text:
+            errors.append("Dispatch Terminal UI is missing its reflected button-action handler.")
+
     if rco_source.is_file():
         rco_text = rco_source.read_text(encoding="utf-8")
-        for required in ("GetOwnerPlayerCharacter", "GetOwnerPlayerController", "HasAuthority", "DeliverFromInventory"):
+        for required in (
+            "GetOwnerPlayerCharacter",
+            "GetOwnerPlayerController",
+            "HasAuthority",
+            "DeliverFromInventory",
+            "GetDistanceTo",
+            "IsActorBeingDestroyed",
+            "GetLifetimeReplicatedProps",
+            "DOREPLIFETIME",
+        ):
             if required not in rco_text:
                 errors.append(f"Remote Call Object is missing server validation: {required}")
+
+    if rco_header.is_file():
+        rco_header_text = rco_header.read_text(encoding="utf-8")
+        for required in ("AFICSITDispatchTerminal* Terminal", "UPROPERTY(Replicated"):
+            if required not in rco_header_text:
+                errors.append(f"Remote Call Object header is missing required declaration: {required}")
+
     if schematic_source.is_file() and "mSchematicDependencies.Add" not in schematic_source.read_text(encoding="utf-8"):
         errors.append("Dispatch Network schematic is missing its Oil Processing prerequisite.")
 
@@ -137,7 +180,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print("Plugin descriptor and expected SML module files are valid.")
+    print("Plugin descriptor and Dispatch Terminal source checks are valid.")
     return 0
 
 

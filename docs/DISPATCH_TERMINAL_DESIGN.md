@@ -4,13 +4,14 @@
 A placeable FICSIT logistics workstation. It is a shared access point to the session-wide contract board; multiple terminals do not create duplicate contract state.
 
 ## Implemented source
-- Native `AFICSITDispatchTerminal : AFGBuildable` actor with Satisfactory hologram, use interaction and a dedicated interaction trace volume.
-- Native `UFGInteractWidget` interface with reputation/rank, active orders, available contracts, multi-stage progress and recent history.
-- Refresh action reads the replicated contract subsystem.
-- Native building descriptor, build-gun recipe, recipe unlock and Tier 5 Logistics milestone.
-- Root world module registers the new schematic.
-- Low-poly OBJ/MTL model source with six material slots; fallback blockout remains available if the imported mesh is missing.
-- Editor utility creates the 256px icon and required `UFGGameFeatureData` asset.
+- Native `AFICSITDispatchTerminal : AFGBuildable` actor with Satisfactory's buildable hologram, physical collision, placement-clearance data and a customisable mesh proxy.
+- Native `UFGInteractWidget` interaction window with reputation/rank, active orders, available contracts, stage progress, recent history and an explicit refresh action.
+- Accept, deliver and cancel buttons dispatch requests through the player's owner-bound SML Remote Call Object.
+- The server revalidates the owning player/controller pair, terminal lifetime and 450-unit interaction radius before changing the shared board or the requesting player's inventory.
+- Native building descriptor, build-gun recipe, recipe unlock and Tier 5 Logistics milestone registered by the root world module.
+- The Dispatch Network milestone requires Oil Processing before it becomes available.
+- Low-poly OBJ/MTL model source with six material slots; a blockout fallback remains available if the imported mesh is missing.
+- Editor utility imports the mesh and 256px icon and creates the required `UFGGameFeatureData` asset.
 
 ## Terminal build cost
 - 20 Heavy Modular Frames
@@ -25,8 +26,8 @@ A placeable FICSIT logistics workstation. It is a shared access point to the ses
 - 100 Cable
 - 10 Motors
 
-## Current interaction boundary
-The terminal UI is currently a live board viewer. Accept, deliver and cancel remain server-authoritative chat commands displayed in the UI footer. Do not directly mutate the replicated subsystem from a client widget. The next UI milestone must route actions through an owner-valid remote-call object and validate the requesting player on the server.
+## Multiplayer and authority boundary
+The terminal is a shared front-end, not a second contract database. All actions are sent through an RCO owned by the requesting player's controller. The server resolves that owner again and refuses requests from a player who is no longer the controller's character, from an invalid/destroyed terminal or from more than 450 Unreal units away. Delivery uses only that validated player's main inventory. The existing chat commands remain a fallback and all contract rules still live in the authoritative world subsystem.
 
 ## Editor steps
 1. Copy the plugin into `Mods/GameFeatures/FICSITContracts` in the SML 3.12 Starter Project.

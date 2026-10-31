@@ -1,6 +1,7 @@
 #include "FICSITDispatchTerminalWidget.h"
 #include "FICSITContractsSubsystem.h"
 #include "FICSITContractsRemoteCallObject.h"
+#include "FICSITDispatchTerminal.h"
 #include "FGPlayerController.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Border.h"
@@ -14,13 +15,29 @@
 #include "Engine/World.h"
 #include "EngineUtils.h"
 
-UFICSITDispatchTerminalWidget::UFICSITDispatchTerminalWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+void UFICSITDispatchTerminalActionHandler::Initialize(
+    UFICSITDispatchTerminalWidget* InOwner, FName InContractId, EFICSITDispatchAction InAction)
+{
+    OwnerWidget = InOwner;
+    ContractId = InContractId;
+    Action = InAction;
+}
+
+void UFICSITDispatchTerminalActionHandler::HandleClicked()
+{
+    if (UFICSITDispatchTerminalWidget* Widget = OwnerWidget.Get())
+    {
+        Widget->SendContractAction(ContractId, Action);
+    }
+}
+
+UFICSITDispatchTerminalWidget::UFICSITDispatchTerminalWidget(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer)
 {
     mUseKeyboard = true;
     mUseMouse = true;
     mDisablePlayerActions = true;
     mDisableBuildGunActions = true;
-    mSupportsCaching = false;
     SetDesiredHorizontalAlignment(HAlign_Center);
     SetDesiredVerticalAlignment(VAlign_Center);
 }
@@ -71,21 +88,26 @@ void UFICSITDispatchTerminalWidget::NativeConstruct()
     Scroll->AddChild(BoardContent);
 
     UTextBlock* Footer = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-    Footer->SetText(FText::FromString(TEXT("SERVER-VALIDATED ACTIONS // ACCEPT, DELIVER AND CANCEL BUTTONS USE YOUR PLAYER INVENTORY AND THE SHARED FICSIT BOARD.")));
+    Footer->SetText(FText::FromString(TEXT("SERVER-VALIDATED ACTIONS // ORDERS ARE CHECKED AGAINST YOUR PLAYER AND THIS TERMINAL BEFORE THE SHARED BOARD CHANGES.")));
     Footer->SetAutoWrapText(true);
     Footer->SetColorAndOpacity(FSlateColor(FLinearColor(0.72f,0.76f,0.8f)));
     MainColumn->AddChildToVerticalBox(Footer);
 
     WidgetTree->RootWidget = RootSize;
     if (AFICSITContractsSubsystem* Board = FindBoard())
+    {
         Board->OnContractBoardChanged.AddDynamic(this,&UFICSITDispatchTerminalWidget::RefreshBoard);
+    }
     RefreshBoard();
 }
 
 void UFICSITDispatchTerminalWidget::NativeDestruct()
 {
     if (AFICSITContractsSubsystem* Board = FindBoard())
+    {
         Board->OnContractBoardChanged.RemoveDynamic(this,&UFICSITDispatchTerminalWidget::RefreshBoard);
+    }
+    ActionHandlers.Reset();
     Super::NativeDestruct();
 }
 
@@ -109,7 +131,7 @@ void UFICSITDispatchTerminalWidget::AddSection(const FText& Heading)
 }
 
 void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,const FText& ContractText,
-    bool bEmphasize,FName ContractId,EDispatchAction Action,int32 ProgressPercent)
+    bool bEmphasize,FName ContractId,EFICSITDispatchAction Action,int32 ProgressPercent)
 {
     if (!BoardContent || !WidgetTree) return;
     UBorder* Card = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
@@ -136,53 +158,60 @@ void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,con
         CardContent->AddChildToVerticalBox(Progress);
     }
 
-    if (Action != EDispatchAction::None && !ContractId.IsNone())
+    if (Action != EFICSITDispatchAction::None && !ContractId.IsNone())
     {
         UHorizontalBox* Actions = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass());
         CardContent->AddChildToVerticalBox(Actions);
-        const auto AddActionButton = [this, Actions, ContractId](const TCHAR* LabelText, EDispatchAction ButtonAction)
+        const auto AddActionButton = [this, Actions, ContractId](const TCHAR* LabelText, EFICSITDispatchAction ButtonAction)
         {
             UButton* Button = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass());
             UTextBlock* ButtonLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
             ButtonLabel->SetText(FText::FromString(LabelText));
             Button->SetContent(ButtonLabel);
-            Button->SetBackgroundColor(ButtonAction == EDispatchAction::Accept
+            Button->SetBackgroundColor(ButtonAction == EFICSITDispatchAction::Accept
                 ? FLinearColor(0.72f,0.25f,0.06f,1.0f)
-                : ButtonAction == EDispatchAction::Deliver
+                : ButtonAction == EFICSITDispatchAction::Deliver
                     ? FLinearColor(0.04f,0.32f,0.48f,1.0f)
                     : FLinearColor(0.48f,0.08f,0.07f,1.0f));
-            Button->OnClicked.AddLambda([this, ContractId, ButtonAction]()
-            {
-                SendContractAction(ContractId,ButtonAction);
-            });
+
+            UFICSITDispatchTerminalActionHandler* Handler =
+                NewObject<UFICSITDispatchTerminalActionHandler>(this);
+            Handler->Initialize(this,ContractId,ButtonAction);
+            ActionHandlers.Add(Handler);
+            Button->OnClicked.AddDynamic(Handler,&UFICSITDispatchTerminalActionHandler::HandleClicked);
             Actions->AddChildToHorizontalBox(Button);
         };
-        if (Action == EDispatchAction::Accept) AddActionButton(TEXT("ACCEPT ORDER"),EDispatchAction::Accept);
-        if (Action == EDispatchAction::Deliver)
+        if (Action == EFICSITDispatchAction::Accept)
+            AddActionButton(TEXT("ACCEPT ORDER"),EFICSITDispatchAction::Accept);
+        if (Action == EFICSITDispatchAction::Deliver)
         {
-            AddActionButton(TEXT("DELIVER FROM INVENTORY"),EDispatchAction::Deliver);
-            AddActionButton(TEXT("CANCEL ORDER"),EDispatchAction::Cancel);
+            AddActionButton(TEXT("DELIVER FROM INVENTORY"),EFICSITDispatchAction::Deliver);
+            AddActionButton(TEXT("CANCEL ORDER"),EFICSITDispatchAction::Cancel);
         }
     }
     BoardContent->AddChildToVerticalBox(Card);
 }
 
-void UFICSITDispatchTerminalWidget::SendContractAction(FName ContractId,EDispatchAction Action)
+void UFICSITDispatchTerminalWidget::SendContractAction(FName ContractId,EFICSITDispatchAction Action)
 {
     AFGPlayerController* Controller = Cast<AFGPlayerController>(GetOwningPlayer());
-    if (!Controller || ContractId.IsNone()) return;
+    AFICSITDispatchTerminal* Terminal = Cast<AFICSITDispatchTerminal>(mInteractObject);
+    if (!Controller || !IsValid(Terminal) || ContractId.IsNone()) return;
+
     UFICSITContractsRemoteCallObject* RCO = Cast<UFICSITContractsRemoteCallObject>(
         Controller->GetRemoteCallObjectOfClass(UFICSITContractsRemoteCallObject::StaticClass()));
     if (!RCO)
+    {
         RCO = Cast<UFICSITContractsRemoteCallObject>(
             Controller->RegisterRemoteCallObjectClass(UFICSITContractsRemoteCallObject::StaticClass()));
+    }
     if (!RCO) return;
 
     switch (Action)
     {
-        case EDispatchAction::Accept: RCO->Server_AcceptContract(ContractId); break;
-        case EDispatchAction::Deliver: RCO->Server_DeliverContract(ContractId); break;
-        case EDispatchAction::Cancel: RCO->Server_CancelContract(ContractId); break;
+        case EFICSITDispatchAction::Accept: RCO->Server_AcceptContract(Terminal,ContractId); break;
+        case EFICSITDispatchAction::Deliver: RCO->Server_DeliverContract(Terminal,ContractId); break;
+        case EFICSITDispatchAction::Cancel: RCO->Server_CancelContract(Terminal,ContractId); break;
         default: break;
     }
 }
@@ -191,6 +220,8 @@ void UFICSITDispatchTerminalWidget::RefreshBoard()
 {
     if (!BoardContent || !WidgetTree || !GetWorld()) return;
     BoardContent->ClearChildren();
+    ActionHandlers.Reset();
+
     AFICSITContractsSubsystem* Board = FindBoard();
     if (!Board)
     {
@@ -211,14 +242,16 @@ void UFICSITDispatchTerminalWidget::RefreshBoard()
         AddContractEntry(FText::FromString(TEXT("NO ACTIVE ORDERS")),FText::FromString(TEXT("Accept an available contract to begin a new logistics operation.")),false);
     else
         for (const FFICSITContract& Contract:Active)
-            AddContractEntry(FText::FromString(TEXT("IN PROGRESS")),FText::FromString(Board->FormatContract(Contract)),true,Contract.ContractId,EDispatchAction::Deliver,Contract.GetProgressPercent());
+            AddContractEntry(FText::FromString(TEXT("IN PROGRESS")),FText::FromString(Board->FormatContract(Contract)),true,
+                Contract.ContractId,EFICSITDispatchAction::Deliver,Contract.GetProgressPercent());
 
     AddSection(FText::FromString(TEXT("AVAILABLE FICSIT CONTRACTS")));
     if (Offers.IsEmpty())
         AddContractEntry(FText::FromString(TEXT("NO AVAILABLE ORDERS")),FText::FromString(TEXT("The board is waiting for new eligible orders.")),false);
     else
         for (const FFICSITContract& Contract:Offers)
-            AddContractEntry(FText::FromString(TEXT("AVAILABLE")),FText::FromString(Board->FormatContract(Contract)),false,Contract.ContractId,EDispatchAction::Accept);
+            AddContractEntry(FText::FromString(TEXT("AVAILABLE")),FText::FromString(Board->FormatContract(Contract)),
+                false,Contract.ContractId,EFICSITDispatchAction::Accept);
 
     AddSection(FText::FromString(TEXT("RECENT DISPATCH HISTORY")));
     const int32 FirstHistoryIndex=FMath::Max(0,History.Num()-5);
