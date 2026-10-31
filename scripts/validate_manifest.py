@@ -90,6 +90,13 @@ def main() -> int:
                 errors.append(f"Expanded contract catalog is missing template: {template_id}")
         if "int ContractEngine::activeContractLimit() noexcept { return 4; }" not in core_text:
             errors.append("The expanded board must retain four active contract slots.")
+    chat_command_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsChatCommand.cpp"
+    if chat_command_source.is_file():
+        chat_command_text = chat_command_source.read_text(encoding="utf-8")
+        if "active %d/4" not in chat_command_text:
+            errors.append("The /contracts summary must display the four active contract slots.")
+        if "active %d/3" in chat_command_text:
+            errors.append("The /contracts summary still displays the obsolete three-slot limit.")
     if subsystem_source.is_file():
         subsystem_text = subsystem_source.read_text(encoding="utf-8")
         if subsystem_text.count("ensureOffers(5,") < 4:
