@@ -2,6 +2,9 @@
 #include "EndgameProgression.h"
 
 #include "FGCharacterPlayer.h"
+#include "FGGamePhaseManager.h"
+#include "FGSchematicManager.h"
+#include "FICSITFerraviumContent.h"
 #include "FGInventoryComponent.h"
 #include "Resources/FGItemDescriptor.h"
 #include "Engine/World.h"
@@ -148,10 +151,144 @@ void AFICSITContractsSubsystem::BeginPlay()
     {
         // Normalize older or malformed save data before exposing progression to clients.
         ApplyEndgameProgression(BuildEndgameProgression());
+        TryBindProgressionEvents();
         GenerateInitialBoard();
         GetWorldTimerManager().SetTimer(ExpiryTimerHandle, this,
             &AFICSITContractsSubsystem::RefreshExpiredContracts, 15.0f, true);
     }
+}
+
+void AFICSITContractsSubsystem::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    GetWorldTimerManager().ClearTimer(ExpiryTimerHandle);
+    GetWorldTimerManager().ClearTimer(ProgressionBindingRetryTimerHandle);
+    UnbindProgressionEvents();
+    Super::EndPlay(EndPlayReason);
+}
+
+void AFICSITContractsSubsystem::TryBindProgressionEvents()
+{
+    if (!HasAuthority() || !GetWorld()) return;
+
+    if (!bGamePhaseEventsBound)
+    {
+        if (AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(GetWorld()))
+        {
+            GamePhaseManager->mOnGameCompleted.AddUniqueDynamic(
+                this, &AFICSITContractsSubsystem::HandleVanillaGameCompleted);
+            bGamePhaseEventsBound = true;
+
+            // Saves may already have completed the vanilla finale before this mod was installed.
+            if (GamePhaseManager->GetGameIsCompleted())
+                HandleVanillaGameCompleted(true);
+        }
+    }
+
+    if (!bSchematicEventsBound)
+    {
+        if (AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld()))
+        {
+            SchematicManager->PurchasedSchematicInstigatorDelegate.AddUniqueDynamic(
+                this, &AFICSITContractsSubsystem::HandleSchematicPurchased);
+            bSchematicEventsBound = true;
+
+            // Reconcile already-purchased research when loading an existing save.
+            RefreshPurchasedSchematicProgression();
+        }
+    }
+
+    if (!bGamePhaseEventsBound || !bSchematicEventsBound)
+    {
+        ++ProgressionBindingAttempts;
+        if (ProgressionBindingAttempts <= 40)
+        {
+            GetWorldTimerManager().SetTimer(
+                ProgressionBindingRetryTimerHandle,
+                this,
+                &AFICSITContractsSubsystem::TryBindProgressionEvents,
+                0.5f,
+                false);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("FICSIT Contracts: progression event binding failed; GamePhaseManager=%s, SchematicManager=%s"),
+                bGamePhaseEventsBound ? TEXT("bound") : TEXT("missing"),
+                bSchematicEventsBound ? TEXT("bound") : TEXT("missing"));
+        }
+    }
+    else
+    {
+        GetWorldTimerManager().ClearTimer(ProgressionBindingRetryTimerHandle);
+        UE_LOG(LogTemp, Log, TEXT("FICSIT Contracts: vanilla finale and schematic purchase events are bound."));
+    }
+}
+
+void AFICSITContractsSubsystem::UnbindProgressionEvents()
+{
+    if (UWorld* World = GetWorld())
+    {
+        if (bGamePhaseEventsBound)
+        {
+            if (AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(World))
+                GamePhaseManager->mOnGameCompleted.RemoveDynamic(
+                    this, &AFICSITContractsSubsystem::HandleVanillaGameCompleted);
+        }
+
+        if (bSchematicEventsBound)
+        {
+            if (AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(World))
+                SchematicManager->PurchasedSchematicInstigatorDelegate.RemoveDynamic(
+                    this, &AFICSITContractsSubsystem::HandleSchematicPurchased);
+        }
+    }
+
+    bGamePhaseEventsBound = false;
+    bSchematicEventsBound = false;
+}
+
+void AFICSITContractsSubsystem::HandleVanillaGameCompleted(bool /*bSuppressNarrativeMessages*/)
+{
+    if (!HasAuthority()) return;
+
+    // AFGGamePhaseManager broadcasts this only after the vanilla Project Assembly finale.
+    if (RecordVanillaSpaceElevatorPhase5Complete())
+    {
+        UE_LOG(LogTemp, Log, TEXT("FICSIT Contracts: vanilla Space Elevator Phase V completion confirmed."));
+    }
+
+    // A custom schematic might already have been purchased via a save migration or admin action.
+    RefreshPurchasedSchematicProgression();
+}
+
+void AFICSITContractsSubsystem::HandleSchematicPurchased(
+    TSubclassOf<UFGSchematic> PurchasedSchematic,
+    AFGCharacterPlayer* /*PurchaseInstigator*/)
+{
+    if (!HasAuthority() || !PurchasedSchematic) return;
+    if (PurchasedSchematic != UFICSITFrontierSurveySchematic::StaticClass()) return;
+
+    AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
+    if (!SchematicManager || !SchematicManager->IsSchematicPurchased(PurchasedSchematic)) return;
+
+    if (CompleteTerminalResearchPhase(1))
+    {
+        UE_LOG(LogTemp, Log,
+            TEXT("FICSIT Contracts: Terminal Research Phase I completed by purchasing Frontier Survey."));
+    }
+}
+
+void AFICSITContractsSubsystem::RefreshPurchasedSchematicProgression()
+{
+    if (!HasAuthority() || !GetWorld()) return;
+
+    AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
+    if (!SchematicManager) return;
+
+    TArray<TSubclassOf<UFGSchematic>> PurchasedSchematics;
+    SchematicManager->GetAllPurchasedSchematics(PurchasedSchematics);
+    for (const TSubclassOf<UFGSchematic>& Schematic : PurchasedSchematics)
+        HandleSchematicPurchased(Schematic, nullptr);
 }
 
 void AFICSITContractsSubsystem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -306,6 +443,7 @@ bool AFICSITContractsSubsystem::RecordVanillaSpaceElevatorPhase5Complete()
     if (Progression.state().vanillaSpaceElevatorPhase5Complete) return false;
     Progression.recordVanillaSpaceElevatorPhase5();
     ApplyEndgameProgression(Progression);
+    RefreshPurchasedSchematicProgression();
     return true;
 }
 
