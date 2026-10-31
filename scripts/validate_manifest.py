@@ -232,14 +232,14 @@ def main() -> int:
             else:
                 progression_core_text = progression_core_path.read_text(encoding="utf-8")
                 mapping_block = re.search(
-                    r"constexpr\\s+UnlockPhase\\s+kUnlockPhases\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\n\\};",
+                    r"constexpr\s+UnlockPhase\s+kUnlockPhases\[\]\s*=\s*\{([\s\S]*?)\n\};",
                     progression_core_text,
                 )
                 if mapping_block is None:
                     errors.append("Portable progression engine is missing its kUnlockPhases lookup table.")
                 else:
                     cpp_entries = re.findall(
-                        r'\\{\\s*"([A-Z0-9_]+)"\\s*,\\s*(\\d+)\\s*\\}',
+                        r'\{\s*"([A-Z0-9_]+)"\s*,\s*(\d+)\s*\}',
                         mapping_block.group(1),
                     )
                     cpp_unlock_map: dict[str, int] = {}
