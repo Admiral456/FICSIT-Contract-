@@ -25,6 +25,7 @@ namespace
     constexpr const TCHAR* OreMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_FerraviumOre.SM_FerraviumOre");
     constexpr const TCHAR* ConcentrateMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_FerraviumConcentrate.SM_FerraviumConcentrate");
     constexpr const TCHAR* IngotMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_FerraviumIngot.SM_FerraviumIngot");
+    constexpr const TCHAR* TitanAlloyIngotMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyIngot.SM_TitanAlloyIngot");
     constexpr const TCHAR* SmelterMeshPath = TEXT("/FICSITContracts/Buildables/FerraviumSmelter/SM_FerraviumSmelter.SM_FerraviumSmelter");
 
     TSubclassOf<UFGItemDescriptor> LoadItem(const TCHAR* Path)
@@ -119,6 +120,23 @@ UFICSITFerraviumIngotDescriptor::UFICSITFerraviumIngotDescriptor()
     mRadioactiveDecay = 0.0f;
     mConveyorMesh = LoadObject<UStaticMesh>(nullptr, IngotMeshPath);
     mSmallIcon = LoadFerraviumIcon(TEXT("TX_FerraviumIngot_256"));
+    mPersistentBigIcon = mSmallIcon;
+    mCategory = LoadClass<UFGCategory>(nullptr, TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_Ingots.Cat_Ingots_C"));
+}
+
+UFICSITTitanAlloyIngotDescriptor::UFICSITTitanAlloyIngotDescriptor()
+{
+    mUseDisplayNameAndDescription = true;
+    mDisplayName = FText::FromString(TEXT("Titan Alloy Ingot"));
+    mDescription = FText::FromString(TEXT("A high-density structural alloy refined from Ferravium and steel in an advanced Foundry process."));
+    mAbbreviatedDisplayName = FText::FromString(TEXT("T-ALY"));
+    mForm = EResourceForm::RF_SOLID;
+    mStackSize = EStackSize::SS_BIG;
+    mCanBeDiscarded = true;
+    mRememberPickUp = true;
+    mRadioactiveDecay = 0.0f;
+    mConveyorMesh = LoadObject<UStaticMesh>(nullptr, TitanAlloyIngotMeshPath);
+    mSmallIcon = LoadFerraviumIcon(TEXT("TX_TitanAlloyIngot_256"));
     mPersistentBigIcon = mSmallIcon;
     mCategory = LoadClass<UFGCategory>(nullptr, TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_Ingots.Cat_Ingots_C"));
 }
@@ -265,12 +283,31 @@ UFICSITFerraviumSmeltingRecipe::UFICSITFerraviumSmeltingRecipe()
     mProducedIn.Add(TSoftClassPtr<UObject>(AFICSITFerraviumSmelter::StaticClass()));
 }
 
+UFICSITTitanAlloyRecipe::UFICSITTitanAlloyRecipe()
+{
+    mDisplayNameOverride = true;
+    mDisplayName = FText::FromString(TEXT("Titan Alloy Ingot"));
+    mManufactoringDuration = 8.0f;
+    mManualManufacturingMultiplier = 1.0f;
+    mProduct.Emplace(UFICSITTitanAlloyIngotDescriptor::StaticClass(), 60);
+
+    AddItem(mIngredients, TEXT("/Script/FICSITContracts.FICSITFerraviumIngotDescriptor"), 60);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/SteelIngot/Desc_SteelIngot.Desc_SteelIngot_C"), 60);
+    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C"));
+}
+
+
 UFICSITFerraviumRecipeUnlock::UFICSITFerraviumRecipeUnlock()
 {
     mRecipes.Add(UFICSITFerraviumRecoveryRecipe::StaticClass());
     mRecipes.Add(UFICSITFerraviumConcentrateRecipe::StaticClass());
     mRecipes.Add(UFICSITFerraviumSmeltingRecipe::StaticClass());
     mRecipes.Add(UFICSITFerraviumSmelterBuildRecipe::StaticClass());
+}
+
+UFICSITTitanAlloyRecipeUnlock::UFICSITTitanAlloyRecipeUnlock()
+{
+    mRecipes.Add(UFICSITTitanAlloyRecipe::StaticClass());
 }
 
 UFICSITFrontierSurveyPrerequisite::UFICSITFrontierSurveyPrerequisite()
@@ -320,5 +357,55 @@ UFICSITFrontierSurveySchematic::UFICSITFrontierSurveySchematic()
     }
 
     mUnlocks.Add(CreateDefaultSubobject<UFICSITFerraviumRecipeUnlock>(TEXT("UnlockFerraviumRecipes")));
+    MarkPublic(this);
+}
+
+UFICSITAdvancedMetallurgyPrerequisite::UFICSITAdvancedMetallurgyPrerequisite()
+{
+    mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass());
+    mRequireAllSchematicsToBePurchased = true;
+}
+
+bool UFICSITAdvancedMetallurgyPrerequisite::AreDependenciesMet(UObject* WorldContext) const
+{
+    if (!Super::AreDependenciesMet(WorldContext) || !WorldContext) return false;
+
+    UWorld* World = WorldContext->GetWorld();
+    USubsystemActorManager* Manager = World ? World->GetSubsystem<USubsystemActorManager>() : nullptr;
+    AFICSITContractsSubsystem* Contracts = Manager
+        ? Manager->GetSubsystemActor<AFICSITContractsSubsystem>() : nullptr;
+
+    return Contracts && Contracts->GetAvailableTerminalResearchPhase() == 2;
+}
+
+UFICSITAdvancedMetallurgySchematic::UFICSITAdvancedMetallurgySchematic()
+{
+    mType = ESchematicType::EST_Milestone;
+    mDisplayName = FText::FromString(TEXT("Advanced Metallurgy // Titan Alloy"));
+    mDescription = FText::FromString(TEXT("Unlocks the Foundry process for Titan Alloy Ingots. Combines Ferravium and Steel into a stronger endgame structural alloy."));
+    mSchematicCategory = LoadClass<UFGSchematicCategory>(
+        nullptr, TEXT("/Game/FactoryGame/Schematics/SchematicCategories/SC_Logistics.SC_Logistics_C"));
+    mMenuPriority = 179.0f;
+    mTechTier = 10;
+    mTimeToComplete = 0.0f;
+    mIsPlayerSpecific = false;
+    mDependenciesBlocksSchematicAccess = true;
+    mHiddenUntilDependenciesMet = true;
+    mSchematicDependencies.Add(
+        CreateDefaultSubobject<UFICSITAdvancedMetallurgyPrerequisite>(TEXT("RequiresFrontierSurvey")));
+
+    AddItem(mCost, TEXT("/Script/FICSITContracts.FICSITFerraviumIngotDescriptor"), 200);
+    AddItem(mCost, TEXT("/Game/FactoryGame/Resource/Parts/SteelIngot/Desc_SteelIngot.Desc_SteelIngot_C"), 400);
+    AddItem(mCost, TEXT("/Game/FactoryGame/Resource/Parts/ModularFrameHeavy/Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C"), 40);
+    AddItem(mCost, TEXT("/Game/FactoryGame/Resource/Parts/Computer/Desc_Computer.Desc_Computer_C"), 25);
+    AddItem(mCost, TEXT("/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C"), 25);
+
+    if (UTexture2D* Icon = LoadFerraviumIcon(TEXT("TX_TitanAlloyIngot_256")))
+    {
+        mSmallSchematicIcon = Icon;
+        mSchematicIcon.SetResourceObject(Icon);
+    }
+
+    mUnlocks.Add(CreateDefaultSubobject<UFICSITTitanAlloyRecipeUnlock>(TEXT("UnlockTitanAlloyRecipe")));
     MarkPublic(this);
 }
