@@ -277,7 +277,7 @@ AFICSITAdvancedAlloyFoundry::AFICSITAdvancedAlloyFoundry()
 
     SolidCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("AdvancedAlloyFoundryCollision"));
     SolidCollision->SetupAttachment(RootComponent);
-    SolidCollision->SetBoxExtent(FVector(220.0f, 155.0f, 157.5f));
+    SolidCollision->SetBoxExtent(FVector(222.0f, 165.0f, 157.5f));
     SolidCollision->SetRelativeLocation(FVector(0.0f, 0.0f, 157.5f));
     SolidCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     SolidCollision->SetCollisionObjectType(ECC_WorldStatic);
