@@ -80,6 +80,8 @@ Ferravium, průzkum ložisek, první endgame vybavení, zbraň a Blueprint Desig
 
 Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.
 
+**První implementovaný bootstrap:** nativní Titan Alloy Ingot descriptor a recept `RCP_TITAN_ALLOY` v vanilla Foundry Mk1 (60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots / 8 s). Schéma Advanced Metallurgy je již registrované a při potvrzeném nákupu označí Terminal II jako dokončený. Dedicated Advanced Alloy Foundry a ostatní fáze výrobního řetězce zůstávají plánované.
+
 **Odemykatelné technologie:**
 
 - **Building:** Advanced Alloy Foundry, Industrial Press, Heavy-Duty Assembler, Industrial Storage Mk2, Industrial Fluid Buffer Mk2, Reinforced Build Set
@@ -414,13 +416,13 @@ Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy
 
 1. Zkopíruj `Mods/GameFeatures/FICSITContracts`, `Mods/FICSITContracts/ContentSource` a `Tools/Unreal` do Satisfactory Modding Starter Projectu.
 2. V Unreal Editoru spusť `Tools/Unreal/BuildFICSITContractsAssets.py` pro vytvoření původního Dispatch Terminal mesh/icon a Game Feature Data assetu.
-3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import čtyř Ferravium ikon a čtyř meshů.
-4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`.
+3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy položek, smelteru a pěti ikon a pěti meshů.
+4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`, včetně `SM_TitanAlloyIngot` a `TX_TitanAlloyIngot_256`.
 5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
 
-## Stav prvního obsahového prototypu: Ferravium
+## Stav prvních obsahových prototypů: Ferravium a Titan Alloy
 
-První native source slice je nyní v repozitáři. Obsahuje:
+První native source slice obsahuje:
 - `UFICSITFerraviumOreDescriptor` jako `UFGResourceDescriptor`, plus Concentrate a Ingot item descriptory.
 - Nativní `AFICSITFerraviumSmelter : AFGBuildableManufacturer` se vstupním a výstupním conveyor connection.
 - Buildable descriptor, Build Gun recept a `Frontier Survey` schematic.
@@ -429,7 +431,19 @@ První native source slice je nyní v repozitáři. Obsahuje:
 
 **Omezení první iterace:** přirozené Ferravium resource nodes ještě nejsou umístěné v herním světě. Prozatím se ruda získává přes recept Ferravium Recovery ve vanilla Oil Refinery. Je to pouze testovací bootstrap cesta, nikoli náhrada finální hlubinné těžby. Frontier Survey je navíc záměrně skrytý, dokud nebude skutečná vanilla Space Elevator Phase V událost volat serverovou metodu, která zpřístupní Terminal I.
 
-V cílovém SML Starter Projectu je nutné spustit nejprve `BuildFICSITContractsAssets.py` a potom `BuildFerraviumAssets.py`, zkompilovat `FactoryGameEditor`, zkontrolovat asset registry a provést in-game test výrobní linky. Portable CI ani statická kontrola tuto herní validaci nenahrazují.
+## Stav druhého obsahového prototypu: Advanced Metallurgy
+
+Druhý native source slice obsahuje:
+- `UFICSITTitanAlloyIngotDescriptor` s vlastním conveyor mesh a generovanou UI ikonou.
+- `UFICSITTitanAlloyRecipe`, odemykaný schématem Advanced Metallurgy.
+- Výrobní cyklus 60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots za 8 sekund ve vanilla Foundry Mk1.
+- `UFICSITAdvancedMetallurgySchematic`, skrytou do zakoupení Frontier Survey a dostupnosti Terminal II.
+- Serverové potvrzení nákupu, které ukládá Terminal II jako dokončený a reconciliuje existující save v pořadí Terminal I → Terminal II.
+- OBJ/MTL mesh, pětici generovaných UI ikon a editorový import assetů.
+
+**Omezení druhé iterace:** vanilla Foundry Mk1 je dočasný kompatibilní bootstrap. Dedicated Advanced Alloy Foundry, Industrial Press, Titan Alloy Beam, Reinforced Titan Frame a ostatní recepty Phase II ještě nejsou implementované. Nativní zdrojové třídy nejsou dosud UHT/UE zkompilované ani otestované ve hře.
+
+V cílovém SML Starter Projectu je nutné spustit nejprve `BuildFICSITContractsAssets.py` a potom `BuildFerraviumAssets.py`, zkompilovat `FactoryGameEditor`, zkontrolovat asset registry a provést in-game test obou výrobních linek i obou schémat. Portable CI ani statická kontrola tuto herní validaci nenahrazují.
 
 ## Rizika a pořadí prototypování
 
