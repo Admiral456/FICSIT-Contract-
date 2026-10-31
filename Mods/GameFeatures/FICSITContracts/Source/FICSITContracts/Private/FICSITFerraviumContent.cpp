@@ -240,7 +240,7 @@ AFICSITAdvancedAlloyFoundry::AFICSITAdvancedAlloyFoundry()
     SetReplicates(true);
     SetCanBeDamaged(false);
     mDisplayName = FText::FromString(TEXT("Advanced Alloy Foundry"));
-    mDescription = FText::FromString(TEXT("A reinforced dual-feed foundry for high-density Titan Alloy and heavy structural components."));
+    mDescription = FText::FromString(TEXT("A reinforced mixed-feed foundry for high-density Titan Alloy and heavy structural components."));
     mHologramClass = AFGBuildableHologram::StaticClass();
     mManufacturingSpeed = 1.0f;
 
@@ -258,8 +258,8 @@ AFICSITAdvancedAlloyFoundry::AFICSITAdvancedAlloyFoundry()
 
     SolidCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("AdvancedAlloyFoundryCollision"));
     SolidCollision->SetupAttachment(RootComponent);
-    SolidCollision->SetBoxExtent(FVector(205.0f, 145.0f, 140.0f));
-    SolidCollision->SetRelativeLocation(FVector(0.0f, 0.0f, 140.0f));
+    SolidCollision->SetBoxExtent(FVector(220.0f, 155.0f, 157.5f));
+    SolidCollision->SetRelativeLocation(FVector(0.0f, 0.0f, 157.5f));
     SolidCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     SolidCollision->SetCollisionObjectType(ECC_WorldStatic);
     SolidCollision->SetCollisionResponseToAllChannels(ECR_Block);
