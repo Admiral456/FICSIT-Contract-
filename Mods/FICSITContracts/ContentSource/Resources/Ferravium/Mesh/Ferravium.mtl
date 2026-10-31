@@ -85,3 +85,28 @@ Kd 0.20 0.75 0.88
 Ks 0.95 0.98 1.00
 Ns 210.0
 Ke 0.08 0.42 0.58
+
+newmtl ReinforcedFrameEdge
+Ka 0.035 0.055 0.075
+Kd 0.13 0.19 0.26
+Ks 0.70 0.78 0.88
+Ns 135.0
+
+newmtl ReinforcedFrameFace
+Ka 0.20 0.27 0.34
+Kd 0.63 0.72 0.80
+Ks 0.92 0.95 1.00
+Ns 175.0
+
+newmtl ReinforcedFrameTrim
+Ka 0.08 0.13 0.19
+Kd 0.31 0.43 0.55
+Ks 0.82 0.88 0.94
+Ns 145.0
+
+newmtl ReinforcedFrameGlow
+Ka 0.07 0.22 0.30
+Kd 0.18 0.70 0.86
+Ks 0.95 0.98 1.00
+Ns 220.0
+Ke 0.06 0.32 0.48
