@@ -377,6 +377,45 @@ Tyto projekty navazují na původní Space Elevator a jsou samostatné od šesti
 5. **Progression layer** musí číst dokončení Space Elevatoru, zpřístupnit správné kapitoly a ukládat nákupy schematics.
 6. **Validation layer** ověřuje unikátní ID, vazby mezi kapitolami, recepty a Elevator požadavky; nikdy nesmí prohlásit JSON design za hotový herní obsah.
 
+## Ferravium – první nativní obsahový prototyp
+
+První endgame obsahový řez má nyní nativní C++ zdrojové třídy, výrobní recepty, vlastní manufacturer a výzkumnou schematiku. Stav této části je **source prototype**: je připravená v repozitáři, ale zatím nebyla zkompilována v cílovém Unreal Engine 5.6.1 ani ověřena v běžící hře.
+
+### Výrobní řetězec
+
+| Recept | Stroj | Vstupy za cyklus | Výstup za cyklus | Čas |
+|---|---|---|---|---:|
+| Ferravium Recovery (dočasný zdroj) | Vanilla Oil Refinery | 120 Bauxite Ore + 30 Coal + 60 Water | 60 Ferravium Ore | 18 s |
+| Ferravium Washing | Vanilla Oil Refinery (prototyp, později Ore Washing Plant) | 60 Ferravium Ore + 30 Water | 45 Ferravium Concentrate | 12 s |
+| Ferravium Ingot | Ferravium Smelter | 45 Ferravium Concentrate + 30 Coal | 30 Ferravium Ingots | 10 s |
+
+**Dočasný zdroj rudy:** Ferravium Recovery z bauxitu, uhlí a vody je pouze bootstrap recept pro testování item descriptorů a výrobní linky. Nepředstavuje přirozené naleziště Ferravia. Přidání skutečných uzlů do vanilla mapy a jejich registrace do skeneru zůstává odděleným technickým úkolem kvůli omezením World Partition.
+
+### Nový stroj: Ferravium Smelter
+
+- Native actor `AFICSITFerraviumSmelter : AFGBuildableManufacturer`.
+- Vstupní a výstupní `UFGFactoryConnectionComponent` pro pásy.
+- Základní odběr nastavený na 90 MW pomocí reflektovaného `mPowerConsumption` pole base třídy.
+- Nativní buildable descriptor, Build Gun recipe a production recipe.
+- Vlastní OBJ/MTL průmyslový model a ikona; import zajišťuje `Tools/Unreal/BuildFerraviumAssets.py`.
+
+### Výzkum
+
+Schematika **Frontier Survey // Ferravium Processing** odemyká:
+- Ferravium Recovery, Washing a Smelting recipes.
+- Ferravium Smelter buildable recipe.
+- Všechny tři Ferravium materiálové descriptory.
+
+Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy je v uloženém endgame postupu dostupná Terminal Phase I. To znamená, že skutečné odemčení stále čeká na propojení s událostí dokončení vanilla Space Elevator Phase V; dokud tato událost nebude napojena, schematika zůstane skrytá.
+
+### Import assetů v cílovém Starter Projectu
+
+1. Zkopíruj `Mods/GameFeatures/FICSITContracts`, `Mods/FICSITContracts/ContentSource` a `Tools/Unreal` do Satisfactory Modding Starter Projectu.
+2. V Unreal Editoru spusť `Tools/Unreal/BuildFICSITContractsAssets.py` pro vytvoření původního Dispatch Terminal mesh/icon a Game Feature Data assetu.
+3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import čtyř Ferravium ikon a čtyř meshů.
+4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`.
+5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
+
 ## Rizika a pořadí prototypování
 
 | Priorita | Oblast | Důvod |
