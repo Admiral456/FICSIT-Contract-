@@ -67,7 +67,9 @@
 - [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
 - [ ] Resolve a supported new resource deposit/node path and ore scanner integration.
 - [x] Add read-only Terminal/Space Elevator phase status to the Dispatch Terminal and `/contracts progression`.
-- [ ] Connect vanilla Space Elevator Phase V completion and real custom schematic purchases to the server-side progression methods.
+- [x] Bind the server subsystem to `AFGGamePhaseManager::mOnGameCompleted`; reconcile saves where the vanilla Project Assembly finale is already complete.
+- [x] Bind to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`, verify purchase state, and reconcile existing purchased schematics for the implemented Frontier Survey → Terminal I transition.
+- [ ] Add actual schematic content and purchase mappings for Terminal II–VI and Space Elevator VI–VIII before marking those progression transitions implemented.
 - [ ] Add a full research UI with category filters, item costs, unlock descriptions and purchase actions.
 
 ## 0.4.0 — Expanded gameplay
