@@ -34,7 +34,7 @@
 
 ## 0.2.1 — Expanded contract operations
 
-- [x] Expand the catalog to 21 distinct templates across five reputation bands.
+- [x] Expand the catalog to 21 distinct templates across eight reputation thresholds.
 - [x] Raise the offer board to five simultaneous offers and the active limit to four.
 - [x] Add multi-material manifests where every line must be supplied.
 - [x] Add six strategic programs ranging from four to seven sequential phases.
