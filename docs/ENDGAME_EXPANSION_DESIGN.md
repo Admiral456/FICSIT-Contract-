@@ -278,8 +278,10 @@ Všechny recepty mají jednoznačné ID v JSON katalogu. Počty jsou na jeden v�
 
 | ID receptu | Stroj | Vstupy | Výstupy | Čas |
 |---|---|---|---|---:|
-| `RCP_FERRAVIUM_CONCENTRATE` | Ore Washing Plant | Ferravium Ore × 120<br>Vanilla Water × 60 | Ferravium Concentrate × 90 | 8 s |
-| `RCP_FERRAVIUM_INGOT` | Ferravium Smelter | Ferravium Concentrate × 90<br>Vanilla Coal × 45 | Ferravium Ingot × 75 | 6 s |
+| `RCP_FERRAVIUM_CONCENTRATE` | Refinery (prototypové praní) | Ferravium Ore × 60<br>Vanilla Water × 30 | Ferravium Concentrate × 45 | 12 s |
+| `RCP_FERRAVIUM_INGOT` | Ferravium Smelter | Ferravium Concentrate × 45<br>Vanilla Coal × 30 | Ferravium Ingot × 30 | 10 s |
+| `RCP_FERRAVIUM_RECOVERY` | Vanilla Oil Refinery | Bauxite Ore × 120<br>Coal × 30<br>Water × 60 | Ferravium Ore × 60 | 18 s |
+| `RCP_FERRAVIUM_SMELTER_BUILD` | Build Gun | Encased Industrial Beam × 30<br>Steel Pipe × 80<br>Motor × 20<br>Computer × 10<br>Cable × 100 | Ferravium Smelter × 1 | 0 s |
 | `RCP_FERRAVIUM_PLATE` | Constructor | Ferravium Ingot × 30 | Ferravium Plate × 20 | 6 s |
 | `RCP_SURVEY_COMPUTER` | Assembler | Vanilla Computer × 2<br>Ferravium Plate × 4 | Survey Computer × 1 | 12 s |
 | `RCP_FERRAVIUM_DARTS` | Field Workshop | Ferravium Ingot × 2<br>Vanilla Iron Rod × 2 | Ferravium Dart × 8 | 5 s |
@@ -415,6 +417,19 @@ Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy
 3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import čtyř Ferravium ikon a čtyř meshů.
 4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`.
 5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
+
+## Stav prvního obsahového prototypu: Ferravium
+
+První native source slice je nyní v repozitáři. Obsahuje:
+- `UFICSITFerraviumOreDescriptor` jako `UFGResourceDescriptor`, plus Concentrate a Ingot item descriptory.
+- Nativní `AFICSITFerraviumSmelter : AFGBuildableManufacturer` se vstupním a výstupním conveyor connection.
+- Buildable descriptor, Build Gun recept a `Frontier Survey` schematic.
+- Recipe unlock, který zpřístupňuje recovery, washing, smelting i konstrukci pece.
+- Zdrojové OBJ/MTL modely a Editor importér pro modely a čtyři ikony.
+
+**Omezení první iterace:** přirozené Ferravium resource nodes ještě nejsou umístěné v herním světě. Prozatím se ruda získává přes recept Ferravium Recovery ve vanilla Oil Refinery. Je to pouze testovací bootstrap cesta, nikoli náhrada finální hlubinné těžby. Frontier Survey je navíc záměrně skrytý, dokud nebude skutečná vanilla Space Elevator Phase V událost volat serverovou metodu, která zpřístupní Terminal I.
+
+V cílovém SML Starter Projectu je nutné spustit nejprve `BuildFICSITContractsAssets.py` a potom `BuildFerraviumAssets.py`, zkompilovat `FactoryGameEditor`, zkontrolovat asset registry a provést in-game test výrobní linky. Portable CI ani statická kontrola tuto herní validaci nenahrazují.
 
 ## Rizika a pořadí prototypování
 
