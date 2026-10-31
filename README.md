@@ -59,6 +59,22 @@ The terminal includes:
 - 100 Cable
 - 10 Motors
 
+## Endgame Expansion design
+
+The next progression expansion is documented in [ENDGAME_EXPANSION_DESIGN.md](docs/ENDGAME_EXPANSION_DESIGN.md) and defined in the machine-readable [EndgameProgression.json](Data/Progression/EndgameProgression.json).
+
+The design catalog currently contains:
+- **Six new Dispatch Terminal research chapters** and **three Space Elevator extensions (VI–VIII)**.
+- **96 planned unlocks** across buildings, miners, belts/lifts, storage, power, automation, weapons, ammunition, equipment, vehicles, blueprints, scanners and defense.
+- **Four fictional resource families**: Ferravium, Cryonite, Asterite and Gravionite.
+- **54 proposed production/equipment recipes** with per-cycle inputs, outputs and cycle times.
+- New weapons including Precision Rebar Rifle, Heavy Rebar Repeater, Cryo Projector, Photonic Rifle and Gravitic Launcher.
+- Blueprint Designer Mk4 and Mk5 as extensions beyond the existing vanilla Mk3.
+
+**Implementation status:** this is a design/data catalog, not yet live game content. The JSON validator checks phase references, unique IDs, recipe structure, Space Elevator gates and whether every Elevator requirement has a producing recipe. Actual schematics, unlock objects, item descriptors, buildables, equipment, models and in-game behavior still need to be implemented and tested.
+
+The original vanilla Blueprint Designer already has Mk1, Mk2 and Mk3; this project intentionally adds Mk4/Mk5 rather than duplicating the existing tiers. New resource nodes in the vanilla World Partition map, custom weapon/equipment replication, defensive AI and quantum cargo transfer are called out as technical prototypes in the design document.
+
 ## Repository layout
 
 ```text
