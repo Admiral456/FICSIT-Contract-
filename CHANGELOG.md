@@ -15,6 +15,10 @@
 - Store vanilla Phase V confirmation and Terminal/Elevator progression flags in SaveGame properties and replicate them to clients.
 - Expose read-only progression status in the Dispatch Terminal and `/contracts progression` command.
 - Add server-only progression adapter methods that re-check phase gates before modifying saved state.
+- Bind the subsystem to `AFGGamePhaseManager::mOnGameCompleted` and reconcile saves where the vanilla Project Assembly finale was already completed.
+- Bind to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`, verify the purchased class with `IsSchematicPurchased`, and map the implemented Frontier Survey schematic to Terminal Research Phase I completion.
+- Reconcile existing purchased schematics on load, retry manager binding during early world startup, and remove dynamic delegate bindings during `EndPlay`.
+- Extend static validation and the in-game acceptance checklist for event binding, save reconciliation, duplicate callbacks and unrelated schematic purchases.
 - Extend static CI validation and the in-game checklist for save, replication, UI and progression gate behavior.
 - Add native Ferravium Ore, Concentrate and Ingot descriptor classes and the recovery/washing/smelting recipe chain.
 - Add a native AFGBuildableManufacturer-based Ferravium Smelter with conveyor input/output ports and a reflected 90 MW power setting.
@@ -23,7 +27,7 @@
 - Add Ferravium OBJ/MTL item and furnace models, four generated icon sources and a dedicated Unreal Editor import utility.
 - Update the machine-readable catalog to 56 recipes and mark Ferravium as a source prototype; natural resource-node spawning remains deferred.
 
-**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. The importer, UHT/UE compilation and in-game production tests have not yet been run; no natural Ferravium nodes are placed in the world. The Frontier Survey schematic intentionally remains hidden until the vanilla Phase V completion callback is connected. The saved/repllicated progression display is implemented, but the vanilla completion and actual schematic purchase callbacks remain unconnected.
+**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration now binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey purchase before marking Terminal I complete; existing completed/purchased saves are reconciled on load. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal II–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
 
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
