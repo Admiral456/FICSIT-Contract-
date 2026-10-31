@@ -362,6 +362,16 @@ def main() -> int:
                 errors.append("The Titan Alloy Beam bootstrap must retain a link to the planned Industrial Press recipe.")
             if titan_alloy_slice and len(titan_alloy_slice.get("bootstrapRecipes", [])) < 2:
                 errors.append("Both Titan Alloy Foundry bootstrap recipes must be documented.")
+            if beam_recipe:
+                if beam_recipe.get("machine") != "Vanilla Foundry Mk1 (native prototype bootstrap)" or beam_recipe.get("cycleSeconds") != 12:
+                    errors.append("Titan Alloy Beam bootstrap must retain the 12-second vanilla Foundry process.")
+                expected_beam_inputs = {"TITAN_ALLOY_INGOT": 30, "VANILLA_STEEL_PIPE": 60}
+                actual_beam_inputs = {item.get("itemId"): item.get("amount") for item in beam_recipe.get("inputs", [])}
+                if actual_beam_inputs != expected_beam_inputs:
+                    errors.append("Titan Alloy Beam bootstrap inputs must be 30 Titan Alloy Ingots and 60 Steel Pipes.")
+                actual_beam_outputs = {item.get("itemId"): item.get("amount") for item in beam_recipe.get("outputs", [])}
+                if actual_beam_outputs != {"TITAN_ALLOY_BEAM": 30}:
+                    errors.append("Titan Alloy Beam bootstrap output must be 30 beams per cycle.")
 
     # Verify the portable progression state machine matches every unlock ID in the catalog.
     progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
@@ -623,6 +633,22 @@ def main() -> int:
                     errors.append("Ferravium Smelter mesh exceeds the buildable Y clearance.")
                 if bounds[2][0] < 0.0 or bounds[2][1] > 255.0:
                     errors.append("Ferravium Smelter mesh exceeds the buildable Z clearance.")
+        elif obj_file.name == "TitanAlloyBeam.obj":
+            positions = []
+            for line in obj_lines:
+                if line.startswith("v "):
+                    try:
+                        positions.append(tuple(float(value) for value in line.split()[1:4]))
+                    except (ValueError, IndexError):
+                        errors.append("Titan Alloy Beam OBJ contains a malformed vertex.")
+            if positions:
+                bounds = [
+                    (min(point[axis] for point in positions), max(point[axis] for point in positions))
+                    for axis in range(3)
+                ]
+                expected_extents = ((-70.0, 70.0), (-18.0, 18.0), (-15.0, 15.0))
+                if bounds != list(expected_extents):
+                    errors.append("Titan Alloy Beam mesh must retain its 140 x 36 x 30 cm I-section envelope.")
 
     # The native Ferravium source slice must be registered and match its asset importer.
     ferravium_header = PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITFerraviumContent.h"
@@ -668,6 +694,11 @@ def main() -> int:
             "UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()",
             "mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass())",
             "UFICSITTitanAlloyBeamDescriptor::StaticClass()",
+            "mManufactoringDuration = 12.0f",
+            "mProduct.Emplace(UFICSITTitanAlloyBeamDescriptor::StaticClass(), 30)",
+            'FICSITTitanAlloyIngotDescriptor"), 30)',
+            'Desc_SteelPipe.Desc_SteelPipe_C"), 60)',
+            "AddProducer(mProducedIn, TEXT(\"/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C\"))",
             "Desc_SteelPipe.Desc_SteelPipe_C",
             "SM_TitanAlloyBeam.SM_TitanAlloyBeam",
             "Desc_SteelIngot.Desc_SteelIngot_C",
