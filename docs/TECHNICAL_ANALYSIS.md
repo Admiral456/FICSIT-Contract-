@@ -71,11 +71,13 @@ The state engine is compiled into the standalone CMake test library and is also 
 
 **Current integration boundary:**
 
-- The SML subsystem now stores the vanilla Phase V confirmation and all nine custom completion flags in `UPROPERTY(SaveGame)` fields.
-- Those properties use the existing board replication notify and are replicated to every connected client.
-- `GetEndgameProgressionSummary()` formats all six Terminal chapters and three Elevator extensions as COMPLETE, AVAILABLE or LOCKED.
-- The Dispatch Terminal renders that status and `/contracts progression` prints the same summary.
-- Server-only adapter methods (`RecordVanillaSpaceElevatorPhase5Complete`, `CompleteTerminalResearchPhase`, `CompleteElevatorExtensionPhase`) re-check the C++ state-machine gates before changing saved progression.
+- The SML subsystem stores the vanilla Phase V confirmation and all nine custom completion flags in `UPROPERTY(SaveGame)` fields. Those properties use the existing board replication notify and are replicated to connected clients.
+- The server subsystem binds to `AFGGamePhaseManager::mOnGameCompleted`. The game SDK documents this event as the final Project Assembly/game-completed event; the handler is server-only and the startup reconciliation checks `GetGameIsCompleted()` so a save that already completed the vanilla finale is not missed.
+- The subsystem binds to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`. It accepts only the implemented `UFICSITFrontierSurveySchematic` mapping, verifies it through `IsSchematicPurchased()`, and scans `GetAllPurchasedSchematics()` on startup / vanilla-finale reconciliation to recover existing save state.
+- The verified current transition is therefore: vanilla final Project Assembly completion confirms the Phase V gate; purchasing Frontier Survey completes Terminal Research Phase I. Duplicate events are harmless because the portable state machine rejects repeat completion.
+- Manager binding retries during early world startup and removes its dynamic delegate bindings in `EndPlay`.
+- `GetEndgameProgressionSummary()` formats all six Terminal chapters and three Elevator extensions as COMPLETE, AVAILABLE or LOCKED. The Dispatch Terminal and `/contracts progression` show the same saved state.
+- Server-only adapter methods re-check the portable state-machine gates before changing saved progression. The state remains server-authoritative and is saved/replicated by the existing subsystem.
 
-**Still pending:** these server methods are not yet called from the game's actual Space Elevator completion event or successful custom schematic purchase flow. They must only be invoked after Satisfactory has authoritatively confirmed a purchase and consumed its materials. The JSON catalog remains design data until actual schematics, unlock objects, item descriptors, recipes, equipment and buildables are registered. The status UI therefore reports the adapter state, not a live query of the vanilla schematic manager.
+**Still pending:** Terminal II–VI and Space Elevator VI–VIII do not yet have their complete custom schematic assets and purchase-to-phase mappings, so those transitions cannot yet be completed through actual gameplay. The JSON catalog remains design data until the remaining schematics, unlock objects, item descriptors, recipes, equipment and buildables are implemented. The Ferravium natural resource-node/scanner path is also outstanding. These event integrations are source-level only until UHT/UE compilation, a cooked Alpakit build, and in-game host/client tests are completed.
 
