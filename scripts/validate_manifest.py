@@ -77,6 +77,7 @@ def main() -> int:
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyIngot.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyBeam.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/ReinforcedTitanFrame.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/HeavyIndustrialRotor.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/AdvancedAlloyFoundry/AdvancedAlloyFoundry.mtl",
@@ -417,8 +418,32 @@ def main() -> int:
                 actual_frame_outputs = {item.get("itemId"): item.get("amount") for item in frame_recipe.get("outputs", [])}
                 if actual_frame_outputs != {"REINFORCED_TITAN_FRAME": 2}:
                     errors.append("Reinforced Titan Frame bootstrap output must be 2 frames per cycle.")
-            if titan_alloy_slice and len(titan_alloy_slice.get("bootstrapRecipes", [])) < 3:
-                errors.append("All three Titan Alloy Phase II bootstrap recipes must be documented.")
+            rotor_unlock = unlock_by_id.get("HEAVY_INDUSTRIAL_ROTOR")
+            if not rotor_unlock or rotor_unlock.get("status") != "native_source_prototype":
+                errors.append("Heavy Industrial Rotor must be tracked as a native Phase II prototype unlock.")
+            if rotor_unlock and rotor_unlock.get("sourceSliceId") != "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP":
+                errors.append("Heavy Industrial Rotor must reference the Phase II prototype slice.")
+            rotor_recipe = recipe_by_id.get("RCP_HEAVY_ROTOR_BOOTSTRAP")
+            if not rotor_recipe or not any(
+                output.get("itemId") == "HEAVY_INDUSTRIAL_ROTOR"
+                for output in (rotor_recipe or {}).get("outputs", [])
+            ):
+                errors.append("The Heavy Industrial Rotor bootstrap must produce Heavy Industrial Rotors.")
+            if rotor_recipe and rotor_recipe.get("designRecipeId") != "RCP_HEAVY_ROTOR":
+                errors.append("The rotor bootstrap must remain separate from the planned Heavy-Duty Assembler recipe.")
+            if rotor_recipe:
+                if rotor_recipe.get("machine") != "Vanilla Manufacturer Mk1 (native prototype bootstrap)" or rotor_recipe.get("cycleSeconds") != 18:
+                    errors.append("Heavy Industrial Rotor bootstrap must use the 18-second vanilla Manufacturer Mk1 process.")
+                expected_rotor_inputs = {"TITAN_ALLOY_INGOT": 12, "VANILLA_ROTOR": 6, "VANILLA_MOTOR": 2}
+                actual_rotor_inputs = {item.get("itemId"): item.get("amount") for item in rotor_recipe.get("inputs", [])}
+                if actual_rotor_inputs != expected_rotor_inputs:
+                    errors.append("Heavy Industrial Rotor bootstrap inputs must be 12 Titan Alloy Ingots, 6 Rotors and 2 Motors.")
+                actual_rotor_outputs = {item.get("itemId"): item.get("amount") for item in rotor_recipe.get("outputs", [])}
+                if actual_rotor_outputs != {"HEAVY_INDUSTRIAL_ROTOR": 2}:
+                    errors.append("Heavy Industrial Rotor bootstrap output must be 2 rotors per cycle.")
+
+            if titan_alloy_slice and len(titan_alloy_slice.get("bootstrapRecipes", [])) < 4:
+                errors.append("All four Phase II native bootstrap/build recipes must be documented.")
 
     # Verify the portable progression state machine matches every unlock ID in the catalog.
     progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
@@ -631,6 +656,10 @@ def main() -> int:
             ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
         ),
         (
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/HeavyIndustrialRotor.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ),
+        (
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ),
@@ -720,6 +749,21 @@ def main() -> int:
                 expected_extents = ((-70.0, 70.0), (-18.0, 18.0), (-15.0, 15.0))
                 if bounds != list(expected_extents):
                     errors.append("Titan Alloy Beam mesh must retain its 140 x 36 x 30 cm I-section envelope.")
+        elif obj_file.name == "HeavyIndustrialRotor.obj":
+            positions = []
+            for line in obj_lines:
+                if line.startswith("v "):
+                    try:
+                        positions.append(tuple(float(value) for value in line.split()[1:4]))
+                    except (ValueError, IndexError):
+                        errors.append("Heavy Industrial Rotor OBJ contains a malformed vertex.")
+            if positions:
+                bounds = [
+                    (min(point[axis] for point in positions), max(point[axis] for point in positions))
+                    for axis in range(3)
+                ]
+                if bounds != [(-58.0, 58.0), (-53.0, 53.0), (-53.0, 53.0)]:
+                    errors.append("Heavy Industrial Rotor mesh must retain its 116 x 106 x 106 cm envelope.")
         elif obj_file.name == "ReinforcedTitanFrame.obj":
             positions = []
             for line in obj_lines:
@@ -752,6 +796,8 @@ def main() -> int:
             "UFICSITTitanAlloyIngotDescriptor",
             "UFICSITTitanAlloyBeamDescriptor",
             "UFICSITReinforcedTitanFrameDescriptor",
+            "UFICSITHeavyIndustrialRotorDescriptor",
+            "UFICSITHeavyIndustrialRotorRecipe",
             "UFICSITTitanAlloyRecipe",
             "UFICSITTitanAlloyBeamRecipe",
             "UFICSITTitanAlloyRecipeUnlock",
@@ -787,6 +833,13 @@ def main() -> int:
             "UFICSITReinforcedTitanFrameRecipe::UFICSITReinforcedTitanFrameRecipe()",
             "mRecipes.Add(UFICSITReinforcedTitanFrameRecipe::StaticClass())",
             "mProduct.Emplace(UFICSITReinforcedTitanFrameDescriptor::StaticClass(), 2)",
+            "UFICSITHeavyIndustrialRotorDescriptor::UFICSITHeavyIndustrialRotorDescriptor()",
+            "UFICSITHeavyIndustrialRotorRecipe::UFICSITHeavyIndustrialRotorRecipe()",
+            "mRecipes.Add(UFICSITHeavyIndustrialRotorRecipe::StaticClass())",
+            "mProduct.Emplace(UFICSITHeavyIndustrialRotorDescriptor::StaticClass(), 2)",
+            'FICSITTitanAlloyIngotDescriptor"), 12)',
+            'Desc_Rotor.Desc_Rotor_C"), 6)',
+            'Desc_Motor.Desc_Motor_C"), 2)',
             'FICSITTitanAlloyBeamDescriptor"), 8)',
             'Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C"), 2)',
             "Build_ManufacturerMk1.Build_ManufacturerMk1_C",
@@ -835,6 +888,7 @@ def main() -> int:
             "TitanAlloyIngot.obj",
             "TitanAlloyBeam.obj",
             "ReinforcedTitanFrame.obj",
+            "HeavyIndustrialRotor.obj",
             "FerraviumSmelter.obj",
             "AdvancedAlloyFoundry.obj",
             "AdvancedAlloyFoundry.mtl",
@@ -845,6 +899,7 @@ def main() -> int:
             "TX_TitanAlloyIngot_256",
             "TX_TitanAlloyBeam_256",
             "TX_ReinforcedTitanFrame_256",
+            "TX_HeavyIndustrialRotor_256",
             "TX_FerraviumSmelter_256",
         ):
             if required not in importer_text:
