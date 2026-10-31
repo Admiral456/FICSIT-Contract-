@@ -9,7 +9,7 @@ A placeable FICSIT logistics workstation. It is a shared access point to the ses
 - Accept, deliver and cancel buttons dispatch requests through the player's owner-bound SML Remote Call Object.
 - The server revalidates the owning player/controller pair, terminal lifetime and 450-unit interaction radius before changing the shared board or the requesting player's inventory.
 - Native building descriptor, build-gun recipe, recipe unlock and Tier 5 Logistics milestone registered by the root world module.
-- The Dispatch Network milestone requires Oil Processing before it becomes available.
+- The Dispatch Network milestone requires Oil Processing before it becomes available and marks the native schematic as included in public cooked builds.
 - Low-poly OBJ/MTL model source with six material slots; a blockout fallback remains available if the imported mesh is missing.
 - Editor utility imports the mesh and 256px icon and creates the required `UFGGameFeatureData` asset.
 

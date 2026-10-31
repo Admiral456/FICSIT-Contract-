@@ -134,8 +134,13 @@ def main() -> int:
             if required not in rco_header_text:
                 errors.append(f"Remote Call Object header is missing required declaration: {required}")
 
-    if schematic_source.is_file() and "mSchematicDependencies.Add" not in schematic_source.read_text(encoding="utf-8"):
-        errors.append("Dispatch Network schematic is missing its Oil Processing prerequisite.")
+    if schematic_source.is_file():
+        schematic_text = schematic_source.read_text(encoding="utf-8")
+        if "mSchematicDependencies.Add" not in schematic_text:
+            errors.append("Dispatch Network schematic is missing its Oil Processing prerequisite.")
+        for required in ("IIB_PublicBuilds", "mIncludeInBuilds", "GetUnderlyingProperty"):
+            if required not in schematic_text:
+                errors.append(f"Dispatch Network schematic is missing cook inclusion configuration: {required}.")
 
     # Parse the Editor utility without importing Unreal's Python module.
     asset_script = source_assets[-1]

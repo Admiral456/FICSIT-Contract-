@@ -5,6 +5,8 @@
 #include "ItemAmount.h"
 #include "Resources/FGItemDescriptor.h"
 #include "FGSchematicCategory.h"
+#include "IncludeInBuild.h"
+#include "UObject/EnumProperty.h"
 #include "Engine/Texture2D.h"
 namespace
 {
@@ -68,4 +70,19 @@ UFICSITDispatchTerminalSchematic::UFICSITDispatchTerminalSchematic()
     AddCost(mCost,TEXT("/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C"),10);
     if(UTexture2D* Icon=LoadTerminalIcon()){mSmallSchematicIcon=Icon;mSchematicIcon.SetResourceObject(Icon);}
     mUnlocks.Add(CreateDefaultSubobject<UFICSITDispatchTerminalRecipeUnlock>(TEXT("UnlockDispatchTerminalRecipe")));
+
+#if WITH_EDITORONLY_DATA
+    // Native-only schematics have no Blueprint defaults asset to author this
+    // private editor-only cook flag. Mark this milestone for public game builds
+    // so the cooker does not silently strip it from packaged Satisfactory.
+    if (FEnumProperty* IncludeInBuilds = FindFProperty<FEnumProperty>(GetClass(), TEXT("mIncludeInBuilds")))
+    {
+        if (FNumericProperty* UnderlyingProperty = IncludeInBuilds->GetUnderlyingProperty())
+        {
+            void* PropertyValue = IncludeInBuilds->ContainerPtrToValuePtr<void>(this);
+            UnderlyingProperty->SetIntPropertyValue(
+                PropertyValue, static_cast<int64>(EIncludeInBuilds::IIB_PublicBuilds));
+        }
+    }
+#endif
 }
