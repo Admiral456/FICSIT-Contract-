@@ -110,3 +110,34 @@ Kd 0.18 0.70 0.86
 Ks 0.95 0.98 1.00
 Ns 220.0
 Ke 0.06 0.32 0.48
+
+newmtl HeavyRotorBody
+Ka 0.035 0.055 0.075
+Kd 0.19 0.25 0.32
+Ks 0.76 0.83 0.90
+Ns 155.0
+
+newmtl HeavyRotorShaft
+Ka 0.06 0.08 0.11
+Kd 0.38 0.46 0.55
+Ks 0.94 0.97 1.00
+Ns 210.0
+
+newmtl HeavyRotorFlange
+Ka 0.09 0.12 0.16
+Kd 0.53 0.61 0.68
+Ks 0.91 0.95 1.00
+Ns 185.0
+
+newmtl HeavyRotorCopper
+Ka 0.16 0.07 0.025
+Kd 0.72 0.31 0.10
+Ks 0.90 0.75 0.60
+Ns 125.0
+
+newmtl HeavyRotorGlow
+Ka 0.06 0.21 0.27
+Kd 0.16 0.68 0.82
+Ks 0.95 0.98 1.00
+Ns 230.0
+Ke 0.04 0.28 0.40
