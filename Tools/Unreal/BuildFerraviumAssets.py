@@ -269,8 +269,6 @@ require(os.path.isfile(os.path.join(MESH_ROOT, "ReinforcedTitanFrame.obj")),
         "ReinforcedTitanFrame.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(MESH_ROOT, "HeavyIndustrialRotor.obj")),
         "HeavyIndustrialRotor.obj is missing from the resource mesh folder.")
-require(os.path.isfile(os.path.join(MESH_ROOT, "HeavyIndustrialRotor.obj")),
-        "HeavyIndustrialRotor.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(SMELTER_ROOT, "Ferravium.mtl")),
         "Ferravium.mtl sidecar is missing from the smelter folder.")
 require(os.path.isfile(os.path.join(ADVANCED_FOUNDRY_ROOT, "AdvancedAlloyFoundry.obj")),
