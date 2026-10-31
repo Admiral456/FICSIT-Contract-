@@ -169,6 +169,120 @@ def main() -> int:
             if required not in schematic_text:
                 errors.append(f"Dispatch Network schematic is missing cook inclusion configuration: {required}.")
 
+    # Validate the complete endgame progression design catalog.
+    progression_path = ROOT / "Data/Progression/EndgameProgression.json"
+    if not progression_path.is_file():
+        errors.append("Endgame progression catalog is missing.")
+    else:
+        try:
+            progression = json.loads(progression_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            progression = {}
+            errors.append(f"Endgame progression catalog is invalid JSON: {exc}")
+
+        if progression:
+            if progression.get("schemaVersion") != 1:
+                errors.append("Endgame progression catalog must use schemaVersion 1.")
+            if progression.get("implementationStatus") != "design_only":
+                errors.append("The design catalog must not claim unimplemented content is runtime-ready.")
+
+            phase_list = progression.get("phases", [])
+            phase_indices = [phase.get("index") for phase in phase_list]
+            if len(phase_list) != 6 or phase_indices != [1, 2, 3, 4, 5, 6]:
+                errors.append("Endgame progression must contain exactly six ordered terminal phases.")
+
+            unlock_list = progression.get("unlocks", [])
+            unlock_ids = [entry.get("id") for entry in unlock_list]
+            if len(unlock_ids) != len(set(unlock_ids)) or any(not value for value in unlock_ids):
+                errors.append("Endgame unlock IDs must be non-empty and globally unique.")
+            unlock_by_id = {entry.get("id"): entry for entry in unlock_list if entry.get("id")}
+            allowed_categories = {
+                "building", "miner", "logistics", "power", "automation", "weapon",
+                "ammo", "equipment", "vehicle", "blueprint", "scanner", "defense",
+            }
+            referenced_unlocks: list[str] = []
+            for phase in phase_list:
+                phase_index = phase.get("index")
+                for unlock_id in phase.get("unlockIds", []):
+                    referenced_unlocks.append(unlock_id)
+                    target = unlock_by_id.get(unlock_id)
+                    if target is None:
+                        errors.append(f"Terminal phase {phase_index} references unknown unlock: {unlock_id}")
+                    elif target.get("phase") != phase_index:
+                        errors.append(f"Unlock {unlock_id} is assigned to a different phase than its phase list.")
+                if not phase.get("title") or not phase.get("requires"):
+                    errors.append(f"Terminal phase {phase_index} is missing its title or gating requirement.")
+            if sorted(referenced_unlocks) != sorted(unlock_ids):
+                errors.append("Every endgame unlock must belong to exactly one terminal phase.")
+            for entry in unlock_list:
+                if entry.get("category") not in allowed_categories:
+                    errors.append(f"Unlock {entry.get('id')} has an unsupported category.")
+                if entry.get("status") != "planned":
+                    errors.append(f"Unlock {entry.get('id')} must remain marked planned until implemented.")
+
+            recipe_list = progression.get("recipes", [])
+            recipe_ids = [recipe.get("id") for recipe in recipe_list]
+            if len(recipe_ids) != len(set(recipe_ids)) or any(not value for value in recipe_ids):
+                errors.append("Endgame recipe IDs must be non-empty and globally unique.")
+            recipe_by_id = {recipe.get("id"): recipe for recipe in recipe_list if recipe.get("id")}
+            recipe_outputs: set[str] = set()
+            for recipe in recipe_list:
+                if recipe.get("phase") not in range(1, 7):
+                    errors.append(f"Recipe {recipe.get('id')} references an invalid terminal phase.")
+                if not isinstance(recipe.get("cycleSeconds"), (int, float)) or recipe.get("cycleSeconds", 0) <= 0:
+                    errors.append(f"Recipe {recipe.get('id')} must have a positive cycle duration.")
+                for direction in ("inputs", "outputs"):
+                    entries = recipe.get(direction, [])
+                    if not entries:
+                        errors.append(f"Recipe {recipe.get('id')} has no {direction}.")
+                    for ingredient in entries:
+                        item_id = ingredient.get("itemId")
+                        amount = ingredient.get("amount")
+                        if not item_id or not isinstance(amount, int) or amount <= 0:
+                            errors.append(f"Recipe {recipe.get('id')} has an invalid {direction} entry.")
+                        if direction == "outputs" and item_id:
+                            recipe_outputs.add(item_id)
+            for phase in phase_list:
+                for recipe_id in phase.get("recipeIds", []):
+                    recipe = recipe_by_id.get(recipe_id)
+                    if recipe is None:
+                        errors.append(f"Terminal phase {phase.get('index')} references unknown recipe: {recipe_id}")
+                    elif recipe.get("phase") != phase.get("index"):
+                        errors.append(f"Recipe {recipe_id} is assigned to a different phase than its phase list.")
+
+            resource_ids = [resource.get("id") for resource in progression.get("resources", [])]
+            if len(resource_ids) != 4 or len(resource_ids) != len(set(resource_ids)):
+                errors.append("Endgame progression must define four unique new resource types.")
+
+            elevator_phases = progression.get("progression", {}).get("elevatorExtensions", [])
+            expected_elevator_unlocks = {6: [3, 4], 7: [5], 8: [6]}
+            if [entry.get("phase") for entry in elevator_phases] != [6, 7, 8]:
+                errors.append("Space Elevator extension must contain ordered phases VI, VII and VIII.")
+            for entry in elevator_phases:
+                phase_number = entry.get("phase")
+                if entry.get("unlocksTerminalPhases") != expected_elevator_unlocks.get(phase_number):
+                    errors.append(f"Space Elevator phase {phase_number} has an incorrect terminal unlock gate.")
+                for requirement in entry.get("requirements", []):
+                    if (
+                        len(requirement) != 2
+                        or not requirement[0]
+                        or not isinstance(requirement[1], int)
+                        or requirement[1] <= 0
+                    ):
+                        errors.append(f"Space Elevator phase {phase_number} has an invalid requirement.")
+                    elif requirement[0] not in recipe_outputs:
+                        errors.append(
+                            f"Space Elevator phase {phase_number} requires {requirement[0]}, "
+                            "but no endgame recipe produces it."
+                        )
+
+            blueprint_ids = {entry.get("id") for entry in unlock_list if entry.get("category") == "blueprint"}
+            if not {"BLUEPRINT_DESIGNER_MK4", "BLUEPRINT_DESIGNER_MK5"}.issubset(blueprint_ids):
+                errors.append("The expansion must continue from vanilla Blueprint Designer Mk3 with Mk4 and Mk5.")
+            constraints = " ".join(progression.get("implementationConstraints", []))
+            if "World Partition" not in constraints or "asset registry" not in constraints:
+                errors.append("The endgame design must retain World Partition and vanilla asset-path implementation caveats.")
+
     # Parse the Editor utility without importing Unreal's Python module.
     asset_script = source_assets[-1]
     if asset_script.is_file():
