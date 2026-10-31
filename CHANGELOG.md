@@ -17,7 +17,7 @@
 - Add server-only progression adapter methods that re-check phase gates before modifying saved state.
 - Extend static CI validation and the in-game checklist for save, replication, UI and progression gate behavior.
 
-**Design only:** the catalog and validation do not register live schematics, items, weapons, buildings or recipes. Runtime integration and in-game testing remain pending.
+**Content remains design-only:** the catalog does not yet register live custom schematics, items, weapons, buildings, recipes or resource nodes. The saved/repllicated progression state and its read-only terminal/chat display are implemented at source level, but no vanilla completion event or custom schematic purchase updates it yet. Custom UE compilation and in-game testing remain pending.
 
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
