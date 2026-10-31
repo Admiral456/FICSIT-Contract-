@@ -214,6 +214,38 @@ const std::vector<ContractTemplate>& templates() {
             stage("06 - Heavy Freight Commissioning", {
                 item("/Game/FactoryGame/Resource/Parts/ModularFrameHeavy/Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C", "Heavy Modular Frames", 160)
             })
+        }),
+        program("SPECIAL-ORBITAL-LOGISTICS", "Orbital Logistics Authority Program", 4200, 3000, {
+            stage("01 - Planetary Foundations", {
+                item("/Game/FactoryGame/Resource/Parts/Concrete/Desc_Concrete.Desc_Concrete_C", "Concrete", 3000),
+                item("/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C", "Iron Plates", 3000)
+            }),
+            stage("02 - Long-Haul Steelworks", {
+                item("/Game/FactoryGame/Resource/Parts/SteelPipe/Desc_SteelPipe.Desc_SteelPipe_C", "Steel Pipes", 1800),
+                item("/Game/FactoryGame/Resource/Parts/SteelPlate/Desc_SteelPlate.Desc_SteelPlate_C", "Steel Beams", 1200)
+            }),
+            stage("03 - Reinforced Launch Structures", {
+                item("/Game/FactoryGame/Resource/Parts/EncasedIndustrialBeam/Desc_EncasedIndustrialBeam.Desc_EncasedIndustrialBeam_C", "Encased Industrial Beams", 650),
+                item("/Game/FactoryGame/Resource/Parts/IronPlateReinforced/Desc_IronPlateReinforced.Desc_IronPlateReinforced_C", "Reinforced Iron Plates", 1200)
+            }),
+            stage("04 - Heavy Structural Modules", {
+                item("/Game/FactoryGame/Resource/Parts/ModularFrame/Desc_ModularFrame.Desc_ModularFrame_C", "Modular Frames", 800),
+                item("/Game/FactoryGame/Resource/Parts/ModularFrameHeavy/Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C", "Heavy Modular Frames", 250)
+            }),
+            stage("05 - Precision Mechanical Systems", {
+                item("/Game/FactoryGame/Resource/Parts/Rotor/Desc_Rotor.Desc_Rotor_C", "Rotors", 650),
+                item("/Game/FactoryGame/Resource/Parts/Stator/Desc_Stator.Desc_Stator_C", "Stators", 550),
+                item("/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C", "Motors", 450)
+            }),
+            stage("06 - Advanced Dispatch Electronics", {
+                item("/Game/FactoryGame/Resource/Parts/CircuitBoard/Desc_CircuitBoard.Desc_CircuitBoard_C", "Circuit Boards", 750),
+                item("/Game/FactoryGame/Resource/Parts/Computer/Desc_Computer.Desc_Computer_C", "Computers", 550),
+                item("/Game/FactoryGame/Resource/Parts/Cable/Desc_Cable.Desc_Cable_C", "Cable", 1800)
+            }),
+            stage("07 - Authority Handover", {
+                item("/Game/FactoryGame/Resource/Parts/ModularFrameHeavy/Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C", "Heavy Modular Frames", 180),
+                item("/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C", "Motors", 200)
+            })
         })
     };
     return value;
