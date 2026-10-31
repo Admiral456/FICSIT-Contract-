@@ -70,7 +70,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 ### Progression and Space Elevator
 
 - [ ] Verify vanilla Space Elevator Phase V remains unchanged.
-- [ ] Complete vanilla Phase V and confirm Terminal Chapters I and II become available.
+- [ ] Complete vanilla Phase V and confirm Terminal Chapter I becomes available; after purchasing Frontier Survey, verify Terminal Chapter II becomes available.
 - [ ] Complete custom Space Elevator Phase VI and confirm Terminal Chapters III and IV become available.
 - [ ] Complete custom Space Elevator Phase VII and confirm Terminal Chapter V becomes available.
 - [ ] Complete custom Space Elevator Phase VIII and confirm Terminal Chapter VI becomes available.
