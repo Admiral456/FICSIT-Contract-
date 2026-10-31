@@ -119,6 +119,7 @@ The inventory delivery adapter checks the actual inventory count before creditin
 | `/contracts deliver FC-000001` | Deliver matching items from the player's main inventory |
 | `/contracts cancel FC-000001` | Abandon an active order |
 | `/contracts history` | Show the latest completed, expired and cancelled contracts |
+| `/contracts progression` | Show vanilla Phase V confirmation, Terminal I–VI and Space Elevator VI–VIII status |
 
 The IDs shown by the game are examples; use the IDs on your own board. The terminal provides the same actions through its interactive buttons.
 
