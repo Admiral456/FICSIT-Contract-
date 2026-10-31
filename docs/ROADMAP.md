@@ -45,12 +45,24 @@
 - [ ] Balance quantities and rewards through extended in-game playtests.
 - [ ] Add optional player-facing settings for offer count, active slots, timers and rewards.
 
-## 0.3.0 — Progression
+## 0.3.0 — Endgame progression foundation
 
-- [ ] Unlock rewards and progression milestones for reputation thresholds.
-- [ ] Cosmetic factory decorations and rank-themed terminal appearance.
-- [ ] Contract generation based on researched tiers / unlock state rather than reputation alone.
-- [ ] Player-facing contract configuration and difficulty controls.
+- [x] Define six new Dispatch Terminal chapters and Space Elevator extensions VI–VIII.
+- [x] Add the machine-readable endgame progression catalog with 96 planned unlocks.
+- [x] Add four proposed resource families and their visual/processing identities.
+- [x] Add 54 proposed production and equipment recipes.
+- [x] Design weapon, ammunition, personal equipment, vehicle, blueprint, defense and automation categories.
+- [x] Continue from the existing vanilla Blueprint Designer Mk3 with planned Mk4/Mk5 extensions.
+- [x] Add validation for unique unlock/recipe IDs, phase ownership, catalog references, elevator gates and required component production.
+- [ ] Implement a runtime catalog loader and a server-authoritative research/unlock registry.
+- [ ] Persist terminal chapter and Space Elevator extension state across save/load.
+- [ ] Generate actual UFGSchematic and UFGUnlock assets/classes from the catalog.
+- [ ] Prototype one custom item descriptor, production recipe and custom buildable from end to end.
+- [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
+- [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
+- [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
+- [ ] Resolve a supported new resource deposit/node path and ore scanner integration.
+- [ ] Add a terminal research UI with category filters, prerequisites, costs and locked/unlocked states.
 
 ## 0.4.0 — Expanded gameplay
 
