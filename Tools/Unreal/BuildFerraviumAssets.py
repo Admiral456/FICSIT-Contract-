@@ -1,4 +1,5 @@
 """Import Ferravium and Titan Alloy item meshes, the smelter and generated icons in the SML Starter Project."""
+import math
 import os
 import struct
 import zlib
@@ -266,6 +267,8 @@ require(os.path.isfile(os.path.join(MESH_ROOT, "TitanAlloyBeam.obj")),
         "TitanAlloyBeam.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(MESH_ROOT, "ReinforcedTitanFrame.obj")),
         "ReinforcedTitanFrame.obj is missing from the resource mesh folder.")
+require(os.path.isfile(os.path.join(MESH_ROOT, "HeavyIndustrialRotor.obj")),
+        "HeavyIndustrialRotor.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(MESH_ROOT, "HeavyIndustrialRotor.obj")),
         "HeavyIndustrialRotor.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(SMELTER_ROOT, "Ferravium.mtl")),
