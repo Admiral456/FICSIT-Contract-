@@ -56,8 +56,12 @@
 - [x] Add validation for unique unlock/recipe IDs, phase ownership, catalog references, elevator gates and required component production.
 - [ ] Implement a runtime catalog loader and a server-authoritative research/unlock registry.
 - [x] Add SaveGame properties and server replication for Terminal I–VI and Space Elevator VI–VIII completion state.
-- [ ] Generate actual UFGSchematic and UFGUnlock assets/classes from the catalog.
-- [ ] Prototype one custom item descriptor, production recipe and custom buildable from end to end.
+- [ ] Build the remaining catalog-wide UFGSchematic/UFGUnlock registration layer; only the first Ferravium schematic is currently prototyped natively.
+- [x] Add native Ferravium Ore, Concentrate and Ingot descriptors plus recovery, washing and smelting recipe classes.
+- [x] Add the native AFICSITFerraviumSmelter manufacturer, factory input/output ports, buildable descriptor, Build Gun recipe and 90 MW base power setting.
+- [x] Add the Frontier Survey schematic source and a prerequisite that waits for the saved Phase V / Terminal I state.
+- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium item/smelter meshes and four icons.
+- [ ] Import Ferravium assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete refinery-to-ingot loop in game.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
 - [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
