@@ -3,7 +3,7 @@
 ## Unreleased — Endgame Expansion and Ferravium source prototype
 
 - Define six Dispatch Terminal research chapters and three additional Space Elevator projects (VI–VIII).
-- Add a machine-readable progression catalog with 96 planned unlocks across production, logistics, blueprints, weapons, ammunition, equipment, vehicles, defense, power and automation.
+- Add a machine-readable progression catalog with 96 planned unlocks plus two native-source prototype entries across production, logistics, blueprints, weapons, ammunition, equipment, vehicles, defense, power and automation.
 - Define four fictional endgame resource families: Ferravium, Cryonite, Asterite and Gravionite.
 - Add 56 proposed production/equipment recipes, including all components required by Space Elevator VI–VIII.
 - Design Blueprint Designer Mk4/Mk5 as extensions beyond the vanilla Mk3.
@@ -29,7 +29,7 @@
 - Align the Ferravium conveyor component names with the canonical `Input0` / `Output0` convention and extend static validation to guard connector direction, forwarding and power configuration.
 - Add the smelter build descriptor/Build Gun recipe and a Frontier Survey schematic gated by the server-saved Phase V/Terminal I state.
 - Add Ferravium and Titan Alloy OBJ/MTL item/furnace models, six generated icon sources and a dedicated Unreal Editor import utility.
-- Update the machine-readable catalog to 56 recipes and 97 unlock entries (96 planned plus one Titan Alloy source prototype); natural resource-node spawning remains deferred.
+- Update the machine-readable catalog to 57 recipes and 98 unlock entries (96 planned plus two Titan Alloy source prototypes); natural resource-node spawning remains deferred.
 
 **Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey and Advanced Metallurgy purchases before marking Terminal I and II complete; existing saves are reconciled in progression order. Advanced Metallurgy unlocks two native Titan Alloy bootstrap recipes on the vanilla Foundry Mk1 (ingot and structural beam); the dedicated Advanced Alloy Foundry and remaining Phase II production chain are not implemented. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal III–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
 
