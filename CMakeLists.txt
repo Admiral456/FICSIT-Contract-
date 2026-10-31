@@ -7,6 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(FICSITContractsCore
     Source/FICSITContractsCore/ContractEngine.cpp
+    Source/FICSITContractsCore/EndgameProgression.cpp
 )
 target_include_directories(FICSITContractsCore PUBLIC Source/FICSITContractsCore)
 
