@@ -145,6 +145,7 @@
       "summary": "Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.",
       "unlockIds": [
         "REINFORCED_TITAN_FRAME",
+        "HEAVY_INDUSTRIAL_ROTOR",
         "TITAN_ALLOY_BEAM",
         "TITAN_ALLOY_INGOT",
         "ADVANCED_ALLOY_FOUNDRY",
@@ -173,6 +174,7 @@
         "RCP_TITAN_BEAM",
         "RCP_REINFORCED_TITAN_FRAME",
         "RCP_HEAVY_ROTOR",
+        "RCP_HEAVY_ROTOR_BOOTSTRAP",
         "RCP_HARDENED_AMMO",
         "RCP_FERRAVIUM_STRUCTURAL_MATRIX",
         "RCP_DEEP_CORE_EXTRACTOR_MODULE",
@@ -537,6 +539,15 @@
       "category": "material",
       "displayName": "Reinforced Titan Frame",
       "description": "Native source prototype: Manufacturer Mk1 recipe combining Titan Alloy Beams and Heavy Modular Frames; the planned Heavy-Duty Assembler recipe remains separate.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "HEAVY_INDUSTRIAL_ROTOR",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Heavy Industrial Rotor",
+      "description": "Native source prototype: Manufacturer Mk1 bootstrap combining Titan Alloy Ingots, Rotors and Motors; the planned Heavy-Duty Assembler recipe remains separate.",
       "status": "native_source_prototype",
       "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
     },
@@ -2620,6 +2631,34 @@
       ],
       "recipeKind": "prototype_bootstrap",
       "designRecipeId": "RCP_REINFORCED_TITAN_FRAME"
+    },
+    {
+      "id": "RCP_HEAVY_ROTOR_BOOTSTRAP",
+      "phase": 2,
+      "machine": "Vanilla Manufacturer Mk1 (native prototype bootstrap)",
+      "cycleSeconds": 18,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 12
+        },
+        {
+          "itemId": "VANILLA_ROTOR",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        }
+      ],
+      "recipeKind": "prototype_bootstrap",
+      "designRecipeId": "RCP_HEAVY_ROTOR"
     }
   ],
   "balanceTargets": {
@@ -2775,15 +2814,18 @@
         "Titan Alloy ingot and beam recipes run in the custom 125 MW Advanced Alloy Foundry",
         "Native Reinforced Titan Frame item descriptor with an open-cage OBJ mesh and its own generated icon",
         "Reinforced Titan Frame Manufacturer Mk1 bootstrap: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 Reinforced Titan Frames per 24-second cycle",
-        "The planned Heavy-Duty Assembler recipe remains separately defined as RCP_REINFORCED_TITAN_FRAME"
+        "The planned Heavy-Duty Assembler recipe remains separately defined as RCP_REINFORCED_TITAN_FRAME",
+        "Native Heavy Industrial Rotor descriptor with dedicated 3D mesh and UI icon",
+        "Heavy Industrial Rotor Manufacturer Mk1 bootstrap: 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors -> 2 Heavy Industrial Rotors per 18-second cycle",
+        "The planned Heavy-Duty Assembler recipe remains separately defined as RCP_HEAVY_ROTOR"
       ],
       "deferred": [
         "Custom UE 5.6.1/UHT compilation and Alpakit packaging",
         "In-game recipe discovery, belt production, save/load and multiplayer tests",
-        "Heavy Industrial Rotor, Hardened Rebar, Ferravium Structural Matrix and the remaining Phase II recipes beyond the Reinforced Titan Frame"
+        "Heavy-Duty Assembler and its final Heavy Industrial Rotor recipe; Hardended Rebar, Ferravium Structural Matrix and remaining Phase II recipes beyond the rotor bootstrap"
       ],
       "bootstrapMachine": "Advanced Alloy Foundry",
-      "note": "Titan Alloy Ingots and Beams are made in the custom 125 MW Advanced Alloy Foundry. Reinforced Titan Frames are assembled in the vanilla Manufacturer Mk1 as a compatibility bootstrap. The planned Heavy-Duty Assembler recipe remains separate from RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP. The dedicated Heavy-Duty Assembler and remaining Phase II production chain are not implemented.",
+      "note": "Titan Alloy Ingots and Beams are made in the custom 125 MW Advanced Alloy Foundry. Reinforced Titan Frames are assembled in the vanilla Manufacturer Mk1 as a compatibility bootstrap. The planned Heavy-Duty Assembler recipe remains separate from RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP. The dedicated Heavy-Duty Assembler and remaining Phase II production chain are not implemented. Heavy Industrial Rotors are currently assembled in vanilla Manufacturer Mk1 as a bootstrap (12 Titan Alloy Ingots + 6 Rotors + 2 Motors -> 2 Heavy Industrial Rotors / 18 s); the planned Heavy-Duty Assembler recipe RCP_HEAVY_ROTOR remains separate.",
       "bootstrapRecipes": [
         {
           "id": "RCP_TITAN_ALLOY",
@@ -2849,6 +2891,34 @@
               "amount": 2
             }
           ]
+        },
+        {
+          "id": "RCP_HEAVY_ROTOR_BOOTSTRAP",
+          "phase": 2,
+          "machine": "Vanilla Manufacturer Mk1 (native prototype bootstrap)",
+          "cycleSeconds": 18,
+          "inputs": [
+            {
+              "itemId": "TITAN_ALLOY_INGOT",
+              "amount": 12
+            },
+            {
+              "itemId": "VANILLA_ROTOR",
+              "amount": 6
+            },
+            {
+              "itemId": "VANILLA_MOTOR",
+              "amount": 2
+            }
+          ],
+          "outputs": [
+            {
+              "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+              "amount": 2
+            }
+          ],
+          "recipeKind": "prototype_bootstrap",
+          "designRecipeId": "RCP_HEAVY_ROTOR"
         }
       ],
       "bootstrapMachines": [
