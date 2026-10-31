@@ -129,6 +129,7 @@ private:
     TArray<uint8> ElevatorExtensionsComplete;
     FTimerHandle ExpiryTimerHandle;
     FTimerHandle ProgressionBindingRetryTimerHandle;
+    FTimerHandle SchematicPurchaseRetryTimerHandle;
     int32 ProgressionBindingAttempts = 0;
     bool bGamePhaseEventsBound = false;
     bool bSchematicEventsBound = false;
