@@ -55,14 +55,16 @@
 - [x] Continue from the existing vanilla Blueprint Designer Mk3 with planned Mk4/Mk5 extensions.
 - [x] Add validation for unique unlock/recipe IDs, phase ownership, catalog references, elevator gates and required component production.
 - [ ] Implement a runtime catalog loader and a server-authoritative research/unlock registry.
-- [ ] Persist terminal chapter and Space Elevator extension state across save/load.
+- [x] Add SaveGame properties and server replication for Terminal I–VI and Space Elevator VI–VIII completion state.
 - [ ] Generate actual UFGSchematic and UFGUnlock assets/classes from the catalog.
 - [ ] Prototype one custom item descriptor, production recipe and custom buildable from end to end.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
 - [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
 - [ ] Resolve a supported new resource deposit/node path and ore scanner integration.
-- [ ] Add a terminal research UI with category filters, prerequisites, costs and locked/unlocked states.
+- [x] Add read-only Terminal/Space Elevator phase status to the Dispatch Terminal and `/contracts progression`.
+- [ ] Connect vanilla Space Elevator Phase V completion and real custom schematic purchases to the server-side progression methods.
+- [ ] Add a full research UI with category filters, item costs, unlock descriptions and purchase actions.
 
 ## 0.4.0 — Expanded gameplay
 
