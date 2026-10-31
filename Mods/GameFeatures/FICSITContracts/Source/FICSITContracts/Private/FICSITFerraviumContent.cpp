@@ -28,6 +28,7 @@ namespace
     constexpr const TCHAR* TitanAlloyIngotMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyIngot.SM_TitanAlloyIngot");
     constexpr const TCHAR* TitanAlloyBeamMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyBeam.SM_TitanAlloyBeam");
     constexpr const TCHAR* SmelterMeshPath = TEXT("/FICSITContracts/Buildables/FerraviumSmelter/SM_FerraviumSmelter.SM_FerraviumSmelter");
+    constexpr const TCHAR* AdvancedAlloyFoundryMeshPath = TEXT("/FICSITContracts/Buildables/AdvancedAlloyFoundry/SM_AdvancedAlloyFoundry.SM_AdvancedAlloyFoundry");
 
     TSubclassOf<UFGItemDescriptor> LoadItem(const TCHAR* Path)
     {
@@ -232,6 +233,106 @@ AFICSITFerraviumSmelter::AFICSITFerraviumSmelter()
     OutputConnection->SetForwardPeekAndGrabToBuildable(true);
 }
 
+AFICSITAdvancedAlloyFoundry::AFICSITAdvancedAlloyFoundry()
+    : Super()
+{
+    PrimaryActorTick.bCanEverTick = false;
+    SetReplicates(true);
+    SetCanBeDamaged(false);
+    mDisplayName = FText::FromString(TEXT("Advanced Alloy Foundry"));
+    mDescription = FText::FromString(TEXT("A reinforced dual-feed foundry for high-density Titan Alloy and heavy structural components."));
+    mHologramClass = AFGBuildableHologram::StaticClass();
+    mManufacturingSpeed = 1.0f;
+
+    if (FFloatProperty* Power = FindFProperty<FFloatProperty>(AFGBuildableFactory::StaticClass(), TEXT("mPowerConsumption")))
+        Power->SetPropertyValue_InContainer(this, 125.0f);
+    else
+        UE_LOG(LogTemp, Warning, TEXT("FICSIT Advanced Alloy Foundry: mPowerConsumption property was not found."));
+
+    FFGClearanceData Clearance;
+    Clearance.Type = EClearanceType::CT_Default;
+    Clearance.ClearanceBox = FBox(FVector(-225.0f, -165.0f, 0.0f), FVector(225.0f, 165.0f, 315.0f));
+    Clearance.RelativeTransform = FTransform::Identity;
+    Clearance.ExcludeForSnapping = false;
+    mClearanceData.Add(Clearance);
+
+    SolidCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("AdvancedAlloyFoundryCollision"));
+    SolidCollision->SetupAttachment(RootComponent);
+    SolidCollision->SetBoxExtent(FVector(205.0f, 145.0f, 140.0f));
+    SolidCollision->SetRelativeLocation(FVector(0.0f, 0.0f, 140.0f));
+    SolidCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    SolidCollision->SetCollisionObjectType(ECC_WorldStatic);
+    SolidCollision->SetCollisionResponseToAllChannels(ECR_Block);
+    SolidCollision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+    SolidCollision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+    SolidCollision->SetGenerateOverlapEvents(false);
+
+    VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AdvancedAlloyFoundryVisual"));
+    VisualMesh->SetupAttachment(RootComponent);
+    VisualMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    VisualMesh->SetCastShadow(true);
+    if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AdvancedAlloyFoundryMeshPath))
+    {
+        VisualMesh->SetStaticMesh(Mesh);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FICSIT Advanced Alloy Foundry: model not imported; run BuildFerraviumAssets.py."));
+        if (UStaticMesh* Cube = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")))
+        {
+            VisualMesh->SetStaticMesh(Cube);
+            VisualMesh->SetRelativeScale3D(FVector(4.0f, 2.8f, 2.8f));
+        }
+    }
+
+    InputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Input0"));
+    InputConnection->SetupAttachment(RootComponent);
+    InputConnection->SetRelativeLocation(FVector(-215.0f, 0.0f, 105.0f));
+    InputConnection->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+    InputConnection->SetDirection(EFactoryConnectionDirection::FCD_INPUT);
+    InputConnection->SetConnectorClearance(105.0f);
+    InputConnection->SetForwardPeekAndGrabToBuildable(true);
+
+    OutputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Output0"));
+    OutputConnection->SetupAttachment(RootComponent);
+    OutputConnection->SetRelativeLocation(FVector(215.0f, 0.0f, 105.0f));
+    OutputConnection->SetRelativeRotation(FRotator::ZeroRotator);
+    OutputConnection->SetDirection(EFactoryConnectionDirection::FCD_OUTPUT);
+    OutputConnection->SetConnectorClearance(105.0f);
+    OutputConnection->SetForwardPeekAndGrabToBuildable(true);
+}
+
+UFICSITAdvancedAlloyFoundryDescriptor::UFICSITAdvancedAlloyFoundryDescriptor()
+{
+    mBuildableClass = AFICSITAdvancedAlloyFoundry::StaticClass();
+    mUseDisplayNameAndDescription = false;
+    mMenuPriority = 180.0f;
+    mCategory = LoadClass<UFGBuildCategory>(nullptr,
+        TEXT("/Game/FactoryGame/Interface/UI/InGame/BuildMenu/BuildCategories/BC_Production.BC_Production_C"));
+    if (UTexture2D* Icon = LoadFerraviumIcon(TEXT("TX_AdvancedAlloyFoundry_256")))
+    {
+        mSmallIcon = Icon;
+        mPersistentBigIcon = Icon;
+    }
+}
+
+UFICSITAdvancedAlloyFoundryBuildRecipe::UFICSITAdvancedAlloyFoundryBuildRecipe()
+{
+    mDisplayNameOverride = true;
+    mDisplayName = FText::FromString(TEXT("Construct Advanced Alloy Foundry"));
+    mManufactoringDuration = 0.0f;
+    mManualManufacturingMultiplier = 1.0f;
+    mProduct.Emplace(UFICSITAdvancedAlloyFoundryDescriptor::StaticClass(), 1);
+    mProducedIn.Add(TSoftClassPtr<UObject>(AFGBuildGun::StaticClass()));
+
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/EncasedIndustrialBeam/Desc_EncasedIndustrialBeam.Desc_EncasedIndustrialBeam_C"), 50);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/SteelPipe/Desc_SteelPipe.Desc_SteelPipe_C"), 120);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/ModularFrameHeavy/Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C"), 25);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C"), 30);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/Computer/Desc_Computer.Desc_Computer_C"), 20);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/Cable/Desc_Cable.Desc_Cable_C"), 200);
+}
+
 UFICSITFerraviumSmelterDescriptor::UFICSITFerraviumSmelterDescriptor()
 {
     mBuildableClass = AFICSITFerraviumSmelter::StaticClass();
@@ -312,7 +413,7 @@ UFICSITTitanAlloyRecipe::UFICSITTitanAlloyRecipe()
 
     AddItem(mIngredients, TEXT("/Script/FICSITContracts.FICSITFerraviumIngotDescriptor"), 60);
     AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/SteelIngot/Desc_SteelIngot.Desc_SteelIngot_C"), 60);
-    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C"));
+    mProducedIn.Add(TSoftClassPtr<UObject>(AFICSITAdvancedAlloyFoundry::StaticClass()));
 }
 
 UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()
@@ -325,7 +426,7 @@ UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()
 
     AddItem(mIngredients, TEXT("/Script/FICSITContracts.FICSITTitanAlloyIngotDescriptor"), 30);
     AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/SteelPipe/Desc_SteelPipe.Desc_SteelPipe_C"), 60);
-    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C"));
+    mProducedIn.Add(TSoftClassPtr<UObject>(AFICSITAdvancedAlloyFoundry::StaticClass()));
 }
 
 
@@ -341,6 +442,7 @@ UFICSITTitanAlloyRecipeUnlock::UFICSITTitanAlloyRecipeUnlock()
 {
     mRecipes.Add(UFICSITTitanAlloyRecipe::StaticClass());
     mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass());
+    mRecipes.Add(UFICSITAdvancedAlloyFoundryBuildRecipe::StaticClass());
 }
 
 UFICSITFrontierSurveyPrerequisite::UFICSITFrontierSurveyPrerequisite()
@@ -415,7 +517,7 @@ UFICSITAdvancedMetallurgySchematic::UFICSITAdvancedMetallurgySchematic()
 {
     mType = ESchematicType::EST_Milestone;
     mDisplayName = FText::FromString(TEXT("Advanced Metallurgy // Titan Alloy"));
-    mDescription = FText::FromString(TEXT("Unlocks the Foundry process for Titan Alloy Ingots. Combines Ferravium and Steel into a stronger endgame structural alloy."));
+    mDescription = FText::FromString(TEXT("Unlocks the Advanced Alloy Foundry build recipe and two Titan Alloy production recipes. Combines Ferravium and Steel into high-strength ingots and structural beams."));
     mSchematicCategory = LoadClass<UFGSchematicCategory>(
         nullptr, TEXT("/Game/FactoryGame/Schematics/SchematicCategories/SC_Logistics.SC_Logistics_C"));
     mMenuPriority = 179.0f;
