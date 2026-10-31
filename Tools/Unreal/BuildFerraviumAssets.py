@@ -145,14 +145,14 @@ def make_icon(kind, path):
             circle(x, y, 3, orange)
     circle(218, 38, 5, cyan)
 
-    raw = b"".join(b"\\x00" + bytes(pixels[y * width * 3:(y + 1) * width * 3]) for y in range(height))
+    raw = b"".join(b"\x00" + bytes(pixels[y * width * 3:(y + 1) * width * 3]) for y in range(height))
 
     def chunk(kind_bytes, data):
         body = kind_bytes + data
         return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body) & 0xffffffff)
 
     png = (
-        b"\\x89PNG\\r\\n\\x1a\\n"
+        b"\x89PNG\r\n\x1a\n"
         + chunk(b"IHDR", struct.pack(">2I5B", width, height, 8, 2, 0, 0, 0))
         + chunk(b"IDAT", zlib.compress(raw, 9))
         + chunk(b"IEND", b"")
