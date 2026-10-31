@@ -80,7 +80,7 @@ Ferravium, průzkum ložisek, první endgame vybavení, zbraň a Blueprint Desig
 
 Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.
 
-**První implementovaný bootstrap:** nativní Titan Alloy Ingot descriptor a recept `RCP_TITAN_ALLOY` v vanilla Foundry Mk1 (60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots / 8 s). Schéma Advanced Metallurgy je již registrované a při potvrzeném nákupu označí Terminal II jako dokončený. Dedicated Advanced Alloy Foundry a ostatní fáze výrobního řetězce zůstávají plánované.
+**Implementovaný Phase II source slice:** nativní Titan Alloy Ingot a Titan Alloy Beam descriptory s oddělenými OBJ meshi a ikonami. Schéma Advanced Metallurgy je registrované a po potvrzeném nákupu označí Terminal II jako dokončený. Zatím jsou přidány dva bootstrap recepty ve vanilla Foundry Mk1: `RCP_TITAN_ALLOY` (60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots / 8 s) a `RCP_TITAN_BEAM` (30 Titan Alloy Ingots + 60 Steel Pipes → 30 Titan Alloy Beams / 12 s). Dedicated Advanced Alloy Foundry a ostatní fáze výrobního řetězce zůstávají plánované.
 
 **Odemykatelné technologie:**
 
