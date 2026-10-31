@@ -235,7 +235,7 @@ UFICSITFerraviumRecoveryRecipe::UFICSITFerraviumRecoveryRecipe()
     AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/RawResources/OreBauxite/Desc_OreBauxite.Desc_OreBauxite_C"), 120);
     AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/RawResources/Coal/Desc_Coal.Desc_Coal_C"), 30);
     AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/RawResources/Water/Desc_Water.Desc_Water_C"), 60);
-    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/Build_Refinery.Build_Refinery_C"));
+    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C"));
 }
 
 UFICSITFerraviumConcentrateRecipe::UFICSITFerraviumConcentrateRecipe()
@@ -248,7 +248,7 @@ UFICSITFerraviumConcentrateRecipe::UFICSITFerraviumConcentrateRecipe()
 
     AddItem(mIngredients, TEXT("/Script/FICSITContracts.FICSITFerraviumOreDescriptor"), 60);
     AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/RawResources/Water/Desc_Water.Desc_Water_C"), 30);
-    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/Build_Refinery.Build_Refinery_C"));
+    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C"));
 }
 
 UFICSITFerraviumSmeltingRecipe::UFICSITFerraviumSmeltingRecipe()
