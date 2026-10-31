@@ -46,7 +46,7 @@ class FICSITCONTRACTS_API AFICSITFerraviumSmelter : public AFGBuildableManufactu
 {
     GENERATED_BODY()
 public:
-    AFICSITFerraviumSmelter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+    AFICSITFerraviumSmelter();
 
 private:
     UPROPERTY()
