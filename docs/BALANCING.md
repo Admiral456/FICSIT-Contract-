@@ -47,7 +47,7 @@ Each phase has its own manifest. The next phase remains locked until every requi
 | 2,000 | Supply Chain Director |
 | 3,000 | FICSIT Executive |
 
-There are five available offers at a time and a maximum of four active contracts. The catalog has 21 templates across five reputation bands. Completed, expired and cancelled history is capped at the latest 50 entries.
+There are five available offers at a time and a maximum of four active contracts. The catalog has 21 templates across eight reputation thresholds. Completed, expired and cancelled history is capped at the latest 50 entries.
 
 Cancelling an active contract costs 25% of its listed reputation reward (rounded up, minimum 5 for positive-reward orders); the charge is capped by the player's current reputation.
 
