@@ -256,32 +256,32 @@ FString AFICSITContractsSubsystem::GetEndgameProgressionSummary() const
     };
 
     FString Result = TEXT("FICSIT ENDGAME RESEARCH // SERVER-SAVED PROGRESSION");
-    Result += FString::Printf(TEXT("\\nVANILLA SPACE ELEVATOR V: %s"),
+    Result += FString::Printf(TEXT("\nVANILLA SPACE ELEVATOR V: %s"),
         Progression.state().vanillaSpaceElevatorPhase5Complete ? TEXT("CONFIRMED") : TEXT("NOT CONFIRMED"));
 
     for (int32 Phase = 1; Phase <= 6; ++Phase)
     {
         const bool bComplete = Progression.isTerminalPhaseComplete(Phase);
         const bool bAvailable = Progression.canResearchTerminalPhase(Phase);
-        Result += FString::Printf(TEXT("\\nTERMINAL %02d // %s"),
+        Result += FString::Printf(TEXT("\nTERMINAL %02d // %s"),
             Phase, GetStatus(bComplete, bAvailable));
     }
     for (int32 Phase = 6; Phase <= 8; ++Phase)
     {
         const bool bComplete = Progression.isElevatorPhaseComplete(Phase);
         const bool bAvailable = Progression.canCompleteElevatorPhase(Phase);
-        Result += FString::Printf(TEXT("\\nSPACE ELEVATOR %02d // %s"),
+        Result += FString::Printf(TEXT("\nSPACE ELEVATOR %02d // %s"),
             Phase, GetStatus(bComplete, bAvailable));
     }
 
     const int32 AvailableTerminal = Progression.availableTerminalPhase();
     const int32 AvailableElevator = Progression.availableElevatorPhase();
     Result += AvailableTerminal > 0
-        ? FString::Printf(TEXT("\\nNEXT RESEARCH: TERMINAL PHASE %d"), AvailableTerminal)
-        : TEXT("\\nNEXT RESEARCH: NONE");
+        ? FString::Printf(TEXT("\nNEXT RESEARCH: TERMINAL PHASE %d"), AvailableTerminal)
+        : TEXT("\nNEXT RESEARCH: NONE");
     Result += AvailableElevator > 0
-        ? FString::Printf(TEXT("\\nNEXT ELEVATOR PROJECT: PHASE %d"), AvailableElevator)
-        : TEXT("\\nNEXT ELEVATOR PROJECT: NONE");
+        ? FString::Printf(TEXT("\nNEXT ELEVATOR PROJECT: PHASE %d"), AvailableElevator)
+        : TEXT("\nNEXT ELEVATOR PROJECT: NONE");
     return Result;
 }
 
