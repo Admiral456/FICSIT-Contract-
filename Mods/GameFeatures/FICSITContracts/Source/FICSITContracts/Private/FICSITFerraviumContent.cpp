@@ -177,7 +177,7 @@ AFICSITFerraviumSmelter::AFICSITFerraviumSmelter()
         }
     }
 
-    InputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("FerraviumInput"));
+    // Keep the canonical Input0/Output0 component names used by vanilla machines.\n    InputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Input0"));
     InputConnection->SetupAttachment(RootComponent);
     InputConnection->SetRelativeLocation(FVector(-155.0f, 0.0f, 76.0f));
     InputConnection->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
@@ -185,7 +185,7 @@ AFICSITFerraviumSmelter::AFICSITFerraviumSmelter()
     InputConnection->SetConnectorClearance(85.0f);
     InputConnection->SetForwardPeekAndGrabToBuildable(true);
 
-    OutputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("FerraviumOutput"));
+    OutputConnection = CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Output0"));
     OutputConnection->SetupAttachment(RootComponent);
     OutputConnection->SetRelativeLocation(FVector(155.0f, 0.0f, 76.0f));
     OutputConnection->SetRelativeRotation(FRotator::ZeroRotator);
