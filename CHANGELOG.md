@@ -16,8 +16,13 @@
 - Expose read-only progression status in the Dispatch Terminal and `/contracts progression` command.
 - Add server-only progression adapter methods that re-check phase gates before modifying saved state.
 - Extend static CI validation and the in-game checklist for save, replication, UI and progression gate behavior.
+- Add native Ferravium Ore, Concentrate and Ingot descriptor classes and the recovery/washing/smelting recipe chain.
+- Add a native AFGBuildableManufacturer-based Ferravium Smelter with conveyor input/output ports and a reflected 90 MW power setting.
+- Add the smelter build descriptor/Build Gun recipe and a Frontier Survey schematic gated by the server-saved Phase V/Terminal I state.
+- Add Ferravium OBJ/MTL item and furnace models, four generated icon sources and a dedicated Unreal Editor import utility.
+- Update the machine-readable catalog to 56 recipes and mark Ferravium as a source prototype; natural resource-node spawning remains deferred.
 
-**Content remains design-only:** the catalog does not yet register live custom schematics, items, weapons, buildings, recipes or resource nodes. The saved/repllicated progression state and its read-only terminal/chat display are implemented at source level, but no vanilla completion event or custom schematic purchase updates it yet. Custom UE compilation and in-game testing remain pending.
+**Content implementation status:** the overall endgame catalogue remains design/data. Ferravium now has native source classes, recipes and a schematic prototype, but its models/icons still require import and no natural Ferravium nodes are placed in the world. The saved/repllicated progression state and its read-only display are implemented at source level, but the vanilla Phase V completion callback and actual schematic purchase callback remain unconnected. Custom UE compilation and in-game testing remain pending.
 
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
