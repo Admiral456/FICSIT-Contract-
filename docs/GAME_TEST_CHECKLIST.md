@@ -97,7 +97,9 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Verify purchasing an unrelated schematic does not advance endgame progression.
 - [ ] Confirm Titan Alloy Ingot recipe appears only after Advanced Metallurgy is purchased.
 - [ ] Import the Titan Alloy Ingot OBJ and generated icon; confirm the mesh and icon resolve under the plugin resource mount.
-- [ ] Run the Foundry Mk1 recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
+- [ ] Run the Foundry Mk1 ingot recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
+- [ ] Run the Foundry Mk1 beam recipe: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle.
+- [ ] Verify Titan Alloy Beam uses the imported I-section mesh and its own icon, and that its conveyor mesh/stack/category metadata are valid.
 - [ ] Save/reload with Titan Alloy production active and verify recipe unlock and item references persist.
 - [ ] Confirm the recipe is intentionally using vanilla Foundry Mk1; do not mark the dedicated Advanced Alloy Foundry as implemented.
 
