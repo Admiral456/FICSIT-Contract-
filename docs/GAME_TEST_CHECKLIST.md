@@ -96,7 +96,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Load a save where both Frontier Survey and Advanced Metallurgy were already purchased before mod installation and verify reconciliation marks Terminal I then Terminal II complete.
 - [ ] Verify purchasing an unrelated schematic does not advance endgame progression.
 - [ ] Confirm Titan Alloy Ingot recipe appears only after Advanced Metallurgy is purchased.
-- [ ] Import the Titan Alloy Ingot, Titan Alloy Beam, Reinforced Titan Frame and Advanced Alloy Foundry OBJ meshes plus their separate generated icons; confirm all assets resolve under the plugin resource mount.
+- [ ] Import the Titan Alloy Ingot, Titan Alloy Beam, Reinforced Titan Frame, Heavy Industrial Rotor and Advanced Alloy Foundry OBJ meshes plus their separate generated icons; confirm all assets resolve under the plugin resource mount.
 - [ ] Confirm Advanced Alloy Foundry appears in the Production build menu only after Advanced Metallurgy is purchased.
 - [ ] Build the Advanced Alloy Foundry and verify hologram, 444 × 316 × 315 cm clearance, collision, dismantle refund and power connection.
 - [ ] Verify the `Input0` port faces into the machine, the `Output0` port faces out, and both belt connectors snap/transfer correctly.
