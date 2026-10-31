@@ -557,6 +557,8 @@ def main() -> int:
     if ferravium_header.is_file():
         header_text = ferravium_header.read_text(encoding="utf-8")
         for required in (
+            "UFGResourceDescriptor",
+            "AFGBuildableManufacturer",
             "UFICSITFerraviumOreDescriptor",
             "UFICSITFerraviumConcentrateDescriptor",
             "UFICSITFerraviumIngotDescriptor",
@@ -568,8 +570,6 @@ def main() -> int:
     if ferravium_source.is_file():
         ferravium_text = ferravium_source.read_text(encoding="utf-8")
         for required in (
-            "UFGResourceDescriptor",
-            "AFGBuildableManufacturer",
             "FCD_INPUT",
             "FCD_OUTPUT",
             "mRecipes.Add(UFICSITFerraviumRecoveryRecipe::StaticClass())",
@@ -583,7 +583,10 @@ def main() -> int:
                 errors.append(f"Ferravium source prototype is missing required integration: {required}")
     if world_module_source.is_file():
         world_text = world_module_source.read_text(encoding="utf-8")
-        if '#include "FICSITFerraviumContent.h"' not in world_text or            "mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass())" not in world_text:
+        if (
+            '#include "FICSITFerraviumContent.h"' not in world_text
+            or "mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass())" not in world_text
+        ):
             errors.append("Frontier Survey schematic must be registered in the SML world module.")
 
     ferravium_importer = ROOT / "Tools/Unreal/BuildFerraviumAssets.py"
