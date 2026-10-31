@@ -1,0 +1,2930 @@
+{
+  "schemaVersion": 1,
+  "catalogId": "FICSIT_ENDGAME_EXPANSION",
+  "displayName": "FICSIT Endgame Expansion",
+  "target": {
+    "game": "Satisfactory",
+    "gameVersion": "1.2",
+    "sml": "3.12.x",
+    "unreal": "custom UE 5.6.1"
+  },
+  "implementationStatus": "design_only",
+  "sourceOfTruthNote": "The full catalogue remains design data: 95 planned unlocks plus five native source prototypes (Titan Alloy Ingot, Titan Alloy Beam, Reinforced Titan Frame, Advanced Alloy Foundry and Heavy Industrial Rotor). Phase II native sources include the Titan Alloy Foundry recipes, Manufacturer Mk1 bootstrap recipes for the Reinforced Titan Frame and Heavy Industrial Rotor, and their separate planned Heavy-Duty Assembler design recipes. Vanilla Project Assembly completion and Frontier Survey / Advanced Metallurgy schematic purchases are wired at source level. Natural Ferravium nodes, target-editor asset import, UHT/UE compilation, Alpakit packaging and in-game validation remain pending.",
+  "progression": {
+    "vanillaPhase5UnlocksTerminalPhases": [
+      1,
+      2
+    ],
+    "gating": "Complete the new Elevator phase before the associated terminal research chapter becomes available.",
+    "elevatorExtensions": [
+      {
+        "phase": 6,
+        "id": "SPACE_ELEVATOR_PHASE_06",
+        "title": "Frontier Expansion",
+        "unlocksTerminalPhases": [
+          3,
+          4
+        ],
+        "requirements": [
+          [
+            "FERRAVIUM_STRUCTURAL_MATRIX",
+            1500
+          ],
+          [
+            "DEEP_CORE_EXTRACTOR_MODULE",
+            800
+          ],
+          [
+            "TITAN_ALLOY_BEAM",
+            1200
+          ],
+          [
+            "ADVANCED_SURVEY_COMPUTER",
+            400
+          ]
+        ]
+      },
+      {
+        "phase": 7,
+        "id": "SPACE_ELEVATOR_PHASE_07",
+        "title": "Planetary Network",
+        "unlocksTerminalPhases": [
+          5
+        ],
+        "requirements": [
+          [
+            "CRYOGENIC_POWER_REGULATOR",
+            1200
+          ],
+          [
+            "PHOTONIC_ROUTING_ARRAY",
+            800
+          ],
+          [
+            "SUPERCONDUCTIVE_COIL",
+            1500
+          ],
+          [
+            "QUANTUM_COMMUNICATION_CORE",
+            400
+          ]
+        ]
+      },
+      {
+        "phase": 8,
+        "id": "SPACE_ELEVATOR_PHASE_08",
+        "title": "Orbital Assembly",
+        "unlocksTerminalPhases": [
+          6
+        ],
+        "requirements": [
+          [
+            "GRAVITIC_TRANSIT_CORE",
+            1000
+          ],
+          [
+            "ORBITAL_LOGISTICS_MODULE",
+            600
+          ],
+          [
+            "QUANTUM_LOGISTICS_ENGINE",
+            300
+          ],
+          [
+            "ORBITAL_PREASSEMBLY_PROCESSOR",
+            100
+          ]
+        ]
+      }
+    ]
+  },
+  "phases": [
+    {
+      "id": "TERMINAL_PHASE_01",
+      "index": 1,
+      "title": "Frontier Survey",
+      "subtitle": "Průzkum hranic",
+      "requires": "Vanilla Space Elevator Phase V complete",
+      "elevatorGate": 5,
+      "summary": "Ferravium, průzkum ložisek, první endgame vybavení, zbraň a Blueprint Designer Mk4.",
+      "unlockIds": [
+        "GEO_SURVEY_STATION",
+        "DEEP_CORE_EXTRACTOR",
+        "ORE_WASHING_PLANT",
+        "FERRAVIUM_SMELTER",
+        "FIELD_WORKSHOP",
+        "SURVEY_BEACON_MK2",
+        "SCANNER_FERRAVIUM",
+        "SURVEY_VISOR",
+        "SCOUT_DRONE",
+        "PORTABLE_MINER_MK2",
+        "PRECISION_REBAR_RIFLE",
+        "FERRAVIUM_DARTS",
+        "BLUEPRINT_DESIGNER_MK4",
+        "DEEP_CORE_STORAGE"
+      ],
+      "recipeIds": [
+        "RCP_FERRAVIUM_SMELTER_BUILD",
+        "RCP_FERRAVIUM_RECOVERY",
+        "RCP_FERRAVIUM_CONCENTRATE",
+        "RCP_FERRAVIUM_INGOT",
+        "RCP_FERRAVIUM_PLATE",
+        "RCP_SURVEY_COMPUTER",
+        "RCP_FERRAVIUM_DARTS",
+        "RCP_PRECISION_REBAR_RIFLE",
+        "RCP_BLUEPRINT_MK4"
+      ]
+    },
+    {
+      "id": "TERMINAL_PHASE_02",
+      "index": 2,
+      "title": "Advanced Metallurgy",
+      "subtitle": "Pokročilá metalurgie",
+      "requires": "Terminal Phase I complete",
+      "elevatorGate": 5,
+      "summary": "Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.",
+      "unlockIds": [
+        "REINFORCED_TITAN_FRAME",
+        "HEAVY_INDUSTRIAL_ROTOR",
+        "TITAN_ALLOY_BEAM",
+        "TITAN_ALLOY_INGOT",
+        "ADVANCED_ALLOY_FOUNDRY",
+        "INDUSTRIAL_PRESS",
+        "HEAVY_DUTY_ASSEMBLER",
+        "MINER_MK4",
+        "CONVEYOR_MK7",
+        "LIFT_MK7",
+        "SMART_SPLITTER_MK2",
+        "INDUSTRIAL_STORAGE_MK2",
+        "PIPELINE_MK3",
+        "FLUID_BUFFER_MK2",
+        "HV_SUBSTATION",
+        "POWER_STORAGE_MK2",
+        "HEAVY_REBAR_REPEATER",
+        "HARDENED_REBAR_AMMO",
+        "EXOSUIT_MK1",
+        "INDUSTRIAL_GARAGE",
+        "REINFORCED_BUILD_SET"
+      ],
+      "recipeIds": [
+        "RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP",
+        "RCP_ADVANCED_ALLOY_FOUNDRY_BUILD",
+        "RCP_TITAN_BEAM_BOOTSTRAP",
+        "RCP_TITAN_ALLOY",
+        "RCP_TITAN_BEAM",
+        "RCP_REINFORCED_TITAN_FRAME",
+        "RCP_HEAVY_ROTOR",
+        "RCP_HEAVY_ROTOR_BOOTSTRAP",
+        "RCP_HARDENED_AMMO",
+        "RCP_FERRAVIUM_STRUCTURAL_MATRIX",
+        "RCP_DEEP_CORE_EXTRACTOR_MODULE",
+        "RCP_ADVANCED_SURVEY_COMPUTER",
+        "RCP_HEAVY_REBAR_REPEATER",
+        "RCP_EXOSUIT_MK1"
+      ]
+    },
+    {
+      "id": "TERMINAL_PHASE_03",
+      "index": 3,
+      "title": "Cryogenic Systems",
+      "subtitle": "Kryogenní systémy",
+      "requires": "Space Elevator Phase VI complete",
+      "elevatorGate": 6,
+      "summary": "Cryonite, chlazení, supravodiče, kryo výbava, nová zbraň a palivové systémy.",
+      "unlockIds": [
+        "CRYOGENIC_PROCESSING_FACILITY",
+        "CRYOGENIC_REFINERY",
+        "GAS_LIQUEFACTION_UNIT",
+        "SUPERCONDUCTIVE_ASSEMBLER",
+        "INDUSTRIAL_COOLING_TOWER",
+        "CRYOGENIC_PUMP_MK3",
+        "FLUID_BUFFER_MK3",
+        "THERMAL_ENERGY_STORAGE",
+        "CRYO_SUIT_MK1",
+        "CRYO_PROJECTOR",
+        "CRYO_AMMO",
+        "CRYO_GRENADE",
+        "JETPACK_MK2",
+        "COOLING_LOOP_CONTROLLER"
+      ],
+      "recipeIds": [
+        "RCP_CRYONITE_POWDER",
+        "RCP_CRYOGENIC_SLURRY",
+        "RCP_REFINED_CRYONITE",
+        "RCP_SUPERCONDUCTIVE_COIL",
+        "RCP_CRYO_ENGINE",
+        "RCP_CRYO_AMMO",
+        "RCP_CRYOGENIC_POWER_REGULATOR",
+        "RCP_CRYO_PROJECTOR",
+        "RCP_CRYO_GRENADE",
+        "RCP_CRYO_SUIT"
+      ]
+    },
+    {
+      "id": "TERMINAL_PHASE_04",
+      "index": 4,
+      "title": "Photonic Manufacturing",
+      "subtitle": "Fotonická výroba",
+      "requires": "Terminal Phase III complete and Space Elevator Phase VI complete",
+      "elevatorGate": 6,
+      "summary": "Asterite, optická elektronika, Blueprint Designer Mk5, fotonická puška a automatizované řízení.",
+      "unlockIds": [
+        "PHOTONIC_FABRICATOR",
+        "OPTICAL_GLASS_FURNACE",
+        "QUANTUM_CIRCUIT_ASSEMBLER",
+        "PHOTONIC_COMMUNICATION_TOWER",
+        "MINER_MK5",
+        "CONVEYOR_MK8",
+        "LIFT_MK8",
+        "SMART_SPLITTER_MK3",
+        "DRONE_PORT_MK2",
+        "FACTORY_MONITOR_TERMINAL",
+        "HOLOGRAPHIC_DISPLAY",
+        "AUTOMATED_FACTORY_ALARM",
+        "PHOTONIC_RIFLE",
+        "PHOTONIC_ENERGY_CELLS",
+        "BLUEPRINT_DESIGNER_MK5",
+        "HOVERPACK_MK2",
+        "SCOUT_DRONE_MK2",
+        "LOGISTICS_CONTROLLER"
+      ],
+      "recipeIds": [
+        "RCP_ASTERITE_WAFER",
+        "RCP_OPTICAL_GLASS",
+        "RCP_PHOTONIC_FIBER",
+        "RCP_PHOTONIC_PROCESSOR",
+        "RCP_QUANTUM_ROUTING_ARRAY",
+        "RCP_PHOTONIC_CELL",
+        "RCP_PHOTONIC_ROUTING_ARRAY",
+        "RCP_QUANTUM_COMMUNICATION_CORE",
+        "RCP_PHOTONIC_RIFLE",
+        "RCP_BLUEPRINT_MK5"
+      ]
+    },
+    {
+      "id": "TERMINAL_PHASE_05",
+      "index": 5,
+      "title": "Gravitic Engineering",
+      "subtitle": "Gravitační technologie",
+      "requires": "Space Elevator Phase VII complete",
+      "elevatorGate": 7,
+      "summary": "Gravionite, gravitační doprava, energetika, osobní štít a gravitační zbraň.",
+      "unlockIds": [
+        "GRAVITIC_STABILIZATION_REACTOR",
+        "GRAVITIC_ASSEMBLER",
+        "MASS_COMPRESSION_UNIT",
+        "MINER_MK6",
+        "CONVEYOR_MK9",
+        "LIFT_MK9",
+        "GRAVITIC_FREIGHT_ELEVATOR",
+        "QUANTUM_MERGER",
+        "QUANTUM_ACCUMULATOR",
+        "GRAVITIC_POWER_PLANT",
+        "GRAVITY_BOOTS",
+        "PERSONAL_SHIELD_GENERATOR",
+        "GRAVITIC_LAUNCHER",
+        "GRAVITY_GRENADE",
+        "REPULSION_GRENADE",
+        "AUTOMATED_SENTRY_MK2"
+      ],
+      "recipeIds": [
+        "RCP_GRAVIONITE_SHARD",
+        "RCP_STABILIZED_GRAVIONITE",
+        "RCP_GRAVITIC_CORE",
+        "RCP_GRAVITIC_STABILIZER",
+        "RCP_QUANTUM_LOGISTICS_ENGINE",
+        "RCP_GRAVITIC_TRANSIT_CORE",
+        "RCP_ORBITAL_LOGISTICS_MODULE",
+        "RCP_GRAVITIC_LAUNCHER",
+        "RCP_GRAVITY_GRENADE",
+        "RCP_REPULSION_GRENADE",
+        "RCP_GRAVITY_BOOTS",
+        "RCP_PERSONAL_SHIELD",
+        "RCP_ORBITAL_PREASSEMBLY_PROCESSOR"
+      ]
+    },
+    {
+      "id": "TERMINAL_PHASE_06",
+      "index": 6,
+      "title": "Interplanetary Logistics",
+      "subtitle": "Meziplanetární logistika",
+      "requires": "Space Elevator Phase VIII complete",
+      "elevatorGate": 8,
+      "summary": "Orbitální logistika, kvantové relé, vzdálená správa továren, pokročilý blueprint management a podpůrný systém.",
+      "unlockIds": [
+        "ORBITAL_FREIGHT_HUB",
+        "QUANTUM_CARGO_RELAY",
+        "LOGISTICS_CONTROL_CENTER",
+        "AUTOMATED_LOADING_DOCK",
+        "QUANTUM_STORAGE_CONTAINER",
+        "ORBITAL_ASSEMBLY_PLANT",
+        "FICSIT_GLOBAL_DISPATCH",
+        "DRONE_PORT_MK3",
+        "TRAIN_LOGISTICS_CONTROLLER",
+        "QUANTUM_POWER_RELAY",
+        "ORBITAL_POWER_DISTRIBUTOR",
+        "FIELD_FABRICATOR_MK2",
+        "PERSONAL_LOGISTICS_SUIT",
+        "ORBITAL_SUPPORT_BEACON",
+        "FICSIT_SECURITY_DRONE",
+        "REMOTE_FACTORY_CONTROL",
+        "BLUEPRINT_MANAGEMENT_TERMINAL"
+      ],
+      "recipeIds": [
+        "RCP_QUANTUM_CARGO_CORE",
+        "RCP_QUANTUM_STORAGE_MATRIX",
+        "RCP_COMMAND_PROCESSOR",
+        "RCP_ORBITAL_ASSEMBLY_FRAME"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "FERRAVIUM_ORE",
+      "displayName": "Ferravium Ore",
+      "visual": "Černomodrá kovová hornina s oranžovými žilami a jemným kovovým leskem.",
+      "processing": [
+        "Ferravium Ore recovery (temporary refinery bootstrap)",
+        "Ferravium Concentrate",
+        "Ferravium Ingot",
+        "Titan Alloy"
+      ],
+      "uses": [
+        "Těžba, konstrukce, nové střelivo a těžké průmyslové sestavy"
+      ],
+      "nodeIntegration": "This first source prototype does not place natural nodes; Ferravium Ore is temporarily produced through a refinery recovery recipe until supported vanilla-world resource-node spawning is validated."
+    },
+    {
+      "id": "CRYONITE_ORE",
+      "displayName": "Cryonite Ore",
+      "visual": "Průsvitné tyrkysové krystaly s ledovým povrchem a světelným jádrem.",
+      "processing": [
+        "Cryonite Powder",
+        "Cryogenic Slurry",
+        "Refined Cryonite Crystal",
+        "Superconductive Coil"
+      ],
+      "uses": [
+        "Kryogenní chlazení, supravodiče, kryo munice a energetické regulátory"
+      ],
+      "nodeIntegration": "Requires a supported resource-node spawning or deposit actor path plus ore scanner registration."
+    },
+    {
+      "id": "ASTERITE_ORE",
+      "displayName": "Asterite Ore",
+      "visual": "Tmavá fialová geoda s magentovými a tyrkysovými krystalickými ploškami.",
+      "processing": [
+        "Asterite Powder",
+        "Asterite Wafer",
+        "Photonic Fiber",
+        "Photonic Processor"
+      ],
+      "uses": [
+        "Optická elektronika, fotonická komunikace a kvantové řídicí obvody"
+      ],
+      "nodeIntegration": "Requires resource-node and scanner integration validation."
+    },
+    {
+      "id": "GRAVIONITE_ORE",
+      "displayName": "Gravionite Ore",
+      "visual": "Černofialový nerost s pulzujícím jádrem a drobnými levitujícími úlomky.",
+      "processing": [
+        "Gravionite Shard",
+        "Stabilized Gravionite",
+        "Gravitic Core",
+        "Quantum Logistics Engine"
+      ],
+      "uses": [
+        "Gravitační logistika, stabilizátory, energetika a orbitální systémy"
+      ],
+      "nodeIntegration": "Requires resource-node and scanner integration validation."
+    }
+  ],
+  "unlocks": [
+    {
+      "id": "GEO_SURVEY_STATION",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Geological Survey Station",
+      "description": "Průzkumná budova; odhaluje v dosahu nové hlubinné a speciální zdroje.",
+      "status": "planned"
+    },
+    {
+      "id": "DEEP_CORE_EXTRACTOR",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Deep-Core Extractor",
+      "description": "Těžební zařízení pro nový typ podzemních ložisek; vyžaduje schválený zdrojový uzel.",
+      "status": "planned",
+      "risk": "resource-node-integration"
+    },
+    {
+      "id": "ORE_WASHING_PLANT",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Ore Washing Plant",
+      "description": "Pere a koncentruje nové rudy; přidává odpadní vodu a vedlejší frakci.",
+      "status": "planned"
+    },
+    {
+      "id": "FERRAVIUM_SMELTER",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Ferravium Smelter",
+      "description": "Native AFICSITFerraviumSmelter manufacturer, buildable descriptor and build recipe are in the source prototype; meshes/icons must be imported and UE/in-game validation remains pending.",
+      "status": "planned"
+    },
+    {
+      "id": "FIELD_WORKSHOP",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Field Workshop",
+      "description": "Malá dílna pro základní terénní výrobu a servis.",
+      "status": "planned"
+    },
+    {
+      "id": "SURVEY_BEACON_MK2",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Survey Beacon Mk2",
+      "description": "Značí objevené zdroje a odesílá jejich souřadnice do terminálu.",
+      "status": "planned"
+    },
+    {
+      "id": "SCANNER_FERRAVIUM",
+      "phase": 1,
+      "category": "scanner",
+      "displayName": "Ferravium Scanner Upgrade",
+      "description": "Přidá Ferravium do skeneru zdrojů; vyžaduje nativní scannable-resource unlock.",
+      "status": "planned"
+    },
+    {
+      "id": "SURVEY_VISOR",
+      "phase": 1,
+      "category": "equipment",
+      "displayName": "Pathfinder Visor",
+      "description": "Osobní navigační visor s označováním průzkumných bodů.",
+      "status": "planned"
+    },
+    {
+      "id": "SCOUT_DRONE",
+      "phase": 1,
+      "category": "vehicle",
+      "displayName": "Survey Drone",
+      "description": "Manuálně vysílaný průzkumný dron; nejde o autonomní combat AI.",
+      "status": "planned"
+    },
+    {
+      "id": "PORTABLE_MINER_MK2",
+      "phase": 1,
+      "category": "equipment",
+      "displayName": "Portable Miner Mk2",
+      "description": "Vylepšený přenosný těžař pro podporované uzly.",
+      "status": "planned"
+    },
+    {
+      "id": "PRECISION_REBAR_RIFLE",
+      "phase": 1,
+      "category": "weapon",
+      "displayName": "FICSIT Precision Rebar Rifle",
+      "description": "Přesná jednoranová zbraň s vyšším dostřelem než Rebar Gun.",
+      "status": "planned"
+    },
+    {
+      "id": "FERRAVIUM_DARTS",
+      "phase": 1,
+      "category": "ammo",
+      "displayName": "Ferravium Darts",
+      "description": "Průrazná munice pro Precision Rebar Rifle.",
+      "status": "planned"
+    },
+    {
+      "id": "BLUEPRINT_DESIGNER_MK4",
+      "phase": 1,
+      "category": "blueprint",
+      "displayName": "Blueprint Designer Mk4",
+      "description": "Návrhový prostor 64 × 64 × 64 m; rozšíření nad existující vanilla Mk3.",
+      "status": "planned",
+      "risk": "blueprint-designer-extension"
+    },
+    {
+      "id": "DEEP_CORE_STORAGE",
+      "phase": 1,
+      "category": "building",
+      "displayName": "Deep-Core Storage",
+      "description": "Průmyslový sklad pro hlubinné koncentráty.",
+      "status": "planned"
+    },
+    {
+      "id": "ADVANCED_ALLOY_FOUNDRY",
+      "phase": 2,
+      "category": "building",
+      "displayName": "Advanced Alloy Foundry",
+      "description": "Velká slévárna pro Titan Alloy a další pokročilé slitiny.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "TITAN_ALLOY_BEAM",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Titan Alloy Beam",
+      "description": "Native source prototype: a Titan Alloy and Steel Pipe beam bootstrap, separate from the planned Industrial Press recipe.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "REINFORCED_TITAN_FRAME",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Reinforced Titan Frame",
+      "description": "Native source prototype: Manufacturer Mk1 recipe combining Titan Alloy Beams and Heavy Modular Frames; the planned Heavy-Duty Assembler recipe remains separate.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "HEAVY_INDUSTRIAL_ROTOR",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Heavy Industrial Rotor",
+      "description": "Native source prototype: Manufacturer Mk1 bootstrap combining Titan Alloy Ingots, Rotors and Motors; the planned Heavy-Duty Assembler recipe remains separate.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "TITAN_ALLOY_INGOT",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Titan Alloy Ingot Recipe",
+      "description": "Foundry recipe combining Ferravium and Steel into a high-density structural alloy.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "INDUSTRIAL_PRESS",
+      "phase": 2,
+      "category": "building",
+      "displayName": "Industrial Press",
+      "description": "Lisuje těžké plechy, nosníky a výztuhy.",
+      "status": "planned"
+    },
+    {
+      "id": "HEAVY_DUTY_ASSEMBLER",
+      "phase": 2,
+      "category": "building",
+      "displayName": "Heavy-Duty Assembler",
+      "description": "Montuje těžké průmyslové sestavy.",
+      "status": "planned"
+    },
+    {
+      "id": "MINER_MK4",
+      "phase": 2,
+      "category": "miner",
+      "displayName": "Miner Mk4",
+      "description": "Nový těžební stroj s návrhovým výkonem 1 200/min na normálním uzlu.",
+      "status": "planned"
+    },
+    {
+      "id": "CONVEYOR_MK7",
+      "phase": 2,
+      "category": "logistics",
+      "displayName": "Conveyor Belt Mk7",
+      "description": "Návrhová kapacita 1 800 předmětů/min; nutný test rychlosti v herním enginu.",
+      "status": "planned"
+    },
+    {
+      "id": "LIFT_MK7",
+      "phase": 2,
+      "category": "logistics",
+      "displayName": "Conveyor Lift Mk7",
+      "description": "Vertikální pás odpovídající Mk7.",
+      "status": "planned"
+    },
+    {
+      "id": "SMART_SPLITTER_MK2",
+      "phase": 2,
+      "category": "logistics",
+      "displayName": "Smart Splitter Mk2",
+      "description": "Pokročilé priority, více pravidel a přesměrování.",
+      "status": "planned"
+    },
+    {
+      "id": "INDUSTRIAL_STORAGE_MK2",
+      "phase": 2,
+      "category": "building",
+      "displayName": "Industrial Storage Mk2",
+      "description": "Větší sklad s více vstupy a výstupy.",
+      "status": "planned"
+    },
+    {
+      "id": "PIPELINE_MK3",
+      "phase": 2,
+      "category": "logistics",
+      "displayName": "Pipeline Mk3",
+      "description": "Vyšší návrhový průtok a rozšířený tlakový rozsah.",
+      "status": "planned"
+    },
+    {
+      "id": "FLUID_BUFFER_MK2",
+      "phase": 2,
+      "category": "building",
+      "displayName": "Industrial Fluid Buffer Mk2",
+      "description": "Větší zásobník kapalin.",
+      "status": "planned"
+    },
+    {
+      "id": "HV_SUBSTATION",
+      "phase": 2,
+      "category": "power",
+      "displayName": "High-Voltage Substation",
+      "description": "Centrální rozvodna pro velké průmyslové areály.",
+      "status": "planned"
+    },
+    {
+      "id": "POWER_STORAGE_MK2",
+      "phase": 2,
+      "category": "power",
+      "displayName": "Power Storage Mk2",
+      "description": "Větší zásoba energie a vyšší výkon nabíjení/vybíjení.",
+      "status": "planned"
+    },
+    {
+      "id": "HEAVY_REBAR_REPEATER",
+      "phase": 2,
+      "category": "weapon",
+      "displayName": "Heavy Rebar Repeater",
+      "description": "Automatická průmyslová zbraň pro boj na kratší vzdálenost.",
+      "status": "planned"
+    },
+    {
+      "id": "HARDENED_REBAR_AMMO",
+      "phase": 2,
+      "category": "ammo",
+      "displayName": "Hardened Rebar Ammunition",
+      "description": "Tvrzená munice pro Heavy Rebar Repeater.",
+      "status": "planned"
+    },
+    {
+      "id": "EXOSUIT_MK1",
+      "phase": 2,
+      "category": "equipment",
+      "displayName": "FICSIT Exosuit Mk1",
+      "description": "Osobní modul pro vyšší odolnost a lepší mobilitu; musí respektovat equipment sloty.",
+      "status": "planned"
+    },
+    {
+      "id": "INDUSTRIAL_GARAGE",
+      "phase": 2,
+      "category": "vehicle",
+      "displayName": "Industrial Garage",
+      "description": "Servisní stanice a přizpůsobení pozemních vozidel.",
+      "status": "planned"
+    },
+    {
+      "id": "REINFORCED_BUILD_SET",
+      "phase": 2,
+      "category": "building",
+      "displayName": "Reinforced Build Set",
+      "description": "Zesílené základy, stěny, střechy, rampy a servisní lávky.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYOGENIC_PROCESSING_FACILITY",
+      "phase": 3,
+      "category": "building",
+      "displayName": "Cryogenic Processing Facility",
+      "description": "Velká kryogenní výrobní budova.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYOGENIC_REFINERY",
+      "phase": 3,
+      "category": "building",
+      "displayName": "Cryogenic Refinery",
+      "description": "Míchá Cryogenic Slurry a rafinuje Cryonite.",
+      "status": "planned"
+    },
+    {
+      "id": "GAS_LIQUEFACTION_UNIT",
+      "phase": 3,
+      "category": "building",
+      "displayName": "Gas Liquefaction Unit",
+      "description": "Zkapalňuje vybrané plyny pro speciální recepty.",
+      "status": "planned"
+    },
+    {
+      "id": "SUPERCONDUCTIVE_ASSEMBLER",
+      "phase": 3,
+      "category": "building",
+      "displayName": "Superconductive Assembler",
+      "description": "Vyrábí supravodivé cívky a regulátory.",
+      "status": "planned"
+    },
+    {
+      "id": "INDUSTRIAL_COOLING_TOWER",
+      "phase": 3,
+      "category": "building",
+      "displayName": "Industrial Cooling Tower",
+      "description": "Chladicí okruh pro tovární komplexy.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYOGENIC_PUMP_MK3",
+      "phase": 3,
+      "category": "logistics",
+      "displayName": "Cryogenic Pump Mk3",
+      "description": "Čerpá nové kryogenní kapaliny.",
+      "status": "planned"
+    },
+    {
+      "id": "FLUID_BUFFER_MK3",
+      "phase": 3,
+      "category": "building",
+      "displayName": "Fluid Buffer Mk3",
+      "description": "Velkokapacitní zásobník pokročilých kapalin.",
+      "status": "planned"
+    },
+    {
+      "id": "THERMAL_ENERGY_STORAGE",
+      "phase": 3,
+      "category": "power",
+      "displayName": "Thermal Energy Storage",
+      "description": "Ukládá tepelnou energii jako výrobní mezisklad.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYO_SUIT_MK1",
+      "phase": 3,
+      "category": "equipment",
+      "displayName": "Cryo Suit Mk1",
+      "description": "Ochranný osobní oblek pro nová kryogenní a chemická prostředí.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYO_PROJECTOR",
+      "phase": 3,
+      "category": "weapon",
+      "displayName": "Cryo Projector",
+      "description": "Zbraň se zpomalujícím kryogenním účinkem.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYO_AMMO",
+      "phase": 3,
+      "category": "ammo",
+      "displayName": "Cryogenic Charge",
+      "description": "Spotřební náplň pro Cryo Projector.",
+      "status": "planned"
+    },
+    {
+      "id": "CRYO_GRENADE",
+      "phase": 3,
+      "category": "ammo",
+      "displayName": "Cryo Grenade",
+      "description": "Plošný kryogenní efekt s krátkým zpomalením.",
+      "status": "planned"
+    },
+    {
+      "id": "JETPACK_MK2",
+      "phase": 3,
+      "category": "equipment",
+      "displayName": "Jetpack Mk2",
+      "description": "Vyšší účinnost paliva a prodloužená doba letu.",
+      "status": "planned"
+    },
+    {
+      "id": "COOLING_LOOP_CONTROLLER",
+      "phase": 3,
+      "category": "automation",
+      "displayName": "Cooling Loop Controller",
+      "description": "Řídí teplotní podmínky a alarmy v chladicích smyčkách.",
+      "status": "planned"
+    },
+    {
+      "id": "PHOTONIC_FABRICATOR",
+      "phase": 4,
+      "category": "building",
+      "displayName": "Photonic Fabricator",
+      "description": "Vyrábí Asterite wafers a fotonické součástky.",
+      "status": "planned"
+    },
+    {
+      "id": "OPTICAL_GLASS_FURNACE",
+      "phase": 4,
+      "category": "building",
+      "displayName": "Optical Glass Furnace",
+      "description": "Taví speciální optické sklo.",
+      "status": "planned"
+    },
+    {
+      "id": "QUANTUM_CIRCUIT_ASSEMBLER",
+      "phase": 4,
+      "category": "building",
+      "displayName": "Quantum Circuit Assembler",
+      "description": "Sestavuje fotonické a kvantové elektronické díly.",
+      "status": "planned"
+    },
+    {
+      "id": "PHOTONIC_COMMUNICATION_TOWER",
+      "phase": 4,
+      "category": "building",
+      "displayName": "Photonic Communication Tower",
+      "description": "Propojuje průmyslové řídicí body.",
+      "status": "planned"
+    },
+    {
+      "id": "MINER_MK5",
+      "phase": 4,
+      "category": "miner",
+      "displayName": "Miner Mk5",
+      "description": "Těžební stroj s návrhovým výkonem 1 800/min na normálním uzlu.",
+      "status": "planned"
+    },
+    {
+      "id": "CONVEYOR_MK8",
+      "phase": 4,
+      "category": "logistics",
+      "displayName": "Conveyor Belt Mk8",
+      "description": "Návrhová kapacita 2 700 předmětů/min; nutný test v herním enginu.",
+      "status": "planned"
+    },
+    {
+      "id": "LIFT_MK8",
+      "phase": 4,
+      "category": "logistics",
+      "displayName": "Conveyor Lift Mk8",
+      "description": "Vertikální pás odpovídající Mk8.",
+      "status": "planned"
+    },
+    {
+      "id": "SMART_SPLITTER_MK3",
+      "phase": 4,
+      "category": "logistics",
+      "displayName": "Smart Splitter Mk3",
+      "description": "Programovatelná materiálová pravidla a skupinové filtry.",
+      "status": "planned"
+    },
+    {
+      "id": "DRONE_PORT_MK2",
+      "phase": 4,
+      "category": "logistics",
+      "displayName": "Drone Port Mk2",
+      "description": "Vylepšená kapacita a servis dronové přepravy.",
+      "status": "planned"
+    },
+    {
+      "id": "FACTORY_MONITOR_TERMINAL",
+      "phase": 4,
+      "category": "automation",
+      "displayName": "Factory Monitoring Terminal",
+      "description": "Přehled stavu vybraných strojů, vstupů a výstupů.",
+      "status": "planned"
+    },
+    {
+      "id": "HOLOGRAPHIC_DISPLAY",
+      "phase": 4,
+      "category": "building",
+      "displayName": "Holographic Display",
+      "description": "Velkoformátová výrobní obrazovka.",
+      "status": "planned"
+    },
+    {
+      "id": "AUTOMATED_FACTORY_ALARM",
+      "phase": 4,
+      "category": "automation",
+      "displayName": "Automated Factory Alarm",
+      "description": "Upozorňuje na zastavené linky, plné výstupy a nedostatek vstupů.",
+      "status": "planned"
+    },
+    {
+      "id": "PHOTONIC_RIFLE",
+      "phase": 4,
+      "category": "weapon",
+      "displayName": "Photonic Rifle",
+      "description": "Přesná energetická zbraň se dvěma režimy výstřelu.",
+      "status": "planned"
+    },
+    {
+      "id": "PHOTONIC_ENERGY_CELLS",
+      "phase": 4,
+      "category": "ammo",
+      "displayName": "Photonic Energy Cells",
+      "description": "Energetické články pro Photonic Rifle.",
+      "status": "planned"
+    },
+    {
+      "id": "BLUEPRINT_DESIGNER_MK5",
+      "phase": 4,
+      "category": "blueprint",
+      "displayName": "Blueprint Designer Mk5",
+      "description": "Návrhový prostor 80 × 80 × 80 m; rozšíření nad Mk4.",
+      "status": "planned",
+      "risk": "blueprint-designer-extension"
+    },
+    {
+      "id": "HOVERPACK_MK2",
+      "phase": 4,
+      "category": "equipment",
+      "displayName": "Hoverpack Mk2",
+      "description": "Delší dosah a přesnější řízení při stavbě.",
+      "status": "planned"
+    },
+    {
+      "id": "SCOUT_DRONE_MK2",
+      "phase": 4,
+      "category": "vehicle",
+      "displayName": "Survey Drone Mk2",
+      "description": "Delší průzkumný dosah a automatický návrat.",
+      "status": "planned"
+    },
+    {
+      "id": "LOGISTICS_CONTROLLER",
+      "phase": 4,
+      "category": "automation",
+      "displayName": "Programmable Logistics Controller",
+      "description": "Pravidla toku materiálů a prioritní směrování.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITIC_STABILIZATION_REACTOR",
+      "phase": 5,
+      "category": "building",
+      "displayName": "Gravitic Stabilization Reactor",
+      "description": "Stabilizuje Gravionite pro další výrobní recepty.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITIC_ASSEMBLER",
+      "phase": 5,
+      "category": "building",
+      "displayName": "Gravitic Assembler",
+      "description": "Sestavuje gravitační komponenty.",
+      "status": "planned"
+    },
+    {
+      "id": "MASS_COMPRESSION_UNIT",
+      "phase": 5,
+      "category": "building",
+      "displayName": "Mass Compression Unit",
+      "description": "Zpracovává a komprimuje pokročilé materiály.",
+      "status": "planned"
+    },
+    {
+      "id": "MINER_MK6",
+      "phase": 5,
+      "category": "miner",
+      "displayName": "Miner Mk6",
+      "description": "Těžební stroj s návrhovým výkonem 2 400/min na normálním uzlu.",
+      "status": "planned"
+    },
+    {
+      "id": "CONVEYOR_MK9",
+      "phase": 5,
+      "category": "logistics",
+      "displayName": "Conveyor Belt Mk9",
+      "description": "Návrhová kapacita 3 600 předmětů/min; nutný test v herním enginu.",
+      "status": "planned"
+    },
+    {
+      "id": "LIFT_MK9",
+      "phase": 5,
+      "category": "logistics",
+      "displayName": "Conveyor Lift Mk9",
+      "description": "Vertikální pás odpovídající Mk9.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITIC_FREIGHT_ELEVATOR",
+      "phase": 5,
+      "category": "logistics",
+      "displayName": "Gravitic Freight Elevator",
+      "description": "Vertikální přeprava těžkých materiálů.",
+      "status": "planned"
+    },
+    {
+      "id": "QUANTUM_MERGER",
+      "phase": 5,
+      "category": "logistics",
+      "displayName": "Quantum Merger",
+      "description": "Pokročilé slučování a řízení materiálových proudů.",
+      "status": "planned"
+    },
+    {
+      "id": "QUANTUM_ACCUMULATOR",
+      "phase": 5,
+      "category": "power",
+      "displayName": "Quantum Accumulator",
+      "description": "Velkokapacitní energetické úložiště.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITIC_POWER_PLANT",
+      "phase": 5,
+      "category": "power",
+      "displayName": "Gravitic Power Plant",
+      "description": "Nový zdroj energie s Gravionite palivovým řetězcem.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITY_BOOTS",
+      "phase": 5,
+      "category": "equipment",
+      "displayName": "Gravity Boots",
+      "description": "Krátký gravitační impuls pro pohyb a překonávání překážek.",
+      "status": "planned"
+    },
+    {
+      "id": "PERSONAL_SHIELD_GENERATOR",
+      "phase": 5,
+      "category": "equipment",
+      "displayName": "Personal Shield Generator",
+      "description": "Dočasný osobní štít s dobíjecí prodlevou.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITIC_LAUNCHER",
+      "phase": 5,
+      "category": "weapon",
+      "displayName": "Gravitic Launcher",
+      "description": "Zbraň vytvářející omezené přitažlivé nebo odpudivé pole.",
+      "status": "planned"
+    },
+    {
+      "id": "GRAVITY_GRENADE",
+      "phase": 5,
+      "category": "ammo",
+      "displayName": "Gravity Grenade",
+      "description": "Přitahuje nepřátele do omezeného prostoru.",
+      "status": "planned"
+    },
+    {
+      "id": "REPULSION_GRENADE",
+      "phase": 5,
+      "category": "ammo",
+      "displayName": "Repulsion Grenade",
+      "description": "Odhazuje nepřátele od místa exploze.",
+      "status": "planned"
+    },
+    {
+      "id": "AUTOMATED_SENTRY_MK2",
+      "phase": 5,
+      "category": "defense",
+      "displayName": "Automated Sentry Mk2",
+      "description": "Vyšší dosah a kapacita obranné věže; vyžaduje ověření target AI.",
+      "status": "planned"
+    },
+    {
+      "id": "ORBITAL_FREIGHT_HUB",
+      "phase": 6,
+      "category": "building",
+      "displayName": "Orbital Freight Hub",
+      "description": "Centrální stanice meziplanetární přepravní sítě.",
+      "status": "planned"
+    },
+    {
+      "id": "QUANTUM_CARGO_RELAY",
+      "phase": 6,
+      "category": "logistics",
+      "displayName": "Quantum Cargo Relay",
+      "description": "Párové logistické uzly; přenos limitovaný kapacitou a energií.",
+      "status": "planned"
+    },
+    {
+      "id": "LOGISTICS_CONTROL_CENTER",
+      "phase": 6,
+      "category": "automation",
+      "displayName": "Logistics Control Center",
+      "description": "Centrální přehled zásilek, tras a výpadků.",
+      "status": "planned"
+    },
+    {
+      "id": "AUTOMATED_LOADING_DOCK",
+      "phase": 6,
+      "category": "building",
+      "displayName": "Automated Loading Dock",
+      "description": "Automatizované nakládání a vykládání.",
+      "status": "planned"
+    },
+    {
+      "id": "QUANTUM_STORAGE_CONTAINER",
+      "phase": 6,
+      "category": "building",
+      "displayName": "Quantum Storage Container",
+      "description": "Pokročilé skladování se správou kapacity.",
+      "status": "planned"
+    },
+    {
+      "id": "ORBITAL_ASSEMBLY_PLANT",
+      "phase": 6,
+      "category": "building",
+      "displayName": "Orbital Assembly Plant",
+      "description": "Výroba orbitálních komponent.",
+      "status": "planned"
+    },
+    {
+      "id": "FICSIT_GLOBAL_DISPATCH",
+      "phase": 6,
+      "category": "automation",
+      "displayName": "FICSIT Global Dispatch",
+      "description": "Centrální monitoring zásob a výrobních kapacit.",
+      "status": "planned"
+    },
+    {
+      "id": "DRONE_PORT_MK3",
+      "phase": 6,
+      "category": "logistics",
+      "displayName": "Drone Port Mk3",
+      "description": "Pokročilá dálková dronová doprava.",
+      "status": "planned"
+    },
+    {
+      "id": "TRAIN_LOGISTICS_CONTROLLER",
+      "phase": 6,
+      "category": "automation",
+      "displayName": "Train Logistics Controller",
+      "description": "Pokročilé řízení vlakových zásilek a stanic.",
+      "status": "planned"
+    },
+    {
+      "id": "QUANTUM_POWER_RELAY",
+      "phase": 6,
+      "category": "power",
+      "displayName": "Quantum Power Relay",
+      "description": "Propojení podporovaných energetických uzlů.",
+      "status": "planned"
+    },
+    {
+      "id": "ORBITAL_POWER_DISTRIBUTOR",
+      "phase": 6,
+      "category": "power",
+      "displayName": "Orbital Power Distributor",
+      "description": "Rozvodna orbitálního energetického systému.",
+      "status": "planned"
+    },
+    {
+      "id": "FIELD_FABRICATOR_MK2",
+      "phase": 6,
+      "category": "equipment",
+      "displayName": "FICSIT Field Fabricator Mk2",
+      "description": "Pokročilá terénní výroba schválených komponent.",
+      "status": "planned"
+    },
+    {
+      "id": "PERSONAL_LOGISTICS_SUIT",
+      "phase": 6,
+      "category": "equipment",
+      "displayName": "Personal Logistics Suit",
+      "description": "Automatizované doplňování vybraných materiálů z osobních zásob.",
+      "status": "planned"
+    },
+    {
+      "id": "ORBITAL_SUPPORT_BEACON",
+      "phase": 6,
+      "category": "weapon",
+      "displayName": "FICSIT Orbital Support Beacon",
+      "description": "Zaměří bod pro omezenou podporu dronu; dlouhý cooldown a spotřeba.",
+      "status": "planned"
+    },
+    {
+      "id": "FICSIT_SECURITY_DRONE",
+      "phase": 6,
+      "category": "defense",
+      "displayName": "FICSIT Security Drone",
+      "description": "Obranný doprovodný dron; vyžaduje ověření AI a multiplayer replikace.",
+      "status": "planned"
+    },
+    {
+      "id": "REMOTE_FACTORY_CONTROL",
+      "phase": 6,
+      "category": "automation",
+      "displayName": "Remote Factory Control",
+      "description": "Vzdálené ovládání pouze povolených zařízení s autoritativní validací.",
+      "status": "planned"
+    },
+    {
+      "id": "BLUEPRINT_MANAGEMENT_TERMINAL",
+      "phase": 6,
+      "category": "blueprint",
+      "displayName": "Blueprint Management Terminal",
+      "description": "Pokročilá organizace blueprintů, verzí a kategorií.",
+      "status": "planned"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "RCP_FERRAVIUM_CONCENTRATE",
+      "phase": 1,
+      "machine": "Refinery (prototype washing)",
+      "cycleSeconds": 12,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_ORE",
+          "amount": 60
+        },
+        {
+          "itemId": "VANILLA_WATER",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_CONCENTRATE",
+          "amount": 45
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_INGOT",
+      "phase": 1,
+      "machine": "Ferravium Smelter",
+      "cycleSeconds": 10,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_CONCENTRATE",
+          "amount": 45
+        },
+        {
+          "itemId": "VANILLA_COAL",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_INGOT",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_PLATE",
+      "phase": 1,
+      "machine": "Constructor",
+      "cycleSeconds": 6,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_INGOT",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "id": "RCP_SURVEY_COMPUTER",
+      "phase": 1,
+      "machine": "Assembler",
+      "cycleSeconds": 12,
+      "inputs": [
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 2
+        },
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "SURVEY_COMPUTER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_DARTS",
+      "phase": 1,
+      "machine": "Field Workshop",
+      "cycleSeconds": 5,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_INGOT",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_IRON_ROD",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_DART",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "id": "RCP_TITAN_ALLOY",
+      "phase": 2,
+      "machine": "Advanced Alloy Foundry",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_INGOT",
+          "amount": 60
+        },
+        {
+          "itemId": "VANILLA_STEEL_INGOT",
+          "amount": 60
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 60
+        }
+      ]
+    },
+    {
+      "id": "RCP_TITAN_BEAM",
+      "phase": 2,
+      "machine": "Industrial Press",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "RCP_REINFORCED_TITAN_FRAME",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 8
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "RCP_HEAVY_ROTOR",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 18,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 12
+        },
+        {
+          "itemId": "VANILLA_ROTOR",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "RCP_HARDENED_AMMO",
+      "phase": 2,
+      "machine": "Assembler",
+      "cycleSeconds": 6,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_INGOT",
+          "amount": 4
+        },
+        {
+          "itemId": "VANILLA_IRON_ROD",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "HARDENED_REBAR",
+          "amount": 12
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYONITE_POWDER",
+      "phase": 3,
+      "machine": "Crusher",
+      "cycleSeconds": 6,
+      "inputs": [
+        {
+          "itemId": "CRYONITE_ORE",
+          "amount": 60
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYONITE_POWDER",
+          "amount": 45
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYOGENIC_SLURRY",
+      "phase": 3,
+      "machine": "Cryogenic Refinery",
+      "cycleSeconds": 10,
+      "inputs": [
+        {
+          "itemId": "CRYONITE_POWDER",
+          "amount": 45
+        },
+        {
+          "itemId": "VANILLA_NITROGEN_GAS",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_WATER",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYOGENIC_SLURRY",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "id": "RCP_REFINED_CRYONITE",
+      "phase": 3,
+      "machine": "Cryogenic Refinery",
+      "cycleSeconds": 10,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_SLURRY",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "REFINED_CRYONITE_CRYSTAL",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "id": "RCP_SUPERCONDUCTIVE_COIL",
+      "phase": 3,
+      "machine": "Superconductive Assembler",
+      "cycleSeconds": 12,
+      "inputs": [
+        {
+          "itemId": "REFINED_CRYONITE_CRYSTAL",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_COPPER_INGOT",
+          "amount": 12
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_ENGINE",
+      "phase": 3,
+      "machine": "Superconductive Assembler",
+      "cycleSeconds": 20,
+      "inputs": [
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 2
+        },
+        {
+          "itemId": "COOLING_CARTRIDGE",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_AMMO",
+      "phase": 3,
+      "machine": "Assembler",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_SLURRY",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_IRON_PLATE",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_CHARGE",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "id": "RCP_ASTERITE_WAFER",
+      "phase": 4,
+      "machine": "Photonic Fabricator",
+      "cycleSeconds": 10,
+      "inputs": [
+        {
+          "itemId": "ASTERITE_ORE",
+          "amount": 60
+        },
+        {
+          "itemId": "VANILLA_EXCITED_PHOTONIC_MATTER",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ASTERITE_WAFER",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "id": "RCP_OPTICAL_GLASS",
+      "phase": 4,
+      "machine": "Optical Glass Furnace",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "VANILLA_SILICA",
+          "amount": 30
+        },
+        {
+          "itemId": "ASTERITE_POWDER",
+          "amount": 15
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "OPTICAL_GLASS",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_FIBER",
+      "phase": 4,
+      "machine": "Photonic Fabricator",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "OPTICAL_GLASS",
+          "amount": 10
+        },
+        {
+          "itemId": "VANILLA_COPPER_INGOT",
+          "amount": 10
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_FIBER",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_PROCESSOR",
+      "phase": 4,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 16,
+      "inputs": [
+        {
+          "itemId": "ASTERITE_WAFER",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_CIRCUIT_BOARD",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "RCP_QUANTUM_ROUTING_ARRAY",
+      "phase": 4,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 20,
+      "inputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_TIME_CRYSTAL",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_CELL",
+      "phase": 4,
+      "machine": "Photonic Fabricator",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 1
+        },
+        {
+          "itemId": "VANILLA_POWER_SHARD",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_ENERGY_CELL",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVIONITE_SHARD",
+      "phase": 5,
+      "machine": "Mass Compression Unit",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "GRAVIONITE_ORE",
+          "amount": 30
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVIONITE_SHARD",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "id": "RCP_STABILIZED_GRAVIONITE",
+      "phase": 5,
+      "machine": "Gravitic Stabilization Reactor",
+      "cycleSeconds": 15,
+      "inputs": [
+        {
+          "itemId": "GRAVIONITE_SHARD",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_DARK_MATTER_CRYSTAL",
+          "amount": 10
+        },
+        {
+          "itemId": "VANILLA_REANIMATED_SAM",
+          "amount": 20
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITIC_CORE",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 20,
+      "inputs": [
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 8
+        },
+        {
+          "itemId": "VANILLA_SUPERPOSITION_OSCILLATOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITIC_STABILIZER",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 15,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 1
+        },
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 10
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITIC_STABILIZER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_QUANTUM_LOGISTICS_ENGINE",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_STABILIZER",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_TIME_CRYSTAL",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "QUANTUM_LOGISTICS_ENGINE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_QUANTUM_CARGO_CORE",
+      "phase": 6,
+      "machine": "Orbital Assembly Plant",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "QUANTUM_CARGO_CORE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_ORBITAL_LOGISTICS_MODULE",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 8
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 4
+        },
+        {
+          "itemId": "PHOTONIC_FIBER",
+          "amount": 10
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ORBITAL_LOGISTICS_MODULE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_QUANTUM_STORAGE_MATRIX",
+      "phase": 6,
+      "machine": "Orbital Assembly Plant",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "ASTERITE_WAFER",
+          "amount": 12
+        },
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "QUANTUM_STORAGE_MATRIX",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_COMMAND_PROCESSOR",
+      "phase": 6,
+      "machine": "Orbital Assembly Plant",
+      "cycleSeconds": 45,
+      "inputs": [
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "QUANTUM_CARGO_CORE",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "INTERPLANETARY_COMMAND_PROCESSOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_ORBITAL_ASSEMBLY_FRAME",
+      "phase": 6,
+      "machine": "Orbital Assembly Plant",
+      "cycleSeconds": 45,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 12
+        },
+        {
+          "itemId": "QUANTUM_LOGISTICS_ENGINE",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ORBITAL_ASSEMBLY_FRAME",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_STRUCTURAL_MATRIX",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 12
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 6
+        },
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_STRUCTURAL_MATRIX",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "RCP_DEEP_CORE_EXTRACTOR_MODULE",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "DEEP_CORE_MODULE",
+          "amount": 4
+        },
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "DEEP_CORE_EXTRACTOR_MODULE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_ADVANCED_SURVEY_COMPUTER",
+      "phase": 2,
+      "machine": "Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "SURVEY_COMPUTER",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 4
+        },
+        {
+          "itemId": "VANILLA_CIRCUIT_BOARD",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ADVANCED_SURVEY_COMPUTER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYOGENIC_POWER_REGULATOR",
+      "phase": 3,
+      "machine": "Superconductive Assembler",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 2
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 4
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYOGENIC_POWER_REGULATOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_ROUTING_ARRAY",
+      "phase": 4,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_FIBER",
+          "amount": 8
+        },
+        {
+          "itemId": "OPTICAL_GLASS",
+          "amount": 10
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_ROUTING_ARRAY",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_QUANTUM_COMMUNICATION_CORE",
+      "phase": 4,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 4
+        },
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "QUANTUM_COMMUNICATION_CORE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITIC_TRANSIT_CORE",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 45,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 2
+        },
+        {
+          "itemId": "GRAVITIC_STABILIZER",
+          "amount": 2
+        },
+        {
+          "itemId": "QUANTUM_LOGISTICS_ENGINE",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITIC_TRANSIT_CORE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PRECISION_REBAR_RIFLE",
+      "phase": 1,
+      "machine": "Field Workshop",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 12
+        },
+        {
+          "itemId": "VANILLA_REBAR_GUN",
+          "amount": 1
+        },
+        {
+          "itemId": "SURVEY_COMPUTER",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PRECISION_REBAR_RIFLE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_HEAVY_REBAR_REPEATER",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "PRECISION_REBAR_RIFLE",
+          "amount": 1
+        },
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "HEAVY_REBAR_REPEATER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_EXOSUIT_MK1",
+      "phase": 2,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 8
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "EXOSUIT_MK1",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_PROJECTOR",
+      "phase": 3,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 2
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_PROJECTOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_GRENADE",
+      "phase": 3,
+      "machine": "Assembler",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "CRYO_CHARGE",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_ALUMINUM_CASING",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_GRENADE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_SUIT",
+      "phase": 3,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 1
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 6
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_SUIT_MK1",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_RIFLE",
+      "phase": 4,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 40,
+      "inputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 4
+        },
+        {
+          "itemId": "ASTERITE_WAFER",
+          "amount": 8
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_RIFLE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITIC_LAUNCHER",
+      "phase": 5,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 50,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 2
+        },
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "HEAVY_REBAR_REPEATER",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITIC_LAUNCHER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITY_GRENADE",
+      "phase": 5,
+      "machine": "Assembler",
+      "cycleSeconds": 12,
+      "inputs": [
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_NOBELISK",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITY_GRENADE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_REPULSION_GRENADE",
+      "phase": 5,
+      "machine": "Assembler",
+      "cycleSeconds": 15,
+      "inputs": [
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_NOBELISK",
+          "amount": 1
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "REPULSION_GRENADE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITY_BOOTS",
+      "phase": 5,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_STABILIZER",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITY_BOOTS",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PERSONAL_SHIELD",
+      "phase": 5,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 1
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PERSONAL_SHIELD_GENERATOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_ORBITAL_PREASSEMBLY_PROCESSOR",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        },
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ORBITAL_PREASSEMBLY_PROCESSOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_BLUEPRINT_MK4",
+      "phase": 1,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 45,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 10
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 8
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "BLUEPRINT_DESIGNER_MK4",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_BLUEPRINT_MK5",
+      "phase": 4,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 60,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 20
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 10
+        },
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "BLUEPRINT_DESIGNER_MK5",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_RECOVERY",
+      "phase": 1,
+      "machine": "Refinery (temporary recovery source)",
+      "cycleSeconds": 18,
+      "recipeKind": "manufacturing",
+      "inputs": [
+        {
+          "itemId": "VANILLA_BAUXITE_ORE",
+          "amount": 120
+        },
+        {
+          "itemId": "VANILLA_COAL",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_WATER",
+          "amount": 60
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_ORE",
+          "amount": 60
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_SMELTER_BUILD",
+      "phase": 1,
+      "machine": "Build Gun",
+      "cycleSeconds": 0,
+      "recipeKind": "build_gun",
+      "inputs": [
+        {
+          "itemId": "VANILLA_ENCASED_INDUSTRIAL_BEAM",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_STEEL_PIPE",
+          "amount": 80
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 10
+        },
+        {
+          "itemId": "VANILLA_CABLE",
+          "amount": 100
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_SMELTER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_TITAN_BEAM_BOOTSTRAP",
+      "phase": 2,
+      "machine": "Advanced Alloy Foundry",
+      "cycleSeconds": 12,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_STEEL_PIPE",
+          "amount": 60
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 30
+        }
+      ],
+      "recipeKind": "prototype_bootstrap",
+      "designRecipeId": "RCP_TITAN_BEAM"
+    },
+    {
+      "id": "RCP_ADVANCED_ALLOY_FOUNDRY_BUILD",
+      "phase": 2,
+      "machine": "Build Gun",
+      "cycleSeconds": 0,
+      "recipeKind": "build_gun",
+      "inputs": [
+        {
+          "itemId": "VANILLA_ENCASED_INDUSTRIAL_BEAM",
+          "amount": 50
+        },
+        {
+          "itemId": "VANILLA_STEEL_PIPE",
+          "amount": 120
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 25
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_CABLE",
+          "amount": 200
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ADVANCED_ALLOY_FOUNDRY",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP",
+      "phase": 2,
+      "machine": "Vanilla Manufacturer Mk1 (native prototype bootstrap)",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 8
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        }
+      ],
+      "recipeKind": "prototype_bootstrap",
+      "designRecipeId": "RCP_REINFORCED_TITAN_FRAME"
+    },
+    {
+      "id": "RCP_HEAVY_ROTOR_BOOTSTRAP",
+      "phase": 2,
+      "machine": "Vanilla Manufacturer Mk1 (native prototype bootstrap)",
+      "cycleSeconds": 18,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 12
+        },
+        {
+          "itemId": "VANILLA_ROTOR",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        }
+      ],
+      "recipeKind": "prototype_bootstrap",
+      "designRecipeId": "RCP_HEAVY_ROTOR"
+    }
+  ],
+  "balanceTargets": {
+    "conveyorItemsPerMinute": {
+      "mk7": 1800,
+      "mk8": 2700,
+      "mk9": 3600
+    },
+    "minersItemsPerMinuteNormalNode": {
+      "mk4": 1200,
+      "mk5": 1800,
+      "mk6": 2400
+    },
+    "blueprintDesignerMeters": {
+      "mk4": [
+        64,
+        64,
+        64
+      ],
+      "mk5": [
+        80,
+        80,
+        80
+      ]
+    },
+    "note": "All new capacities, dimensions, durations and quantities are proposed targets. They require engine and gameplay validation; do not hard-code as proven Satisfactory limits."
+  },
+  "implementationConstraints": [
+    "Blueprint Designer Mk1, Mk2 and Mk3 already exist in vanilla; this expansion starts with Mk4.",
+    "New ore nodes in the vanilla World Partition map require a supported placement path; the current public modding toolkit documents World Partition interaction as unavailable.",
+    "A dynamically spawned resource node must be added to the resource scanner's internal node clusters after spawn.",
+    "New weapons and equipment must use valid native equipment descriptors, ammo, damage, inventory and multiplayer replication paths.",
+    "Defensive AI, drones, remote factory control and quantum cargo transfer are higher-risk features and need dedicated technical prototypes.",
+    "Do not ship invented vanilla item class paths; resolve all vanilla dependencies from the target game's asset registry before content packaging."
+  ],
+  "elevator": [
+    {
+      "phase": 6,
+      "id": "SPACE_ELEVATOR_PHASE_06",
+      "title": "Frontier Expansion",
+      "unlocksTerminalPhases": [
+        3,
+        4
+      ],
+      "requirements": [
+        [
+          "FERRAVIUM_STRUCTURAL_MATRIX",
+          1500
+        ],
+        [
+          "DEEP_CORE_EXTRACTOR_MODULE",
+          800
+        ],
+        [
+          "TITAN_ALLOY_BEAM",
+          1200
+        ],
+        [
+          "ADVANCED_SURVEY_COMPUTER",
+          400
+        ]
+      ]
+    },
+    {
+      "phase": 7,
+      "id": "SPACE_ELEVATOR_PHASE_07",
+      "title": "Planetary Network",
+      "unlocksTerminalPhases": [
+        5
+      ],
+      "requirements": [
+        [
+          "CRYOGENIC_POWER_REGULATOR",
+          1200
+        ],
+        [
+          "PHOTONIC_ROUTING_ARRAY",
+          800
+        ],
+        [
+          "SUPERCONDUCTIVE_COIL",
+          1500
+        ],
+        [
+          "QUANTUM_COMMUNICATION_CORE",
+          400
+        ]
+      ]
+    },
+    {
+      "phase": 8,
+      "id": "SPACE_ELEVATOR_PHASE_08",
+      "title": "Orbital Assembly",
+      "unlocksTerminalPhases": [
+        6
+      ],
+      "requirements": [
+        [
+          "GRAVITIC_TRANSIT_CORE",
+          1000
+        ],
+        [
+          "ORBITAL_LOGISTICS_MODULE",
+          600
+        ],
+        [
+          "QUANTUM_LOGISTICS_ENGINE",
+          300
+        ],
+        [
+          "ORBITAL_PREASSEMBLY_PROCESSOR",
+          100
+        ]
+      ]
+    }
+  ],
+  "implementationSlices": [
+    {
+      "id": "FERRAVIUM_PROCESSING_BOOTSTRAP",
+      "status": "native_source_prototype",
+      "includes": [
+        "Native Ferravium Ore resource descriptor",
+        "Native Ferravium Concentrate and Ferravium Ingot item descriptors",
+        "Ferravium recovery, washing and smelting recipes",
+        "Native AFICSITFerraviumSmelter manufacturer with input/output factory connections",
+        "Ferravium Smelter buildable descriptor and Build Gun recipe",
+        "Frontier Survey schematic gated by the saved vanilla Phase V / Terminal I state",
+        "Source OBJ/MTL models and Unreal Editor asset importer"
+      ],
+      "deferred": [
+        "Natural Ferravium resource-node placement in the vanilla World Partition map",
+        "Ore scanner node registration and map markers",
+        "UE 5.6.1/UHT compile and Alpakit packaging",
+        "In-game production, power draw, belt connection and save/load tests",
+        "Live callback from the game's actual Space Elevator Phase V completion event"
+      ],
+      "temporaryOreSource": "RCP_FERRAVIUM_RECOVERY",
+      "note": "The refinery recovery recipe is a test/bootstrap source, not a claim that natural Ferravium deposits have been placed in the world."
+    },
+    {
+      "id": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP",
+      "status": "native_source_prototype",
+      "includes": [
+        "Native Titan Alloy Ingot item descriptor",
+        "Titan Alloy recipe using 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle",
+        "Advanced Metallurgy schematic gated by purchased Frontier Survey and the saved Terminal II availability gate",
+        "Server-side confirmed purchase mapping to Terminal Research Phase II",
+        "OBJ/MTL ingot mesh and generated UI icon source",
+        "Native Titan Alloy Beam item descriptor with its own OBJ/MTL mesh and generated icon",
+        "Titan Alloy Beam Foundry bootstrap recipe: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle",
+        "The planned Industrial Press recipe remains separately defined as RCP_TITAN_BEAM",
+        "Native Advanced Alloy Foundry manufacturer, buildable descriptor and Build Gun recipe",
+        "Titan Alloy ingot and beam recipes run in the custom 125 MW Advanced Alloy Foundry",
+        "Native Reinforced Titan Frame item descriptor with an open-cage OBJ mesh and its own generated icon",
+        "Reinforced Titan Frame Manufacturer Mk1 bootstrap: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 Reinforced Titan Frames per 24-second cycle",
+        "The planned Heavy-Duty Assembler recipe remains separately defined as RCP_REINFORCED_TITAN_FRAME",
+        "Native Heavy Industrial Rotor descriptor with dedicated 3D mesh and UI icon",
+        "Heavy Industrial Rotor Manufacturer Mk1 bootstrap: 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors -> 2 Heavy Industrial Rotors per 18-second cycle",
+        "The planned Heavy-Duty Assembler recipe remains separately defined as RCP_HEAVY_ROTOR"
+      ],
+      "deferred": [
+        "Custom UE 5.6.1/UHT compilation and Alpakit packaging",
+        "In-game recipe discovery, belt production, save/load and multiplayer tests",
+        "Heavy-Duty Assembler and its final Heavy Industrial Rotor recipe; Hardened Rebar, Ferravium Structural Matrix and remaining Phase II recipes beyond the rotor bootstrap"
+      ],
+      "bootstrapMachine": "Advanced Alloy Foundry",
+      "note": "Titan Alloy Ingots and Beams are made in the custom 125 MW Advanced Alloy Foundry. Reinforced Titan Frames are assembled in the vanilla Manufacturer Mk1 as a compatibility bootstrap. The planned Heavy-Duty Assembler recipe remains separate from RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP. The dedicated Heavy-Duty Assembler and remaining Phase II production chain are not implemented. Heavy Industrial Rotor is available through a Manufacturer Mk1 bootstrap while its final Heavy-Duty Assembler recipe remains design-only. Heavy Industrial Rotors are currently assembled in vanilla Manufacturer Mk1 as a bootstrap (12 Titan Alloy Ingots + 6 Rotors + 2 Motors -> 2 Heavy Industrial Rotors / 18 s); the planned Heavy-Duty Assembler recipe RCP_HEAVY_ROTOR remains separate.",
+      "bootstrapRecipes": [
+        {
+          "id": "RCP_TITAN_ALLOY",
+          "machine": "Advanced Alloy Foundry",
+          "cycleSeconds": 8,
+          "inputs": [
+            {
+              "itemId": "FERRAVIUM_INGOT",
+              "amount": 60
+            },
+            {
+              "itemId": "VANILLA_STEEL_INGOT",
+              "amount": 60
+            }
+          ],
+          "outputs": [
+            {
+              "itemId": "TITAN_ALLOY_INGOT",
+              "amount": 60
+            }
+          ],
+          "powerMW": 125
+        },
+        {
+          "id": "RCP_TITAN_BEAM_BOOTSTRAP",
+          "machine": "Advanced Alloy Foundry",
+          "cycleSeconds": 12,
+          "inputs": [
+            {
+              "itemId": "TITAN_ALLOY_INGOT",
+              "amount": 30
+            },
+            {
+              "itemId": "VANILLA_STEEL_PIPE",
+              "amount": 60
+            }
+          ],
+          "outputs": [
+            {
+              "itemId": "TITAN_ALLOY_BEAM",
+              "amount": 30
+            }
+          ],
+          "powerMW": 125
+        },
+        {
+          "id": "RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP",
+          "machine": "Vanilla Manufacturer Mk1",
+          "cycleSeconds": 24,
+          "inputs": [
+            {
+              "itemId": "TITAN_ALLOY_BEAM",
+              "amount": 8
+            },
+            {
+              "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+              "amount": 2
+            }
+          ],
+          "outputs": [
+            {
+              "itemId": "REINFORCED_TITAN_FRAME",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "id": "RCP_HEAVY_ROTOR_BOOTSTRAP",
+          "phase": 2,
+          "machine": "Vanilla Manufacturer Mk1 (native prototype bootstrap)",
+          "cycleSeconds": 18,
+          "inputs": [
+            {
+              "itemId": "TITAN_ALLOY_INGOT",
+              "amount": 12
+            },
+            {
+              "itemId": "VANILLA_ROTOR",
+              "amount": 6
+            },
+            {
+              "itemId": "VANILLA_MOTOR",
+              "amount": 2
+            }
+          ],
+          "outputs": [
+            {
+              "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+              "amount": 2
+            }
+          ],
+          "recipeKind": "prototype_bootstrap",
+          "designRecipeId": "RCP_HEAVY_ROTOR"
+        }
+      ],
+      "bootstrapMachines": [
+        "Advanced Alloy Foundry (125 MW)",
+        "Vanilla Manufacturer Mk1"
+      ]
+    }
+  ]
+}

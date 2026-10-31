@@ -1,4 +1,5 @@
 #include "ContractEngine.h"
+#include "EndgameProgression.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -65,60 +66,107 @@ int main() {
     Snapshot advancedState; advancedState.reputation = 1000;
     ContractEngine advancedEngine(advancedState);
     advancedEngine.ensureOffers(10, now, 555);
-    expect(advancedEngine.state().offers.size() == 9, "advanced reputation unlocks the full catalog");
-    bool foundLongTerm = false;
-    for (const auto& offer : advancedEngine.state().offers) if (offer.longTerm) {
-        foundLongTerm = true;
-        expect(offer.stages.size() == 3, "long-term backbone order has three sequential stages");
-        expect(offer.requirements.empty(), "staged contract does not expose future-stage items as current requirements");
-    }
-    expect(foundLongTerm, "1000 reputation unlocks the long-term factory contract");
-    Contract stagedOffer;
-    for (const Contract& offer : advancedEngine.state().offers)
-        if (offer.templateId == "SPECIAL-FACTORY-BACKBONE") stagedOffer = offer;
-    ContractEngine chainEngine(advancedEngine.state());
-    expect(chainEngine.accept(stagedOffer.id, now), "long-term staged contract can be accepted");
+    expect(advancedEngine.state().offers.size() == 10, "five-offer advanced board can fill ten test slots");
+    std::set<std::string> advancedTemplates;
+    for (const auto& offer : advancedEngine.state().offers) advancedTemplates.insert(offer.templateId);
+    expect(advancedTemplates.size() == advancedEngine.state().offers.size(), "expanded catalog never duplicates a template on the board");
+
+    const auto findProgram = [&](int reputation, const std::string& templateId, Snapshot* outBoard = nullptr) {
+        Snapshot startingState;
+        startingState.reputation = reputation;
+        for (std::uint32_t seed = 1; seed <= 400; ++seed) {
+            ContractEngine probe(startingState);
+            probe.ensureOffers(10, now, seed);
+            for (const Contract& offer : probe.state().offers) {
+                if (offer.templateId == templateId) {
+                    if (outBoard) *outBoard = probe.state();
+                    return offer;
+                }
+            }
+        }
+        return Contract{};
+    };
+
+    Snapshot backboneBoard;
+    const Contract stagedOffer = findProgram(1000, "SPECIAL-FACTORY-BACKBONE", &backboneBoard);
+    expect(!stagedOffer.id.empty(), "Factory Backbone is generated at its reputation gate");
+    expect(stagedOffer.stages.size() == 4, "Factory Backbone is expanded into four sequential phases");
+    expect(stagedOffer.stages.front().requirements.size() == 2, "each phase can require several different materials");
+    expect(findProgram(1000, "SPECIAL-FOUNDRY-EXPANSION").stages.size() == 4,
+        "Foundry Expansion is a four-phase industrial megaproject");
+    expect(findProgram(1500, "SPECIAL-AUTOMATION-ROLLOUT").stages.size() == 5,
+        "Automation Rollout is a five-phase production program");
+    expect(findProgram(1500, "SPECIAL-POWER-GRID").stages.size() == 5,
+        "Planetary Power Grid is a five-phase infrastructure program");
+    expect(findProgram(2000, "SPECIAL-PLANETARY-LOGISTICS").stages.size() == 6,
+        "Planetary Logistics is a six-phase endgame megaproject");
+    expect(findProgram(3000, "SPECIAL-ORBITAL-LOGISTICS").stages.size() == 7,
+        "Orbital Logistics Authority is a seven-phase executive megaproject");
+
+    ContractEngine chainEngine(backboneBoard);
+    expect(chainEngine.accept(stagedOffer.id, now), "multi-stage industrial program can be accepted");
     const std::string ironPlatePath = "/Game/FactoryGame/Resource/Parts/IronPlate/Desc_IronPlate.Desc_IronPlate_C";
+    const std::string concretePath = "/Game/FactoryGame/Resource/Parts/Concrete/Desc_Concrete.Desc_Concrete_C";
     const std::string reinforcedPath = "/Game/FactoryGame/Resource/Parts/IronPlateReinforced/Desc_IronPlateReinforced.Desc_IronPlateReinforced_C";
+    const std::string modularFramePath = "/Game/FactoryGame/Resource/Parts/ModularFrame/Desc_ModularFrame.Desc_ModularFrame_C";
     const std::string motorPath = "/Game/FactoryGame/Resource/Parts/Motor/Desc_Motor.Desc_Motor_C";
-    const auto partialStageDelivery = chainEngine.deliver(stagedOffer.id, ironPlatePath, 1000, now + 1);
-    expect(partialStageDelivery.acceptedAmount == 1000 && !partialStageDelivery.stageCompleted,
-        "partial first-stage delivery does not unlock the next stage");
+    const std::string rotorPath = "/Game/FactoryGame/Resource/Parts/Rotor/Desc_Rotor.Desc_Rotor_C";
+    const std::string statorPath = "/Game/FactoryGame/Resource/Parts/Stator/Desc_Stator.Desc_Stator_C";
+    const std::string computerPath = "/Game/FactoryGame/Resource/Parts/Computer/Desc_Computer.Desc_Computer_C";
+    const std::string circuitBoardPath = "/Game/FactoryGame/Resource/Parts/CircuitBoard/Desc_CircuitBoard.Desc_CircuitBoard_C";
+
+    const auto partialStageDelivery = chainEngine.deliver(stagedOffer.id, ironPlatePath, 2000, now + 1);
+    expect(partialStageDelivery.acceptedAmount == 2000 && !partialStageDelivery.stageCompleted,
+        "delivering one required material does not bypass the remaining stage manifest");
+    expect(chainEngine.state().active.front().currentStageIndex == 0,
+        "the next phase remains locked while one current-phase material is outstanding");
     ContractEngine partialChainRestore(chainEngine.state());
-    expect(partialChainRestore.state().active.front().stages.front().requirements.front().deliveredAmount == 1000,
-        "partial stage progress survives snapshot restoration");
-    const auto firstStageDelivery = partialChainRestore.deliver(stagedOffer.id, ironPlatePath, 5000, now + 2);
+    expect(partialChainRestore.state().active.front().stages.front().requirements.front().deliveredAmount == 2000,
+        "partial multi-material phase progress survives a snapshot restore");
+    const auto firstStageDelivery = partialChainRestore.deliver(stagedOffer.id, concretePath, 800, now + 2);
     expect(firstStageDelivery.stageCompleted && !firstStageDelivery.completed,
-        "first stage completes without completing the whole chain");
-    expect(firstStageDelivery.acceptedAmount == 1000, "stage delivery clamps to the stage remainder");
+        "all materials complete phase one without completing the full program");
     expect(partialChainRestore.state().active.front().currentStageIndex == 1,
-        "completing the first stage unlocks the second stage");
-    expect(ContractEngine::progressPercent(partialChainRestore.state().active.front()) >= 33,
-        "staged contract progress includes completed earlier stages");
+        "completing phase one unlocks phase two");
+    expect(ContractEngine::progressPercent(partialChainRestore.state().active.front()) >= 25,
+        "program progress includes completed earlier phases");
+
     const auto futureStageAttempt = partialChainRestore.deliver(stagedOffer.id, motorPath, 150, now + 3);
     expect(!futureStageAttempt.requirementFound && futureStageAttempt.acceptedAmount == 0,
-        "future-stage products cannot be delivered early");
-
+        "future-phase products cannot be delivered early");
     ContractEngine restoredChain(partialChainRestore.state());
     expect(restoredChain.state().active.front().currentStageIndex == 1,
-        "current stage survives a save snapshot restore");
-    expect(ContractEngine::currentStageTitle(restoredChain.state().active.front()) == "02 - Reinforcement",
-        "restored chain identifies its current stage");
-    const auto secondStageDelivery = restoredChain.deliver(stagedOffer.id, reinforcedPath, 500, now + 4);
+        "current phase survives a save snapshot restore");
+    expect(ContractEngine::currentStageTitle(restoredChain.state().active.front()) == "02 - Reinforced Superstructure",
+        "restored program identifies its current phase");
+    const auto incompleteSecondMaterial = restoredChain.deliver(stagedOffer.id, reinforcedPath, 500, now + 4);
+    expect(!incompleteSecondMaterial.stageCompleted,
+        "a phase with multiple requirements remains open until every line is supplied");
+    const auto secondStageDelivery = restoredChain.deliver(stagedOffer.id, modularFramePath, 150, now + 5);
     expect(secondStageDelivery.stageCompleted && !secondStageDelivery.completed,
-        "second stage advances without paying final reputation");
+        "phase two advances only after both reinforcement materials arrive");
     expect(restoredChain.state().active.front().currentStageIndex == 2,
-        "second stage unlocks the final stage");
-    const auto finalStageDelivery = restoredChain.deliver(stagedOffer.id, motorPath, 150, now + 5);
+        "phase two unlocks the powertrain phase");
+
+    const auto motors = restoredChain.deliver(stagedOffer.id, motorPath, 150, now + 6);
+    expect(!motors.stageCompleted, "powertrain phase waits for its secondary components");
+    const auto rotors = restoredChain.deliver(stagedOffer.id, rotorPath, 120, now + 7);
+    expect(!rotors.stageCompleted, "powertrain phase still waits for its stator shipment");
+    const auto stators = restoredChain.deliver(stagedOffer.id, statorPath, 80, now + 8);
+    expect(stators.stageCompleted && !stators.completed, "all three powertrain lines complete phase three");
+
+    const auto computers = restoredChain.deliver(stagedOffer.id, computerPath, 80, now + 9);
+    expect(!computers.completed, "final commissioning waits for its circuit-board shipment");
+    const auto finalStageDelivery = restoredChain.deliver(stagedOffer.id, circuitBoardPath, 100, now + 10);
     expect(finalStageDelivery.stageCompleted && finalStageDelivery.completed,
-        "final stage completes the full chain");
-    expect(finalStageDelivery.reputationAwarded == 750 && restoredChain.state().reputation == 1750,
-        "long-term reputation is awarded only after every stage is complete");
-    expect(restoredChain.state().active.empty(), "completed staged order leaves active contracts");
-    expect(restoredChain.state().history.back().stages.size() == 3,
-        "completed history retains the full stage chain");
+        "the final delivery completes the entire four-phase program");
+    expect(finalStageDelivery.reputationAwarded == 1100 && restoredChain.state().reputation == 2100,
+        "the expanded program awards its full reputation reward exactly once at final completion");
+    expect(restoredChain.state().active.empty(), "completed industrial program leaves active operations");
+    expect(restoredChain.state().history.back().stages.size() == 4,
+        "completed history retains the complete four-phase program route");
     expect(ContractEngine::progressPercent(restoredChain.state().history.back()) == 100,
-        "completed staged order reports 100 percent progress");
+        "completed industrial program reports full progress");
 
     Snapshot malformedStages;
     Contract malformedChain;
@@ -139,13 +187,14 @@ int main() {
     // The active-contract cap must be tested with more than three distinct offers available.
     ContractEngine capEngine(advancedState);
     capEngine.ensureOffers(10, now, 9981);
-    expect(capEngine.state().offers.size() == 9, "cap test has at least four available offers");
+    expect(capEngine.state().offers.size() == 10, "cap test exposes ten offers for active-slot validation");
     const auto capOffers = capEngine.state().offers;
     expect(capEngine.accept(capOffers[0].id, now), "first active slot can be used");
     expect(capEngine.accept(capOffers[1].id, now), "second active slot can be used");
     expect(capEngine.accept(capOffers[2].id, now), "third active slot can be used");
-    expect(!capEngine.accept(capOffers[3].id, now), "fourth active contract is rejected");
-    expect(capEngine.state().active.size() == 3, "active contract cap remains three");
+    expect(capEngine.accept(capOffers[3].id, now), "fourth active slot can be used");
+    expect(!capEngine.accept(capOffers[4].id, now), "fifth active contract is rejected");
+    expect(capEngine.state().active.size() == 4, "expanded active contract cap remains four");
 
     Snapshot historyState;
     for (int index = 0; index < 55; ++index) {
@@ -250,6 +299,78 @@ int main() {
     expect(std::string(ContractEngine::rankName(500)) == "Logistics Specialist", "specialist rank threshold");
     expect(std::string(ContractEngine::rankName(1000)) == "FICSIT Coordinator", "coordinator rank threshold");
     expect(std::string(ContractEngine::rankName(2000)) == "Supply Chain Director", "director rank threshold");
+    expect(std::string(ContractEngine::rankName(1500)) == "Regional Logistics Director", "regional director rank threshold");
+    expect(std::string(ContractEngine::rankName(3000)) == "FICSIT Executive", "executive rank threshold");
+
+    // Endgame progression is a strict ladder: vanilla V -> Terminal I/II ->
+    // Elevator VI -> Terminal III/IV -> Elevator VII -> Terminal V ->
+    // Elevator VIII -> Terminal VI.
+    EndgameProgression progression;
+    expect(progression.availableTerminalPhase() == 0, "endgame research stays locked before vanilla Elevator Phase V");
+    expect(progression.availableElevatorPhase() == 0, "custom Elevator projects stay locked before Terminal II");
+    expect(!progression.canResearchTerminalPhase(1), "Terminal I requires vanilla Space Elevator Phase V");
+    expect(!progression.completeTerminalPhase(2), "Terminal II cannot be skipped");
+
+    progression.recordVanillaSpaceElevatorPhase5();
+    expect(progression.availableTerminalPhase() == 1, "vanilla Phase V unlocks Terminal I");
+    expect(progression.completeTerminalPhase(1), "Terminal I can be completed");
+    expect(progression.availableTerminalPhase() == 2, "Terminal I unlocks Terminal II");
+    expect(!progression.canCompleteElevatorPhase(6), "Elevator VI remains locked until Terminal II completes");
+    expect(progression.completeTerminalPhase(2), "Terminal II can be completed");
+    expect(progression.availableElevatorPhase() == 6, "Terminal II unlocks Elevator VI");
+    expect(!progression.canResearchTerminalPhase(3), "Terminal III stays locked until Elevator VI completes");
+    expect(progression.completeElevatorPhase(6), "Elevator VI can be completed after Terminal II");
+    expect(progression.availableTerminalPhase() == 3, "Elevator VI unlocks Terminal III");
+    expect(!progression.canResearchTerminalPhase(4), "Terminal IV cannot skip Terminal III");
+    expect(progression.completeTerminalPhase(3), "Terminal III can be completed");
+    expect(progression.availableTerminalPhase() == 4, "Terminal III unlocks Terminal IV");
+    expect(progression.completeTerminalPhase(4), "Terminal IV can be completed");
+    expect(progression.availableElevatorPhase() == 7, "Terminal IV unlocks Elevator VII");
+    expect(!progression.canCompleteElevatorPhase(8), "Elevator VIII cannot skip Elevator VII and Terminal V");
+    expect(progression.completeElevatorPhase(7), "Elevator VII can be completed after Terminal IV");
+    expect(progression.availableTerminalPhase() == 5, "Elevator VII unlocks Terminal V");
+    expect(progression.completeTerminalPhase(5), "Terminal V can be completed");
+    expect(progression.availableElevatorPhase() == 8, "Terminal V unlocks Elevator VIII");
+    expect(progression.completeElevatorPhase(8), "Elevator VIII can be completed after Terminal V");
+    expect(progression.availableTerminalPhase() == 6, "Elevator VIII unlocks Terminal VI");
+    expect(progression.completeTerminalPhase(6), "Terminal VI can be completed");
+    expect(progression.availableTerminalPhase() == 0 && progression.availableElevatorPhase() == 0,
+        "all endgame phases report no remaining research or Elevator project");
+    expect(!progression.completeTerminalPhase(6), "completed terminal research cannot be purchased twice");
+    expect(!progression.completeElevatorPhase(8), "completed Elevator projects cannot be completed twice");
+
+    expect(EndgameProgression::terminalPhaseForUnlock("GEO_SURVEY_STATION") == 1,
+        "survey building is mapped to Terminal I");
+    expect(EndgameProgression::terminalPhaseForUnlock("TITAN_ALLOY_INGOT") == 2,
+        "Titan Alloy recipe is mapped to Terminal II");
+    expect(EndgameProgression::terminalPhaseForUnlock("TITAN_ALLOY_BEAM") == 2,
+        "Titan Alloy Beam is mapped to Terminal II");
+    expect(EndgameProgression::terminalPhaseForUnlock("REINFORCED_TITAN_FRAME") == 2,
+        "Reinforced Titan Frame is mapped to Terminal II");
+    expect(EndgameProgression::terminalPhaseForUnlock("HEAVY_INDUSTRIAL_ROTOR") == 2,
+        "Heavy Industrial Rotor is mapped to Terminal II");
+    expect(EndgameProgression::terminalPhaseForUnlock("BLUEPRINT_DESIGNER_MK5") == 4,
+        "Blueprint Designer Mk5 is mapped to Terminal IV");
+    expect(EndgameProgression::terminalPhaseForUnlock("ORBITAL_FREIGHT_HUB") == 6,
+        "Orbital Freight Hub is mapped to Terminal VI");
+    expect(EndgameProgression::terminalPhaseForUnlock("UNKNOWN_ENDGAME_UNLOCK") == 0,
+        "unknown unlock IDs do not grant a research phase");
+
+    EndgameProgression restoredProgression(progression.state());
+    expect(restoredProgression.state().terminalPhasesComplete == progression.state().terminalPhasesComplete
+        && restoredProgression.state().elevatorExtensionsComplete == progression.state().elevatorExtensionsComplete,
+        "endgame progression survives a value snapshot save/load round trip");
+
+    EndgameProgressionSnapshot malformedProgression;
+    malformedProgression.terminalPhasesComplete.fill(true);
+    malformedProgression.elevatorExtensionsComplete.fill(true);
+    EndgameProgression sanitizedProgression(malformedProgression);
+    expect(sanitizedProgression.availableTerminalPhase() == 0
+        && sanitizedProgression.availableElevatorPhase() == 0,
+        "malformed endgame save cannot bypass the vanilla Elevator finale");
+    expect(!sanitizedProgression.state().terminalPhasesComplete[0]
+        && !sanitizedProgression.state().elevatorExtensionsComplete[0],
+        "malformed endgame save is normalized by clearing impossible later progress");
 
     if (failures == 0) { std::cout << "All FICSIT Contracts core tests passed.\n"; return EXIT_SUCCESS; }
     std::cerr << failures << " test(s) failed.\n"; return EXIT_FAILURE;

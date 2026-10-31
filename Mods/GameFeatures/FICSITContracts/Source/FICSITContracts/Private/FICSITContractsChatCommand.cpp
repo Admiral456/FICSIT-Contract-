@@ -13,7 +13,7 @@ AFICSITContractsChatCommand::AFICSITContractsChatCommand()
     MinNumberOfArguments = 0;
     CommandName = TEXT("contracts");
     Aliases.Add(TEXT("fcontracts"));
-    Usage = FText::FromString(TEXT("/contracts [accept <ID> | deliver <ID> | cancel <ID> | history]"));
+    Usage = FText::FromString(TEXT("/contracts [accept <ID> | deliver <ID> | cancel <ID> | history | progression]"));
 }
 
 EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCommandSender* Sender, const TArray<FString>& Arguments, const FString& Label)
@@ -29,7 +29,7 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
 
     if (Arguments.Num() == 0)
     {
-        Sender->SendChatMessage(FString::Printf(TEXT("FICSIT CONTRACTS | %d REP | %s | active %d/3"), Contracts->GetReputation(), *Contracts->GetRankName(), Contracts->GetActiveContracts().Num()), FLinearColor(0.95f, 0.72f, 0.24f));
+        Sender->SendChatMessage(FString::Printf(TEXT("FICSIT CONTRACTS | %d REP | %s | active %d/4"), Contracts->GetReputation(), *Contracts->GetRankName(), Contracts->GetActiveContracts().Num()), FLinearColor(0.95f, 0.72f, 0.24f));
         const TArray<FFICSITContract> Offers = Contracts->GetAvailableContracts();
         Sender->SendChatMessage(TEXT("AVAILABLE CONTRACTS"), FLinearColor::Green);
         if (Offers.Num() == 0) Sender->SendChatMessage(TEXT("No offers are available right now."));
@@ -43,6 +43,11 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
     }
 
     const FString Subcommand = Arguments[0].ToLower();
+    if (Subcommand == TEXT("progression"))
+    {
+        Sender->SendChatMessage(Contracts->GetEndgameProgressionSummary(), FLinearColor(0.35f, 0.82f, 0.97f));
+        return EExecutionStatus::COMPLETED;
+    }
     if (Subcommand == TEXT("history"))
     {
         const TArray<FFICSITContract> History = Contracts->GetContractHistory();

@@ -1,6 +1,10 @@
 #include "FICSITContractsSubsystem.h"
+#include "EndgameProgression.h"
 
 #include "FGCharacterPlayer.h"
+#include "FGGamePhaseManager.h"
+#include "FGSchematicManager.h"
+#include "FICSITFerraviumContent.h"
 #include "FGInventoryComponent.h"
 #include "Resources/FGItemDescriptor.h"
 #include "Engine/World.h"
@@ -136,6 +140,8 @@ int32 FFICSITContract::GetProgressPercent() const
 AFICSITContractsSubsystem::AFICSITContractsSubsystem()
 {
     ReplicationPolicy = ESubsystemReplicationPolicy::SpawnOnServer_Replicate;
+    TerminalResearchPhasesComplete.Init(0, 6);
+    ElevatorExtensionsComplete.Init(0, 3);
 }
 
 void AFICSITContractsSubsystem::BeginPlay()
@@ -143,10 +149,172 @@ void AFICSITContractsSubsystem::BeginPlay()
     Super::BeginPlay();
     if (HasAuthority())
     {
+        // Normalize older or malformed save data before exposing progression to clients.
+        ApplyEndgameProgression(BuildEndgameProgression());
+        TryBindProgressionEvents();
         GenerateInitialBoard();
         GetWorldTimerManager().SetTimer(ExpiryTimerHandle, this,
             &AFICSITContractsSubsystem::RefreshExpiredContracts, 15.0f, true);
     }
+}
+
+void AFICSITContractsSubsystem::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    GetWorldTimerManager().ClearTimer(ExpiryTimerHandle);
+    GetWorldTimerManager().ClearTimer(ProgressionBindingRetryTimerHandle);
+    GetWorldTimerManager().ClearTimer(SchematicPurchaseRetryTimerHandle);
+    UnbindProgressionEvents();
+    Super::EndPlay(EndPlayReason);
+}
+
+void AFICSITContractsSubsystem::TryBindProgressionEvents()
+{
+    if (!HasAuthority() || !GetWorld()) return;
+
+    if (!bGamePhaseEventsBound)
+    {
+        if (AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(GetWorld()))
+        {
+            GamePhaseManager->mOnGameCompleted.AddUniqueDynamic(
+                this, &AFICSITContractsSubsystem::HandleVanillaGameCompleted);
+            bGamePhaseEventsBound = true;
+
+            // Saves may already have completed the vanilla finale before this mod was installed.
+            if (GamePhaseManager->GetGameIsCompleted())
+                HandleVanillaGameCompleted(true);
+        }
+    }
+
+    if (!bSchematicEventsBound)
+    {
+        if (AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld()))
+        {
+            SchematicManager->PurchasedSchematicInstigatorDelegate.AddUniqueDynamic(
+                this, &AFICSITContractsSubsystem::HandleSchematicPurchased);
+            bSchematicEventsBound = true;
+
+            // Reconcile already-purchased research when loading an existing save.
+            RefreshPurchasedSchematicProgression();
+        }
+    }
+
+    if (!bGamePhaseEventsBound || !bSchematicEventsBound)
+    {
+        ++ProgressionBindingAttempts;
+        if (ProgressionBindingAttempts <= 40)
+        {
+            GetWorldTimerManager().SetTimer(
+                ProgressionBindingRetryTimerHandle,
+                this,
+                &AFICSITContractsSubsystem::TryBindProgressionEvents,
+                0.5f,
+                false);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("FICSIT Contracts: progression event binding failed; GamePhaseManager=%s, SchematicManager=%s"),
+                bGamePhaseEventsBound ? TEXT("bound") : TEXT("missing"),
+                bSchematicEventsBound ? TEXT("bound") : TEXT("missing"));
+        }
+    }
+    else
+    {
+        GetWorldTimerManager().ClearTimer(ProgressionBindingRetryTimerHandle);
+        UE_LOG(LogTemp, Log, TEXT("FICSIT Contracts: vanilla finale and schematic purchase events are bound."));
+    }
+}
+
+void AFICSITContractsSubsystem::UnbindProgressionEvents()
+{
+    if (UWorld* World = GetWorld())
+    {
+        if (bGamePhaseEventsBound)
+        {
+            if (AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(World))
+                GamePhaseManager->mOnGameCompleted.RemoveDynamic(
+                    this, &AFICSITContractsSubsystem::HandleVanillaGameCompleted);
+        }
+
+        if (bSchematicEventsBound)
+        {
+            if (AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(World))
+                SchematicManager->PurchasedSchematicInstigatorDelegate.RemoveDynamic(
+                    this, &AFICSITContractsSubsystem::HandleSchematicPurchased);
+        }
+    }
+
+    bGamePhaseEventsBound = false;
+    bSchematicEventsBound = false;
+}
+
+void AFICSITContractsSubsystem::HandleVanillaGameCompleted(bool /*bSuppressNarrativeMessages*/)
+{
+    if (!HasAuthority()) return;
+
+    // AFGGamePhaseManager broadcasts this only after the vanilla Project Assembly finale.
+    if (RecordVanillaSpaceElevatorPhase5Complete())
+    {
+        UE_LOG(LogTemp, Log, TEXT("FICSIT Contracts: vanilla Space Elevator Phase V completion confirmed."));
+    }
+
+    // A custom schematic might already have been purchased via a save migration or admin action.
+    RefreshPurchasedSchematicProgression();
+}
+
+void AFICSITContractsSubsystem::HandleSchematicPurchased(
+    TSubclassOf<UFGSchematic> PurchasedSchematic,
+    AFGCharacterPlayer* /*PurchaseInstigator*/)
+{
+    if (!HasAuthority() || !PurchasedSchematic) return;
+
+    int32 ResearchPhase = 0;
+    if (PurchasedSchematic == UFICSITFrontierSurveySchematic::StaticClass())
+        ResearchPhase = 1;
+    else if (PurchasedSchematic == UFICSITAdvancedMetallurgySchematic::StaticClass())
+        ResearchPhase = 2;
+    else
+        return;
+
+    AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
+    if (!SchematicManager) return;
+    if (!SchematicManager->IsSchematicPurchased(PurchasedSchematic))
+    {
+        // Some purchase flows can broadcast before the replicated/saved purchased list
+        // is queryable. Re-check once on the next short server timer instead of losing
+        // the progression transition.
+        GetWorldTimerManager().SetTimer(
+            SchematicPurchaseRetryTimerHandle,
+            this,
+            &AFICSITContractsSubsystem::RefreshPurchasedSchematicProgression,
+            0.25f,
+            false);
+        return;
+    }
+
+    if (CompleteTerminalResearchPhase(ResearchPhase))
+    {
+        UE_LOG(LogTemp, Log,
+            TEXT("FICSIT Contracts: Terminal Research Phase %d completed by purchasing %s."),
+            ResearchPhase, *GetNameSafe(PurchasedSchematic.Get()));
+    }
+}
+
+void AFICSITContractsSubsystem::RefreshPurchasedSchematicProgression()
+{
+    if (!HasAuthority() || !GetWorld()) return;
+
+    AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
+    if (!SchematicManager) return;
+
+    // Reconcile in progression order so the result does not depend on the
+    // schematic manager's internal array ordering when multiple milestones
+    // were purchased before this mod was installed.
+    if (SchematicManager->IsSchematicPurchased(UFICSITFrontierSurveySchematic::StaticClass()))
+        HandleSchematicPurchased(UFICSITFrontierSurveySchematic::StaticClass(), nullptr);
+
+    if (SchematicManager->IsSchematicPurchased(UFICSITAdvancedMetallurgySchematic::StaticClass()))
+        HandleSchematicPurchased(UFICSITAdvancedMetallurgySchematic::StaticClass(), nullptr);
 }
 
 void AFICSITContractsSubsystem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -157,6 +325,9 @@ void AFICSITContractsSubsystem::GetLifetimeReplicatedProps(TArray<FLifetimePrope
     DOREPLIFETIME(AFICSITContractsSubsystem, AvailableContracts);
     DOREPLIFETIME(AFICSITContractsSubsystem, ActiveContracts);
     DOREPLIFETIME(AFICSITContractsSubsystem, ContractHistory);
+    DOREPLIFETIME(AFICSITContractsSubsystem, bVanillaSpaceElevatorPhase5Complete);
+    DOREPLIFETIME(AFICSITContractsSubsystem, TerminalResearchPhasesComplete);
+    DOREPLIFETIME(AFICSITContractsSubsystem, ElevatorExtensionsComplete);
 }
 
 void AFICSITContractsSubsystem::OnRep_ContractBoard()
@@ -192,6 +363,134 @@ void AFICSITContractsSubsystem::ApplySnapshot(const FicsitContracts::Snapshot& S
     OnContractBoardChanged.Broadcast();
 }
 
+FicsitContracts::EndgameProgression AFICSITContractsSubsystem::BuildEndgameProgression() const
+{
+    FicsitContracts::EndgameProgressionSnapshot Snapshot;
+    Snapshot.vanillaSpaceElevatorPhase5Complete = bVanillaSpaceElevatorPhase5Complete;
+    for (int32 Index = 0; Index < 6; ++Index)
+        Snapshot.terminalPhasesComplete[static_cast<std::size_t>(Index)] =
+            TerminalResearchPhasesComplete.IsValidIndex(Index) && TerminalResearchPhasesComplete[Index] != 0;
+    for (int32 Index = 0; Index < 3; ++Index)
+        Snapshot.elevatorExtensionsComplete[static_cast<std::size_t>(Index)] =
+            ElevatorExtensionsComplete.IsValidIndex(Index) && ElevatorExtensionsComplete[Index] != 0;
+    return FicsitContracts::EndgameProgression(Snapshot);
+}
+
+void AFICSITContractsSubsystem::ApplyEndgameProgression(const FicsitContracts::EndgameProgression& Progression)
+{
+    const FicsitContracts::EndgameProgressionSnapshot& Snapshot = Progression.state();
+    bVanillaSpaceElevatorPhase5Complete = Snapshot.vanillaSpaceElevatorPhase5Complete;
+    TerminalResearchPhasesComplete.Init(0, 6);
+    ElevatorExtensionsComplete.Init(0, 3);
+    for (int32 Index = 0; Index < 6; ++Index)
+        TerminalResearchPhasesComplete[Index] = Snapshot.terminalPhasesComplete[static_cast<std::size_t>(Index)] ? 1 : 0;
+    for (int32 Index = 0; Index < 3; ++Index)
+        ElevatorExtensionsComplete[Index] = Snapshot.elevatorExtensionsComplete[static_cast<std::size_t>(Index)] ? 1 : 0;
+    ForceNetUpdate();
+    OnContractBoardChanged.Broadcast();
+}
+
+int32 AFICSITContractsSubsystem::GetAvailableTerminalResearchPhase() const
+{
+    return BuildEndgameProgression().availableTerminalPhase();
+}
+
+int32 AFICSITContractsSubsystem::GetAvailableElevatorExtensionPhase() const
+{
+    return BuildEndgameProgression().availableElevatorPhase();
+}
+
+bool AFICSITContractsSubsystem::IsTerminalResearchPhaseComplete(int32 Phase) const
+{
+    return BuildEndgameProgression().isTerminalPhaseComplete(Phase);
+}
+
+bool AFICSITContractsSubsystem::IsElevatorExtensionComplete(int32 Phase) const
+{
+    return BuildEndgameProgression().isElevatorPhaseComplete(Phase);
+}
+
+FString AFICSITContractsSubsystem::GetEndgameProgressionSummary() const
+{
+    const FicsitContracts::EndgameProgression Progression = BuildEndgameProgression();
+    const auto GetStatus = [](bool bComplete, bool bAvailable) -> const TCHAR*
+    {
+        return bComplete ? TEXT("COMPLETE") : (bAvailable ? TEXT("AVAILABLE") : TEXT("LOCKED"));
+    };
+
+    static const TCHAR* TerminalPhaseNames[] = {
+        TEXT("Frontier Survey"),
+        TEXT("Advanced Metallurgy"),
+        TEXT("Cryogenic Systems"),
+        TEXT("Photonic Manufacturing"),
+        TEXT("Gravitic Engineering"),
+        TEXT("Interplanetary Logistics")
+    };
+    static const TCHAR* ElevatorPhaseNames[] = {
+        TEXT("Frontier Expansion"),
+        TEXT("Planetary Network"),
+        TEXT("Orbital Assembly")
+    };
+
+    FString Result = TEXT("FICSIT ENDGAME RESEARCH // SERVER-SAVED PROGRESSION");
+    Result += FString::Printf(TEXT("\nVANILLA SPACE ELEVATOR V // FINAL PROJECT: %s"),
+        Progression.state().vanillaSpaceElevatorPhase5Complete ? TEXT("CONFIRMED") : TEXT("NOT CONFIRMED"));
+
+    for (int32 Phase = 1; Phase <= 6; ++Phase)
+    {
+        const bool bComplete = Progression.isTerminalPhaseComplete(Phase);
+        const bool bAvailable = Progression.canResearchTerminalPhase(Phase);
+        Result += FString::Printf(TEXT("\nTERMINAL %02d // %s // %s"),
+            Phase, TerminalPhaseNames[Phase - 1], GetStatus(bComplete, bAvailable));
+    }
+    for (int32 Phase = 6; Phase <= 8; ++Phase)
+    {
+        const bool bComplete = Progression.isElevatorPhaseComplete(Phase);
+        const bool bAvailable = Progression.canCompleteElevatorPhase(Phase);
+        Result += FString::Printf(TEXT("\nSPACE ELEVATOR %02d // %s // %s"),
+            Phase, ElevatorPhaseNames[Phase - 6], GetStatus(bComplete, bAvailable));
+    }
+
+    const int32 AvailableTerminal = Progression.availableTerminalPhase();
+    const int32 AvailableElevator = Progression.availableElevatorPhase();
+    Result += AvailableTerminal > 0
+        ? FString::Printf(TEXT("\nNEXT RESEARCH: TERMINAL PHASE %d"), AvailableTerminal)
+        : TEXT("\nNEXT RESEARCH: NONE");
+    Result += AvailableElevator > 0
+        ? FString::Printf(TEXT("\nNEXT ELEVATOR PROJECT: PHASE %d"), AvailableElevator)
+        : TEXT("\nNEXT ELEVATOR PROJECT: NONE");
+    return Result;
+}
+
+bool AFICSITContractsSubsystem::RecordVanillaSpaceElevatorPhase5Complete()
+{
+    if (!HasAuthority()) return false;
+    FicsitContracts::EndgameProgression Progression = BuildEndgameProgression();
+    if (Progression.state().vanillaSpaceElevatorPhase5Complete) return false;
+    Progression.recordVanillaSpaceElevatorPhase5();
+    ApplyEndgameProgression(Progression);
+    RefreshPurchasedSchematicProgression();
+    return true;
+}
+
+bool AFICSITContractsSubsystem::CompleteTerminalResearchPhase(int32 Phase)
+{
+    if (!HasAuthority()) return false;
+    FicsitContracts::EndgameProgression Progression = BuildEndgameProgression();
+    if (!Progression.completeTerminalPhase(Phase)) return false;
+    ApplyEndgameProgression(Progression);
+    return true;
+}
+
+bool AFICSITContractsSubsystem::CompleteElevatorExtensionPhase(int32 Phase)
+{
+    if (!HasAuthority()) return false;
+    FicsitContracts::EndgameProgression Progression = BuildEndgameProgression();
+    if (!Progression.completeElevatorPhase(Phase)) return false;
+    ApplyEndgameProgression(Progression);
+    return true;
+}
+
 FString AFICSITContractsSubsystem::GetRankName() const
 {
     return UTF8_TO_TCHAR(FicsitContracts::ContractEngine::rankName(Reputation));
@@ -202,7 +501,7 @@ void AFICSITContractsSubsystem::GenerateInitialBoard()
     if (!HasAuthority()) return;
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     const int64 Now = GetUtcUnixTime();
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
 }
 
@@ -211,13 +510,13 @@ void AFICSITContractsSubsystem::RefreshExpiredContracts()
     if (!HasAuthority()) return;
     const int64 Now = GetUtcUnixTime();
     const auto HasExpired = [Now](const FFICSITContract& Contract) { return Contract.ExpiresAtUnix > 0 && Now >= Contract.ExpiresAtUnix; };
-    // A board can legitimately have fewer than three free offers when all unlocked templates
+    // A board can legitimately have fewer than five free offers when all unlocked templates
     // are already offered or active. Do not replicate an unchanged board every 15 seconds.
     const bool bHasExpiredContract = AvailableContracts.ContainsByPredicate(HasExpired) || ActiveContracts.ContainsByPredicate(HasExpired);
     if (!bHasExpiredContract) return;
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     Engine.expire(Now);
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
 }
 
@@ -227,11 +526,11 @@ bool AFICSITContractsSubsystem::AcceptContract(FName ContractId, FString& OutMes
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     const int64 Now = GetUtcUnixTime();
     const bool bAccepted = Engine.accept(ToUtf8(ContractId.ToString()), Now);
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
     if (!bAccepted)
     {
-        OutMessage = TEXT("That contract is unavailable, expired, or you already have three active contracts.");
+        OutMessage = TEXT("That contract is unavailable, expired, or you already have four active contracts.");
         return false;
     }
     OutMessage = FString::Printf(TEXT("Contract %s accepted. Deliver the requested items with /contracts deliver %s."), *ContractId.ToString(), *ContractId.ToString());
@@ -338,7 +637,7 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
         }
     }
 
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
     if (TotalDelivered <= 0)
     {
@@ -369,26 +668,41 @@ FString AFICSITContractsSubsystem::FormatContract(const FFICSITContract& Contrac
     FString Result = FString::Printf(TEXT("%s | %s | %s | +%d REP | %d%%"),
         *Contract.ContractId.ToString(), *Contract.Title, DifficultyLabel(Contract.Difficulty),
         Contract.RewardReputation, Contract.GetProgressPercent());
-    if (Contract.bLongTerm) Result += TEXT(" | LONG-TERM");
+    if (Contract.bLongTerm) Result += TEXT(" | STRATEGIC PROGRAM");
     if (Contract.bTimeLimited && Contract.ExpiresAtUnix > 0)
     {
         const int64 SecondsRemaining = FMath::Max<int64>(0, Contract.ExpiresAtUnix - GetUtcUnixTime());
-        Result += FString::Printf(TEXT(" | %lld min left"), SecondsRemaining / 60);
+        Result += FString::Printf(TEXT(" | DEADLINE %lld min"), SecondsRemaining / 60);
     }
+
     if (Contract.Stages.Num() > 0)
     {
-        Result += FString::Printf(TEXT(" | STAGE %d/%d: %s"),
-            Contract.CurrentStageIndex + 1, Contract.Stages.Num(), *Contract.GetCurrentStageTitle());
-        if (Contract.Stages.IsValidIndex(Contract.CurrentStageIndex))
+        Result += FString::Printf(TEXT("\nPROGRAM ROUTE // %d PHASES // CURRENT %d/%d"),
+            Contract.Stages.Num(), FMath::Clamp(Contract.CurrentStageIndex + 1, 1, Contract.Stages.Num()),
+            Contract.Stages.Num());
+
+        for (int32 StageIndex = 0; StageIndex < Contract.Stages.Num(); ++StageIndex)
         {
-            for (const FFICSITContractRequirement& Requirement : Contract.Stages[Contract.CurrentStageIndex].Requirements)
-                Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+            const FFICSITContractStage& Stage = Contract.Stages[StageIndex];
+            const TCHAR* StageState = Contract.bCompleted || StageIndex < Contract.CurrentStageIndex
+                ? TEXT("COMPLETE")
+                : StageIndex == Contract.CurrentStageIndex ? TEXT("CURRENT") : TEXT("LOCKED");
+            Result += FString::Printf(TEXT("\n  [%s] %02d. %s"), StageState, StageIndex + 1, *Stage.StageTitle);
+            for (const FFICSITContractRequirement& Requirement : Stage.Requirements)
+            {
+                Result += FString::Printf(TEXT("\n      - %s: %d / %d"),
+                    *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+            }
         }
     }
     else
     {
+        Result += TEXT("\nDELIVERY MANIFEST");
         for (const FFICSITContractRequirement& Requirement : Contract.Requirements)
-            Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+        {
+            Result += FString::Printf(TEXT("\n  - %s: %d / %d"),
+                *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+        }
     }
     return Result;
 }

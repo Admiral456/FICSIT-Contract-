@@ -36,7 +36,19 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
     TObjectPtr<UStaticMeshComponent> FallbackStatusBar;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UStaticMeshComponent> FallbackCanopy;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UStaticMeshComponent> FallbackLeftModule;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UStaticMeshComponent> FallbackRightModule;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UStaticMeshComponent> FallbackFrontGrille;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UStaticMeshComponent> FallbackBeacon;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
     TObjectPtr<UPointLightComponent> ScreenLight;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FICSIT Dispatch Terminal")
+    TObjectPtr<UPointLightComponent> BeaconLight;
 private:
     void ConfigureFallbackMesh(UStaticMeshComponent* Component, UStaticMesh* Cube,
         const FVector& Location, const FVector& Scale, const FRotator& Rotation = FRotator::ZeroRotator);
