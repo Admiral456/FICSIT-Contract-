@@ -69,5 +69,13 @@ The portable domain layer now also contains `EndgameProgression` and `EndgamePro
 
 The state engine is compiled into the standalone CMake test library and is also included into the SML runtime module through `FICSITContractsCore.cpp`. The wrapper lives under the module's `Source/FICSITContracts/Private` tree so Unreal Build Tool discovers the translation unit. CMake compiles the same wrapper as an object-only target to verify the relative source includes on Linux and Windows without requiring the proprietary UE SDK.
 
-**Boundary of this milestone:** the state machine is not yet connected to `AFICSITContractsSubsystem` SaveGame/replication properties, the Space Elevator completion events, real schematic purchases, material costs or terminal research widgets. Those adapters must call this state machine only after server-side validation and verified item consumption. The new JSON catalog remains design data until real Satisfactory assets and unlock objects are registered.
+**Current integration boundary:**
+
+- The SML subsystem now stores the vanilla Phase V confirmation and all nine custom completion flags in `UPROPERTY(SaveGame)` fields.
+- Those properties use the existing board replication notify and are replicated to every connected client.
+- `GetEndgameProgressionSummary()` formats all six Terminal chapters and three Elevator extensions as COMPLETE, AVAILABLE or LOCKED.
+- The Dispatch Terminal renders that status and `/contracts progression` prints the same summary.
+- Server-only adapter methods (`RecordVanillaSpaceElevatorPhase5Complete`, `CompleteTerminalResearchPhase`, `CompleteElevatorExtensionPhase`) re-check the C++ state-machine gates before changing saved progression.
+
+**Still pending:** these server methods are not yet called from the game's actual Space Elevator completion event or successful custom schematic purchase flow. They must only be invoked after Satisfactory has authoritatively confirmed a purchase and consumed its materials. The JSON catalog remains design data until actual schematics, unlock objects, item descriptors, recipes, equipment and buildables are registered. The status UI therefore reports the adapter state, not a live query of the vanilla schematic manager.
 
