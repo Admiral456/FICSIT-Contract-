@@ -65,14 +65,14 @@ The next progression expansion is documented in [ENDGAME_EXPANSION_DESIGN.md](do
 
 The design catalog currently contains:
 - **Six new Dispatch Terminal research chapters** and **three Space Elevator extensions (VI–VIII)**.
-- **96 planned unlocks** across buildings, miners, belts/lifts, storage, power, automation, weapons, ammunition, equipment, vehicles, blueprints, scanners and defense.
+- **96 planned unlocks plus one native-source prototype entry** across buildings, materials, miners, belts/lifts, storage, power, automation, weapons, ammunition, equipment, vehicles, blueprints, scanners and defense.
 - **Four fictional resource families**: Ferravium, Cryonite, Asterite and Gravionite.
 - **56 proposed production/equipment recipes** with per-cycle inputs, outputs and cycle times.
 - New weapons including Precision Rebar Rifle, Heavy Rebar Repeater, Cryo Projector, Photonic Rifle and Gravitic Launcher.
 - Blueprint Designer Mk4 and Mk5 as extensions beyond the existing vanilla Mk3.
 - A first native **Ferravium processing source prototype**: ore, concentrate and ingot descriptors; recovery/washing/smelting recipes; a 90 MW manufacturer; smelter build recipe; and a Phase-I-gated Frontier Survey schematic.
 - A first **Advanced Metallurgy / Phase II source prototype**: Titan Alloy Ingot descriptor, custom Foundry recipe, recipe unlock, purchase-gated milestone, and generated mesh/icon source. The prototype temporarily uses the vanilla Foundry Mk1.
-- Ferravium ore, concentrate, ingot and smelter OBJ/MTL source meshes, plus a dedicated Unreal Editor icon/mesh importer.
+- Ferravium ore, concentrate, ingot, Titan Alloy Ingot and smelter OBJ/MTL source meshes, plus a dedicated Unreal Editor icon/mesh importer.
 
 A portable C++ research state machine enforces the ordered unlock gates; the SML subsystem saves and replicates progression state, and the Dispatch Terminal plus `/contracts progression` display it. The server subsystem binds to `AFGGamePhaseManager::mOnGameCompleted` and `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`. It reconciles an already-completed vanilla finale through `GetGameIsCompleted()` and checks the two implemented milestone purchases explicitly in progression order with `IsSchematicPurchased()`. The implemented mapping is vanilla finale → Terminal I eligibility, Frontier Survey purchase → Terminal I complete, and Advanced Metallurgy purchase → Terminal II complete. The content now contains the Ferravium source processing line plus a Titan Alloy Ingot prototype. **Implementation status:** the wider catalogue remains design/data. The refinery recovery recipe is a temporary ore source, and the Titan Alloy prototype temporarily uses the vanilla Foundry Mk1; neither natural Ferravium deposits nor the dedicated Advanced Alloy Foundry building are implemented. Terminal III–VI and Elevator VI–VIII purchase mappings, Unreal/UHT compilation, content import, Alpakit packaging and in-game tests remain outstanding.
 
