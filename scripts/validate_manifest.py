@@ -763,8 +763,8 @@ def main() -> int:
                     (min(point[axis] for point in positions), max(point[axis] for point in positions))
                     for axis in range(3)
                 ]
-                if bounds != [(-58.0, 58.0), (-53.0, 53.0), (-53.0, 53.0)]:
-                    errors.append("Heavy Industrial Rotor mesh must retain its 116 x 106 x 106 cm envelope.")
+                if bounds != [(-22.0, 22.0), (-22.0, 22.0), (-42.0, 42.0)]:
+                    errors.append("Heavy Industrial Rotor mesh must retain its 44 x 44 x 84 cm envelope.")
         elif obj_file.name == "ReinforcedTitanFrame.obj":
             positions = []
             for line in obj_lines:
