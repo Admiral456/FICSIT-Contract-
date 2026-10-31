@@ -19,7 +19,7 @@
 
 ## Contract catalog
 
-The source catalog contains **21 templates** across five reputation bands. It includes basic stock orders, multi-material foundation and electrical batches, steelworks and machinery shipments, urgent grid recovery orders, and six strategic programs:
+The source catalog contains **21 templates** across eight reputation thresholds. It includes basic stock orders, multi-material foundation and electrical batches, steelworks and machinery shipments, urgent grid recovery orders, and six strategic programs:
 
 | Program | Phases | Reputation unlock | Reward |
 | --- | ---: | ---: | ---: |
