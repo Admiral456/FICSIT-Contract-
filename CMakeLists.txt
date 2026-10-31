@@ -11,6 +11,13 @@ add_library(FICSITContractsCore
 )
 target_include_directories(FICSITContractsCore PUBLIC Source/FICSITContractsCore)
 
+# Compile the exact adapter translation unit used by Unreal Build Tool. This
+# catches broken relative source includes even without the proprietary UE SDK.
+add_library(FICSITContractsPluginCoreCompileCheck OBJECT
+    Mods/GameFeatures/FICSITContracts/Source/FICSITContracts/Private/FICSITContractsCore.cpp
+)
+target_include_directories(FICSITContractsPluginCoreCompileCheck PRIVATE Source/FICSITContractsCore)
+
 if(MSVC)
     target_compile_options(FICSITContractsCore PRIVATE /W4)
 else()
