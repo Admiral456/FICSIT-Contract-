@@ -131,6 +131,18 @@ def make_icon(kind, path):
         line(63, 117, 169, 92, (239, 246, 251), 3)
         for px, py in ((65, 159), (188, 143)):
             circle(px, py, 4, (205, 223, 236))
+    elif kind == "titan_beam":
+        # Long extruded I-section with a raised cyan alloy seam.
+        polygon([(27, 104), (210, 79), (230, 119), (48, 151)], (35, 53, 71))
+        polygon([(27, 104), (210, 79), (198, 99), (38, 125)], (204, 220, 232))
+        polygon([(38, 125), (198, 99), (230, 119), (48, 151)], (83, 112, 138))
+        polygon([(48, 151), (230, 119), (211, 156), (31, 190)], (29, 46, 64))
+        polygon([(31, 190), (211, 156), (198, 174), (42, 207)], (151, 174, 194))
+        line(57, 157, 204, 131, cyan, 7)
+        line(64, 171, 197, 147, (118, 231, 247), 3)
+        line(45, 109, 202, 83, (239, 246, 251), 3)
+        for px, py in ((47, 126), (215, 115), (39, 181), (205, 164)):
+            circle(px, py, 4, (205, 223, 236))
     else:
         # Furnace silhouette, heat window, twin exhausts and FICSIT-style hazard trim.
         rect(44, 105, 212, 211, black)
@@ -196,6 +208,8 @@ require(os.path.isfile(os.path.join(MESH_ROOT, "Ferravium.mtl")),
         "Ferravium.mtl is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(MESH_ROOT, "TitanAlloyIngot.obj")),
         "TitanAlloyIngot.obj is missing from the resource mesh folder.")
+require(os.path.isfile(os.path.join(MESH_ROOT, "TitanAlloyBeam.obj")),
+        "TitanAlloyBeam.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(SMELTER_ROOT, "Ferravium.mtl")),
         "Ferravium.mtl sidecar is missing from the smelter folder.")
 
@@ -205,6 +219,7 @@ icon_specs = [
     ("concentrate", "TX_FerraviumConcentrate_256"),
     ("ingot", "TX_FerraviumIngot_256"),
     ("titan_alloy", "TX_TitanAlloyIngot_256"),
+    ("titan_beam", "TX_TitanAlloyBeam_256"),
     ("smelter", "TX_FerraviumSmelter_256"),
 ]
 for kind, name in icon_specs:
@@ -220,6 +235,7 @@ for filename, destination, name in [
     (os.path.join(MESH_ROOT, "FerraviumConcentrate.obj"), resource_mesh_path, "SM_FerraviumConcentrate"),
     (os.path.join(MESH_ROOT, "FerraviumIngot.obj"), resource_mesh_path, "SM_FerraviumIngot"),
     (os.path.join(MESH_ROOT, "TitanAlloyIngot.obj"), resource_mesh_path, "SM_TitanAlloyIngot"),
+    (os.path.join(MESH_ROOT, "TitanAlloyBeam.obj"), resource_mesh_path, "SM_TitanAlloyBeam"),
     (os.path.join(SMELTER_ROOT, "FerraviumSmelter.obj"), smelter_mesh_path, "SM_FerraviumSmelter"),
 ]:
     import_asset(asset_tools, filename, destination, name)
