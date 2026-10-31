@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — Endgame Expansion design catalog
+
+- Define six Dispatch Terminal research chapters and three additional Space Elevator projects (VI–VIII).
+- Add a machine-readable progression catalog with 96 planned unlocks across production, logistics, blueprints, weapons, ammunition, equipment, vehicles, defense, power and automation.
+- Define four fictional endgame resource families: Ferravium, Cryonite, Asterite and Gravionite.
+- Add 54 proposed production/equipment recipes, including all components required by Space Elevator VI–VIII.
+- Design Blueprint Designer Mk4/Mk5 as extensions beyond the vanilla Mk3.
+- Add CI validation for phase order, unique IDs, unlock references, recipe references, elevator gates and production of every Elevator requirement.
+- Record implementation risks for World Partition resource nodes, ore scanner registration, custom equipment/weapons, AI drones and quantum material transfer.
+
+**Design only:** the catalog and validation do not register live schematics, items, weapons, buildings or recipes. Runtime integration and in-game testing remain pending.
+
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
 - Expand the catalog to 21 templates covering five reputation bands, multi-material delivery manifests and timed emergency orders.
