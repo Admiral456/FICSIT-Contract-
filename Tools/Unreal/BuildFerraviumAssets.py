@@ -144,6 +144,22 @@ def make_icon(kind, path):
         line(45, 109, 202, 83, (239, 246, 251), 3)
         for px, py in ((47, 126), (215, 115), (39, 181), (205, 164)):
             circle(px, py, 4, (205, 223, 236))
+    elif kind == "reinforced_frame":
+        # Three-dimensional open structural cage with visible cross-bracing.
+        polygon([(47, 83), (170, 55), (214, 87), (91, 119)], (32, 49, 66))
+        polygon([(47, 83), (91, 119), (91, 195), (47, 159)], (122, 148, 171))
+        polygon([(91, 119), (214, 87), (214, 164), (91, 195)], (58, 82, 104))
+        line(47, 83, 170, 55, pale, 8)
+        line(170, 55, 214, 87, steel, 9)
+        line(214, 87, 214, 164, steel, 8)
+        line(214, 164, 91, 195, pale, 8)
+        line(91, 195, 47, 159, steel, 8)
+        line(47, 159, 47, 83, pale, 8)
+        line(91, 119, 170, 95, cyan, 6)
+        line(91, 195, 170, 119, (118, 231, 247), 5)
+        line(91, 119, 170, 173, (118, 231, 247), 4)
+        for px, py in ((47, 83), (170, 55), (214, 87), (214, 164), (91, 195), (47, 159)):
+            circle(px, py, 4, (220, 235, 244))
     elif kind == "advanced_foundry":
         # Tall multi-stage alloy furnace with a cyan inspection chamber and twin stacks.
         rect(31, 112, 225, 218, black)
@@ -232,6 +248,8 @@ require(os.path.isfile(os.path.join(MESH_ROOT, "TitanAlloyIngot.obj")),
         "TitanAlloyIngot.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(MESH_ROOT, "TitanAlloyBeam.obj")),
         "TitanAlloyBeam.obj is missing from the resource mesh folder.")
+require(os.path.isfile(os.path.join(MESH_ROOT, "ReinforcedTitanFrame.obj")),
+        "ReinforcedTitanFrame.obj is missing from the resource mesh folder.")
 require(os.path.isfile(os.path.join(SMELTER_ROOT, "Ferravium.mtl")),
         "Ferravium.mtl sidecar is missing from the smelter folder.")
 require(os.path.isfile(os.path.join(ADVANCED_FOUNDRY_ROOT, "AdvancedAlloyFoundry.obj")),
@@ -246,6 +264,7 @@ icon_specs = [
     ("ingot", "TX_FerraviumIngot_256"),
     ("titan_alloy", "TX_TitanAlloyIngot_256"),
     ("titan_beam", "TX_TitanAlloyBeam_256"),
+    ("reinforced_frame", "TX_ReinforcedTitanFrame_256"),
     ("smelter", "TX_FerraviumSmelter_256"),
     ("advanced_foundry", "TX_AdvancedAlloyFoundry_256"),
 ]
@@ -264,6 +283,7 @@ for filename, destination, name in [
     (os.path.join(MESH_ROOT, "FerraviumIngot.obj"), resource_mesh_path, "SM_FerraviumIngot"),
     (os.path.join(MESH_ROOT, "TitanAlloyIngot.obj"), resource_mesh_path, "SM_TitanAlloyIngot"),
     (os.path.join(MESH_ROOT, "TitanAlloyBeam.obj"), resource_mesh_path, "SM_TitanAlloyBeam"),
+    (os.path.join(MESH_ROOT, "ReinforcedTitanFrame.obj"), resource_mesh_path, "SM_ReinforcedTitanFrame"),
     (os.path.join(SMELTER_ROOT, "FerraviumSmelter.obj"), smelter_mesh_path, "SM_FerraviumSmelter"),
     (os.path.join(ADVANCED_FOUNDRY_ROOT, "AdvancedAlloyFoundry.obj"), advanced_foundry_mesh_path, "SM_AdvancedAlloyFoundry"),
 ]:
