@@ -186,7 +186,7 @@ int main() {
     // The active-contract cap must be tested with more than three distinct offers available.
     ContractEngine capEngine(advancedState);
     capEngine.ensureOffers(10, now, 9981);
-    expect(capEngine.state().offers.size() == 9, "cap test has at least four available offers");
+    expect(capEngine.state().offers.size() == 10, "cap test exposes ten offers for active-slot validation");
     const auto capOffers = capEngine.state().offers;
     expect(capEngine.accept(capOffers[0].id, now), "first active slot can be used");
     expect(capEngine.accept(capOffers[1].id, now), "second active slot can be used");
