@@ -123,8 +123,8 @@ UFICSITFerraviumIngotDescriptor::UFICSITFerraviumIngotDescriptor()
     mCategory = LoadClass<UFGCategory>(nullptr, TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_Ingots.Cat_Ingots_C"));
 }
 
-AFICSITFerraviumSmelter::AFICSITFerraviumSmelter(const FObjectInitializer& ObjectInitializer)
-    : Super(ObjectInitializer)
+AFICSITFerraviumSmelter::AFICSITFerraviumSmelter()
+    : Super()
 {
     PrimaryActorTick.bCanEverTick = false;
     SetReplicates(true);
