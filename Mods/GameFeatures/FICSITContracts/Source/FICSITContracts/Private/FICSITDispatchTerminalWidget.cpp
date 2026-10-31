@@ -48,37 +48,37 @@ void UFICSITDispatchTerminalWidget::NativeConstruct()
     if (!WidgetTree) return;
 
     USizeBox* RootSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("DispatchRootSize"));
-    RootSize->SetWidthOverride(1040.0f);
-    RootSize->SetHeightOverride(760.0f);
+    RootSize->SetWidthOverride(1180.0f);
+    RootSize->SetHeightOverride(850.0f);
     UBorder* Frame = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("DispatchFrame"));
-    Frame->SetPadding(FMargin(24.0f));
-    Frame->SetBrushColor(FLinearColor(0.018f,0.028f,0.04f,0.97f));
+    Frame->SetPadding(FMargin(28.0f));
+    Frame->SetBrushColor(FLinearColor(0.012f,0.021f,0.031f,0.985f));
     RootSize->SetContent(Frame);
 
     UVerticalBox* MainColumn = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("DispatchMainColumn"));
     Frame->SetContent(MainColumn);
     UTextBlock* Eyebrow = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-    Eyebrow->SetText(FText::FromString(TEXT("F I C S I T   //   LOGISTICS DIVISION")));
+    Eyebrow->SetText(FText::FromString(TEXT("F I C S I T   //   GLOBAL LOGISTICS COMMAND   //   SECURE DISPATCH LINK")));
     Eyebrow->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f,0.43f,0.08f)));
     MainColumn->AddChildToVerticalBox(Eyebrow);
 
     UTextBlock* Title = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-    Title->SetText(FText::FromString(TEXT("DISPATCH TERMINAL")));
+    Title->SetText(FText::FromString(TEXT("DISPATCH CONTROL")));
     Title->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f,0.94f,1.0f)));
     FSlateFontInfo TitleFont = Title->GetFont();
-    TitleFont.Size = 30;
+    TitleFont.Size = 34;
     Title->SetFont(TitleFont);
     MainColumn->AddChildToVerticalBox(Title);
 
     SummaryText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DispatchSummary"));
     SummaryText->SetAutoWrapText(true);
-    SummaryText->SetColorAndOpacity(FSlateColor(FLinearColor(0.38f,0.78f,0.96f)));
+    SummaryText->SetColorAndOpacity(FSlateColor(FLinearColor(0.35f,0.82f,0.97f)));\n    FSlateFontInfo SummaryFont = SummaryText->GetFont();\n    SummaryFont.Size = 15;\n    SummaryText->SetFont(SummaryFont);
     MainColumn->AddChildToVerticalBox(SummaryText);
 
     UButton* RefreshButton = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("RefreshBoardButton"));
     UTextBlock* RefreshLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-    RefreshLabel->SetText(FText::FromString(TEXT("REFRESH CONTRACT BOARD")));
-    RefreshButton->SetContent(RefreshLabel);
+    RefreshLabel->SetText(FText::FromString(TEXT("SYNC DISPATCH NETWORK")));
+    RefreshButton->SetContent(RefreshLabel);\n    RefreshButton->SetBackgroundColor(FLinearColor(0.56f,0.22f,0.055f,1.0f));
     RefreshButton->OnClicked.AddDynamic(this,&UFICSITDispatchTerminalWidget::RefreshBoard);
     MainColumn->AddChildToVerticalBox(RefreshButton);
 
@@ -88,7 +88,7 @@ void UFICSITDispatchTerminalWidget::NativeConstruct()
     Scroll->AddChild(BoardContent);
 
     UTextBlock* Footer = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-    Footer->SetText(FText::FromString(TEXT("SERVER-VALIDATED ACTIONS // ORDERS ARE CHECKED AGAINST YOUR PLAYER AND THIS TERMINAL BEFORE THE SHARED BOARD CHANGES.")));
+    Footer->SetText(FText::FromString(TEXT("SECURE LINK // MULTI-PHASE PROGRAMS // MULTI-MATERIAL MANIFESTS // DEADLINE ORDERS // ALL DELIVERIES ARE VALIDATED BY THE SESSION HOST.")));
     Footer->SetAutoWrapText(true);
     Footer->SetColorAndOpacity(FSlateColor(FLinearColor(0.72f,0.76f,0.8f)));
     MainColumn->AddChildToVerticalBox(Footer);
@@ -135,26 +135,26 @@ void UFICSITDispatchTerminalWidget::AddContractEntry(const FText& GroupLabel,con
 {
     if (!BoardContent || !WidgetTree) return;
     UBorder* Card = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
-    Card->SetPadding(FMargin(12.0f,9.0f));
-    Card->SetBrushColor(bEmphasize ? FLinearColor(0.075f,0.11f,0.15f,0.98f) : FLinearColor(0.035f,0.055f,0.075f,0.96f));
+    Card->SetPadding(FMargin(16.0f,13.0f));
+    Card->SetBrushColor(bEmphasize ? FLinearColor(0.055f,0.105f,0.135f,0.99f) : FLinearColor(0.025f,0.045f,0.065f,0.98f));
     UVerticalBox* CardContent = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
     Card->SetContent(CardContent);
 
     UTextBlock* Label = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
     Label->SetText(GroupLabel);
-    Label->SetColorAndOpacity(FSlateColor(FLinearColor(0.35f,0.72f,0.9f)));
+    Label->SetColorAndOpacity(FSlateColor(FLinearColor(1.0f,0.43f,0.09f)));\n    FSlateFontInfo LabelFont = Label->GetFont();\n    LabelFont.Size = 13;\n    Label->SetFont(LabelFont);
     CardContent->AddChildToVerticalBox(Label);
 
     UTextBlock* Details = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
     Details->SetText(ContractText);
     Details->SetAutoWrapText(true);
-    Details->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f,0.91f,0.94f)));
+    Details->SetColorAndOpacity(FSlateColor(FLinearColor(0.90f,0.94f,0.97f)));\n    FSlateFontInfo DetailsFont = Details->GetFont();\n    DetailsFont.Size = 15;\n    Details->SetFont(DetailsFont);
     CardContent->AddChildToVerticalBox(Details);
     if (ProgressPercent >= 0)
     {
         UProgressBar* Progress = WidgetTree->ConstructWidget<UProgressBar>(UProgressBar::StaticClass());
         Progress->SetPercent(FMath::Clamp(ProgressPercent,0,100) / 100.0f);
-        Progress->SetFillColorAndOpacity(FLinearColor(0.08f,0.66f,0.91f));
+        Progress->SetFillColorAndOpacity(FLinearColor(0.98f,0.38f,0.075f));
         CardContent->AddChildToVerticalBox(Progress);
     }
 
@@ -234,30 +234,37 @@ void UFICSITDispatchTerminalWidget::RefreshBoard()
     const TArray<FFICSITContract> Offers=Board->GetAvailableContracts();
     const TArray<FFICSITContract> Active=Board->GetActiveContracts();
     const TArray<FFICSITContract> History=Board->GetContractHistory();
-    SummaryText->SetText(FText::FromString(FString::Printf(TEXT("NETWORK: ONLINE     FICSIT REP: %d     RANK: %s     AVAILABLE: %d     ACTIVE: %d"),
+    SummaryText->SetText(FText::FromString(FString::Printf(
+        TEXT("NETWORK ONLINE  //  %d REP  //  %s  //  %d OPEN CONTRACTS  //  %d / 4 ACTIVE SLOTS"),
         Board->GetReputation(),*Board->GetRankName(),Offers.Num(),Active.Num())));
 
-    AddSection(FText::FromString(TEXT("ACTIVE OPERATIONS")));
+    AddSection(FText::FromString(TEXT("01  //  ACTIVE OPERATIONS")));
     if (Active.IsEmpty())
         AddContractEntry(FText::FromString(TEXT("NO ACTIVE ORDERS")),FText::FromString(TEXT("Accept an available contract to begin a new logistics operation.")),false);
     else
         for (const FFICSITContract& Contract:Active)
-            AddContractEntry(FText::FromString(TEXT("IN PROGRESS")),FText::FromString(Board->FormatContract(Contract)),true,
+            AddContractEntry(FText::FromString(Contract.Stages.Num() > 1 ? TEXT("STRATEGIC PROGRAM // IN PROGRESS") : TEXT("ACTIVE DELIVERY ORDER")),FText::FromString(Board->FormatContract(Contract)),true,
                 Contract.ContractId,EFICSITDispatchAction::Deliver,Contract.GetProgressPercent());
 
-    AddSection(FText::FromString(TEXT("AVAILABLE FICSIT CONTRACTS")));
+    AddSection(FText::FromString(TEXT("02  //  AVAILABLE CONTRACTS")));
     if (Offers.IsEmpty())
         AddContractEntry(FText::FromString(TEXT("NO AVAILABLE ORDERS")),FText::FromString(TEXT("The board is waiting for new eligible orders.")),false);
     else
         for (const FFICSITContract& Contract:Offers)
-            AddContractEntry(FText::FromString(TEXT("AVAILABLE")),FText::FromString(Board->FormatContract(Contract)),
+            AddContractEntry(FText::FromString(Contract.Stages.Num() > 1 ? TEXT("MULTI-PHASE PROGRAM // OFFERED") : TEXT("NEW DISPATCH ORDER")),FText::FromString(Board->FormatContract(Contract)),
                 false,Contract.ContractId,EFICSITDispatchAction::Accept);
 
-    AddSection(FText::FromString(TEXT("RECENT DISPATCH HISTORY")));
+    AddSection(FText::FromString(TEXT("03  //  DISPATCH ARCHIVE")));
     const int32 FirstHistoryIndex=FMath::Max(0,History.Num()-5);
     if (History.IsEmpty())
         AddContractEntry(FText::FromString(TEXT("NO HISTORY")),FText::FromString(TEXT("Completed, expired and cancelled orders will be recorded here.")),false);
     else
         for (int32 Index=FirstHistoryIndex;Index<History.Num();++Index)
-            AddContractEntry(FText::FromString(TEXT("ARCHIVED ORDER")),FText::FromString(Board->FormatContract(History[Index])),false);
+        {
+            const TCHAR* ArchiveState = History[Index].bCompleted ? TEXT("COMPLETED") :
+                History[Index].bExpired ? TEXT("EXPIRED") :
+                History[Index].bAbandoned ? TEXT("CANCELLED") : TEXT("ARCHIVED");
+            AddContractEntry(FText::FromString(ArchiveState),
+                FText::FromString(Board->FormatContract(History[Index])),false);
+        }
 }
