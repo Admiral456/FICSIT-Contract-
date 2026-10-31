@@ -11,8 +11,8 @@ Toto rozšíření navazuje na původní pátou fázi Space Elevatoru. Zachováv
 - 6 nových kapitol Dispatch Terminalu.
 - 3 nové Space Elevator projekty (VI–VIII).
 - 4 nové suroviny.
-- 96 plánovaných odemykatelných technologií.
-- 54 návrhových výrobních receptů.
+- 96 plánovaných odemykatelných technologií plus dva nativní Phase II source-prototype unlocky (Titan Alloy Ingot a Titan Alloy Beam).
+- 56 návrhových výrobních receptů plus jeden samostatný Foundry Mk1 bootstrap recept pro Titan Alloy Beam.
 - Samostatné kategorie pro budovy, těžbu, logistiku, energii, automatizaci, zbraně, munici, osobní vybavení, vozidla, blueprinty a obranu.
 
 **Důležité:** položky v tomto dokumentu a JSON katalogu jsou návrhy. Zatím nejde o hotové zbraně, blueprinty, budovy, recepty, rudy ani funkce ve hře.
@@ -416,7 +416,7 @@ Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy
 
 1. Zkopíruj `Mods/GameFeatures/FICSITContracts`, `Mods/FICSITContracts/ContentSource` a `Tools/Unreal` do Satisfactory Modding Starter Projectu.
 2. V Unreal Editoru spusť `Tools/Unreal/BuildFICSITContractsAssets.py` pro vytvoření původního Dispatch Terminal mesh/icon a Game Feature Data assetu.
-3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy položek, smelteru a pěti ikon a pěti meshů.
+3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy položek, smelteru a šesti ikon a šesti meshů.
 4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`, včetně `SM_TitanAlloyIngot`, `SM_TitanAlloyBeam`, `TX_TitanAlloyIngot_256` a `TX_TitanAlloyBeam_256`.
 5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
 
