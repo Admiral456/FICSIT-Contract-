@@ -1,4 +1,4 @@
-"""Import Ferravium and Titan Alloy item meshes, the smelter and generated icons in the SML Starter Project."""
+"""Import Ferravium, Titan Alloy and Phase II item meshes, the smelter/foundry buildables and generated icons in the SML Starter Project."""
 import math
 import os
 import struct
@@ -313,5 +313,5 @@ for filename, destination, name in [
 for kind, name in icon_specs:
     import_asset(asset_tools, os.path.join(ICON_ROOT, name + ".png"), resource_ui_path, name)
 
-unreal.log("Ferravium source meshes and UI icons imported. Native item descriptors, recipes and the smelter resolve these asset paths.")
+unreal.log("Ferravium and Phase II source meshes and UI icons imported. Native descriptors, recipes, the smelter and Advanced Alloy Foundry resolve these asset paths.")
 unreal.log_warning("This script does not place Ferravium resource nodes in the vanilla World Partition map and does not compile the C++ plugin.")
