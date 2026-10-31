@@ -388,6 +388,10 @@ def main() -> int:
             "RecordVanillaSpaceElevatorPhase5Complete",
             "CompleteTerminalResearchPhase",
             "CompleteElevatorExtensionPhase",
+            "HandleVanillaGameCompleted",
+            "HandleSchematicPurchased",
+            "TryBindProgressionEvents",
+            "virtual void EndPlay",
         ):
             if required not in header_text:
                 errors.append(f"SML subsystem progression state is missing: {required}")
@@ -405,6 +409,17 @@ def main() -> int:
             "Progression.completeElevatorPhase(Phase)",
             "if (!HasAuthority()) return false;",
             "GetEndgameProgressionSummary",
+            '#include "FGGamePhaseManager.h"',
+            '#include "FGSchematicManager.h"',
+            '#include "FICSITFerraviumContent.h"',
+            "mOnGameCompleted.AddUniqueDynamic",
+            "PurchasedSchematicInstigatorDelegate.AddUniqueDynamic",
+            "GetGameIsCompleted()",
+            "GetAllPurchasedSchematics(PurchasedSchematics)",
+            "IsSchematicPurchased(PurchasedSchematic)",
+            "CompleteTerminalResearchPhase(1)",
+            "RemoveDynamic",
+            "ProgressionBindingRetryTimerHandle",
         ):
             if required not in runtime_text:
                 errors.append(f"SML runtime progression integration is missing: {required}")
