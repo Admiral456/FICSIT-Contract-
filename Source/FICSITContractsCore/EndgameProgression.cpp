@@ -1,6 +1,7 @@
 #include "EndgameProgression.h"
 
 #include <algorithm>
+#include <iterator>
 #include <array>
 
 namespace FicsitContracts {
