@@ -62,3 +62,12 @@ The source mesh is OBJ/MTL, not a cooked `.uasset`. SML 3.12 requires a Game Fea
 ### Terminal action security
 
 The terminal widget obtains the RCO from its owning `AFGPlayerController`. `UFICSITContractsGameInstanceModule` registers `UFICSITContractsRemoteCallObject` through SML's `UGameInstanceModule::RemoteCallObjects`. The three server RPCs resolve `GetOwnerPlayerCharacter()` and `GetOwnerPlayerController()`, verify that the character is controlled by that exact controller and has server authority, then call the existing authoritative `AFICSITContractsSubsystem` methods. Delivery passes only the owning server-side character to `DeliverFromInventory`, so the host validates and removes items from that player's main inventory. The UI subscribes to `OnContractBoardChanged`; the subsystem's replication notify broadcasts the delegate on clients to refresh the board. This is source-level integration and still needs UHT/UE and multiplayer validation.
+
+## Endgame progression core (0.3.0 foundation)
+
+The portable domain layer now also contains `EndgameProgression` and `EndgameProgressionSnapshot`. The state machine models the ordered sequence from vanilla Space Elevator Phase V through Terminal I–VI and the three custom Space Elevator extensions VI–VIII. Its public API separates read-only gate checks from state-changing completion calls, maps catalog unlock IDs to their terminal chapter, and normalizes malformed snapshots so impossible later-phase flags are cleared.
+
+The state engine is compiled into the standalone CMake test library and is also included into the SML runtime module through `FICSITContractsCore.cpp`. The wrapper lives under the module's `Source/FICSITContracts/Private` tree so Unreal Build Tool discovers the translation unit. CMake compiles the same wrapper as an object-only target to verify the relative source includes on Linux and Windows without requiring the proprietary UE SDK.
+
+**Boundary of this milestone:** the state machine is not yet connected to `AFICSITContractsSubsystem` SaveGame/replication properties, the Space Elevator completion events, real schematic purchases, material costs or terminal research widgets. Those adapters must call this state machine only after server-side validation and verified item consumption. The new JSON catalog remains design data until real Satisfactory assets and unlock objects are registered.
+
