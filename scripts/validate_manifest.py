@@ -57,6 +57,7 @@ def main() -> int:
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITDispatchTerminalContent.h",
         ROOT / "Source/FICSITContractsCore/EndgameProgression.h",
         ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp",
+        PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsCore.cpp",
     ]
     errors.extend(
         f"Required source file missing: {path.relative_to(ROOT)}"
@@ -310,6 +311,16 @@ def main() -> int:
         cmake_text = cmake_file.read_text(encoding="utf-8")
         if "Source/FICSITContractsCore/EndgameProgression.cpp" not in cmake_text:
             errors.append("CMake must compile the portable endgame progression engine.")
+    plugin_core_wrapper = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsCore.cpp"
+    if plugin_core_wrapper.is_file():
+        wrapper_text = plugin_core_wrapper.read_text(encoding="utf-8")
+        for source_name in ("ContractEngine.cpp", "EndgameProgression.cpp"):
+            if source_name not in wrapper_text:
+                errors.append(f"SML runtime core wrapper does not compile {source_name}.")
+    if cmake_file.is_file():
+        cmake_text = cmake_file.read_text(encoding="utf-8")
+        if "FICSITContractsPluginCoreCompileCheck" not in cmake_text:
+            errors.append("CI must compile-check the SML runtime core wrapper.")
     if progression_tests.is_file():
         progression_test_text = progression_tests.read_text(encoding="utf-8")
         for required in (
