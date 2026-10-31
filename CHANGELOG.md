@@ -3,7 +3,7 @@
 ## Unreleased — Endgame Expansion and Ferravium source prototype
 
 - Define six Dispatch Terminal research chapters and three additional Space Elevator projects (VI–VIII).
-- Add a machine-readable progression catalog with 96 planned unlocks plus two native-source prototype entries across production, logistics, blueprints, weapons, ammunition, equipment, vehicles, defense, power and automation.
+- Add a machine-readable progression catalog with 96 planned unlocks plus three native-source prototype entries across production, logistics, blueprints, weapons, ammunition, equipment, vehicles, defense, power and automation.
 - Define four fictional endgame resource families: Ferravium, Cryonite, Asterite and Gravionite.
 - Add 56 proposed production/equipment recipes, including all components required by Space Elevator VI–VIII.
 - Design Blueprint Designer Mk4/Mk5 as extensions beyond the vanilla Mk3.
@@ -18,9 +18,9 @@
 - Bind the subsystem to `AFGGamePhaseManager::mOnGameCompleted` and reconcile saves where the vanilla Project Assembly finale was already completed.
 - Bind to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`, verify the purchased class with `IsSchematicPurchased`, and map the implemented Frontier Survey schematic to Terminal Research Phase I completion.
 - Add the Advanced Metallurgy / Terminal II native milestone schematic, gated by the confirmed Frontier Survey purchase and the saved Terminal II availability check.
-- Add native Titan Alloy Ingot and Titan Alloy Beam descriptors, with Foundry Mk1 recipes for ingots (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots / 8 s) and beams (30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams / 12 s).
-- Generate dedicated Titan Alloy Ingot and I-section Beam OBJ meshes plus separate UI icon sources; extend the Unreal import utility and static validation for both products.
-- Keep the planned Industrial Press beam recipe (`RCP_TITAN_BEAM`) separate from the native Foundry bootstrap (`RCP_TITAN_BEAM_BOOTSTRAP`) in the machine-readable catalog.
+- Add native Titan Alloy Ingot and Titan Alloy Beam descriptors, plus a dedicated Advanced Alloy Foundry manufacturer/buildable, Build Gun recipe and source model; assign the 8-second ingot and 12-second beam recipes to the custom 125 MW machine.
+- Generate Titan Alloy Ingot and I-section Beam OBJ meshes plus a detailed Advanced Alloy Foundry OBJ/MTL model and separate UI icon sources; extend the Unreal import utility and static validation for all new assets.
+- Keep the planned Industrial Press beam recipe (`RCP_TITAN_BEAM`) separate from the native Advanced Alloy Foundry beam bootstrap (`RCP_TITAN_BEAM_BOOTSTRAP`) in the machine-readable catalog.
 - Reconcile Frontier Survey and Advanced Metallurgy purchases in progression order and map the confirmed Advanced Metallurgy purchase to Terminal II completion.
 - Reconcile existing purchased schematics on load, retry manager binding during early world startup, and remove dynamic delegate bindings during `EndPlay`.
 - Extend static validation and the in-game acceptance checklist for event binding, save reconciliation, duplicate callbacks and unrelated schematic purchases.
@@ -30,9 +30,9 @@
 - Align the Ferravium conveyor component names with the canonical `Input0` / `Output0` convention and extend static validation to guard connector direction, forwarding and power configuration.
 - Add the smelter build descriptor/Build Gun recipe and a Frontier Survey schematic gated by the server-saved Phase V/Terminal I state.
 - Add Ferravium and Titan Alloy OBJ/MTL item/furnace models, six generated icon sources and a dedicated Unreal Editor import utility.
-- Update the machine-readable catalog to 57 recipes and 98 unlock entries (96 planned plus two Titan Alloy source prototypes); natural resource-node spawning remains deferred.
+- Update the machine-readable catalog to 58 recipes and 99 unlock entries (96 planned plus three Phase II source prototypes); natural resource-node spawning remains deferred.
 
-**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey and Advanced Metallurgy purchases before marking Terminal I and II complete; existing saves are reconciled in progression order. Advanced Metallurgy unlocks two native Titan Alloy bootstrap recipes on the vanilla Foundry Mk1 (ingot and structural beam); the dedicated Advanced Alloy Foundry and remaining Phase II production chain are not implemented. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal III–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
+**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey and Advanced Metallurgy purchases before marking Terminal I and II complete; existing saves are reconciled in progression order. Advanced Metallurgy now unlocks a native Advanced Alloy Foundry manufacturer/buildable with 125 MW source power setting, mixed-feed Input0/Output0 connections, its Build Gun construction recipe and source OBJ/MTL asset. Titan Alloy Ingot and Beam recipes run in the custom foundry rather than vanilla Foundry Mk1. The importer, UHT/UE compilation, Alpakit cook and in-game factory/research tests remain outstanding; the Industrial Press and remaining Phase II production chain are not implemented. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal III–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
 
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
