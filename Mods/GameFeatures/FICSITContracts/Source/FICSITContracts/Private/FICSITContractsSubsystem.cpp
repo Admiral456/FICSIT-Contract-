@@ -211,7 +211,7 @@ void AFICSITContractsSubsystem::RefreshExpiredContracts()
     if (!HasAuthority()) return;
     const int64 Now = GetUtcUnixTime();
     const auto HasExpired = [Now](const FFICSITContract& Contract) { return Contract.ExpiresAtUnix > 0 && Now >= Contract.ExpiresAtUnix; };
-    // A board can legitimately have fewer than three free offers when all unlocked templates
+    // A board can legitimately have fewer than five free offers when all unlocked templates
     // are already offered or active. Do not replicate an unchanged board every 15 seconds.
     const bool bHasExpiredContract = AvailableContracts.ContainsByPredicate(HasExpired) || ActiveContracts.ContainsByPredicate(HasExpired);
     if (!bHasExpiredContract) return;
@@ -231,7 +231,7 @@ bool AFICSITContractsSubsystem::AcceptContract(FName ContractId, FString& OutMes
     ApplySnapshot(Engine.state());
     if (!bAccepted)
     {
-        OutMessage = TEXT("That contract is unavailable, expired, or you already have three active contracts.");
+        OutMessage = TEXT("That contract is unavailable, expired, or you already have four active contracts.");
         return false;
     }
     OutMessage = FString::Printf(TEXT("Contract %s accepted. Deliver the requested items with /contracts deliver %s."), *ContractId.ToString(), *ContractId.ToString());
