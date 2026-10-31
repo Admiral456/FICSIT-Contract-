@@ -18,7 +18,7 @@
 - Bind the subsystem to `AFGGamePhaseManager::mOnGameCompleted` and reconcile saves where the vanilla Project Assembly finale was already completed.
 - Bind to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`, verify the purchased class with `IsSchematicPurchased`, and map the implemented Frontier Survey schematic to Terminal Research Phase I completion.
 - Add the Advanced Metallurgy / Terminal II native milestone schematic, gated by the confirmed Frontier Survey purchase and the saved Terminal II availability check.
-- Add a native Titan Alloy Ingot descriptor and Foundry Mk1 recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
+- Add native Titan Alloy Ingot and Titan Alloy Beam descriptors, with Foundry Mk1 recipes for ingots (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots / 8 s) and beams (30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams / 12 s).
 - Generate a dedicated Titan Alloy OBJ mesh and UI icon source; extend the Unreal import utility and static validation for the new content.
 - Reconcile Frontier Survey and Advanced Metallurgy purchases in progression order and map the confirmed Advanced Metallurgy purchase to Terminal II completion.
 - Reconcile existing purchased schematics on load, retry manager binding during early world startup, and remove dynamic delegate bindings during `EndPlay`.
