@@ -75,6 +75,13 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Complete custom Space Elevator Phase VII and confirm Terminal Chapter V becomes available.
 - [ ] Complete custom Space Elevator Phase VIII and confirm Terminal Chapter VI becomes available.
 - [ ] Verify no chapter or Elevator project can be purchased before its prerequisites.
+- [ ] Run `/contracts progression` and verify the current saved research/Elevator state is displayed accurately.
+- [ ] Open the Dispatch Terminal and verify its Endgame Research section matches `/contracts progression` on host and clients.
+- [ ] Complete a progression transition through the verified server schematic adapter and confirm the change is saved and replicated.
+- [ ] Attempt to complete an out-of-order phase through the server adapter and confirm it is rejected without modifying the save.
+- [ ] Load a pre-expansion save and verify empty/missing progression arrays normalize safely to all phases locked.
+- [ ] Save/reload after each milestone and verify completed flags persist without granting future phases.
+- [ ] Confirm the vanilla Phase V flag is only recorded after the actual game completion event is integrated; until then it must remain unconfirmed.
 - [ ] Save/reload and verify completed schematics and unlock state persist in multiplayer.
 
 ### Custom resources and production
