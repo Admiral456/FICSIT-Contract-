@@ -108,7 +108,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Run the Reinforced Titan Frame bootstrap in Manufacturer Mk1: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second cycle.
 - [ ] Run the Heavy Industrial Rotor bootstrap in Manufacturer Mk1: 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors -> 2 Heavy Industrial Rotors per 18-second cycle.
 - [ ] Verify the planned `RCP_HEAVY_ROTOR` Heavy-Duty Assembler recipe remains separate from `RCP_HEAVY_ROTOR_BOOTSTRAP`.
-- [ ] Verify Heavy Industrial Rotor uses its dedicated imported rotor mesh and icon and retains the 116 × 106 × 106 cm source envelope.
+- [ ] Verify Heavy Industrial Rotor uses its dedicated imported rotor mesh and icon and retains the 44 × 44 × 84 cm source envelope.
 - [ ] Save/reload during Heavy Industrial Rotor production; confirm item metadata and partial Manufacturer Mk1 progress persist.
 - [ ] Verify the planned `RCP_REINFORCED_TITAN_FRAME` Heavy-Duty Assembler recipe remains separate from `RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP`.
 - [ ] Confirm the Reinforced Titan Frame recipe is unlocked by Advanced Metallurgy and is available in vanilla Manufacturer Mk1 as the 24-second bootstrap.
