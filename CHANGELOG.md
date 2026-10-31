@@ -18,6 +18,7 @@
 - Extend static CI validation and the in-game checklist for save, replication, UI and progression gate behavior.
 - Add native Ferravium Ore, Concentrate and Ingot descriptor classes and the recovery/washing/smelting recipe chain.
 - Add a native AFGBuildableManufacturer-based Ferravium Smelter with conveyor input/output ports and a reflected 90 MW power setting.
+- Align the Ferravium conveyor component names with the canonical `Input0` / `Output0` convention and extend static validation to guard connector direction, forwarding and power configuration.
 - Add the smelter build descriptor/Build Gun recipe and a Frontier Survey schematic gated by the server-saved Phase V/Terminal I state.
 - Add Ferravium OBJ/MTL item and furnace models, four generated icon sources and a dedicated Unreal Editor import utility.
 - Update the machine-readable catalog to 56 recipes and mark Ferravium as a source prototype; natural resource-node spawning remains deferred.
