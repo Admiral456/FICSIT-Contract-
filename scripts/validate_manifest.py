@@ -76,6 +76,7 @@ def main() -> int:
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumIngot.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyIngot.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyBeam.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/ReinforcedTitanFrame.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/AdvancedAlloyFoundry/AdvancedAlloyFoundry.mtl",
@@ -393,6 +394,32 @@ def main() -> int:
                 if actual_beam_outputs != {"TITAN_ALLOY_BEAM": 30}:
                     errors.append("Titan Alloy Beam bootstrap output must be 30 beams per cycle.")
 
+            frame_unlock = unlock_by_id.get("REINFORCED_TITAN_FRAME")
+            if not frame_unlock or frame_unlock.get("status") != "native_source_prototype":
+                errors.append("Reinforced Titan Frame must be tracked as a native Phase II prototype unlock.")
+            if frame_unlock and frame_unlock.get("sourceSliceId") != "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP":
+                errors.append("Reinforced Titan Frame must reference the Phase II prototype slice.")
+            frame_recipe = recipe_by_id.get("RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP")
+            if not frame_recipe or not any(
+                output.get("itemId") == "REINFORCED_TITAN_FRAME"
+                for output in (frame_recipe or {}).get("outputs", [])
+            ):
+                errors.append("The Reinforced Titan Frame bootstrap recipe must produce Reinforced Titan Frames.")
+            if frame_recipe and frame_recipe.get("designRecipeId") != "RCP_REINFORCED_TITAN_FRAME":
+                errors.append("The frame bootstrap must remain separate from the planned Heavy-Duty Assembler recipe.")
+            if frame_recipe:
+                if frame_recipe.get("machine") != "Vanilla Manufacturer Mk1 (native prototype bootstrap)" or frame_recipe.get("cycleSeconds") != 24:
+                    errors.append("Reinforced Titan Frame bootstrap must use the 24-second vanilla Manufacturer Mk1 process.")
+                expected_frame_inputs = {"TITAN_ALLOY_BEAM": 8, "VANILLA_HEAVY_MODULAR_FRAME": 2}
+                actual_frame_inputs = {item.get("itemId"): item.get("amount") for item in frame_recipe.get("inputs", [])}
+                if actual_frame_inputs != expected_frame_inputs:
+                    errors.append("Reinforced Titan Frame bootstrap inputs must be 8 Titan Alloy Beams and 2 Heavy Modular Frames.")
+                actual_frame_outputs = {item.get("itemId"): item.get("amount") for item in frame_recipe.get("outputs", [])}
+                if actual_frame_outputs != {"REINFORCED_TITAN_FRAME": 2}:
+                    errors.append("Reinforced Titan Frame bootstrap output must be 2 frames per cycle.")
+            if titan_alloy_slice and len(titan_alloy_slice.get("bootstrapRecipes", [])) < 3:
+                errors.append("All three Titan Alloy Phase II bootstrap recipes must be documented.")
+
     # Verify the portable progression state machine matches every unlock ID in the catalog.
     progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
     progression_tests = ROOT / "Tests/ContractEngineTests.cpp"
@@ -689,6 +716,22 @@ def main() -> int:
                 expected_extents = ((-70.0, 70.0), (-18.0, 18.0), (-15.0, 15.0))
                 if bounds != list(expected_extents):
                     errors.append("Titan Alloy Beam mesh must retain its 140 x 36 x 30 cm I-section envelope.")
+        elif obj_file.name == "ReinforcedTitanFrame.obj":
+            positions = []
+            for line in obj_lines:
+                if line.startswith("v "):
+                    try:
+                        positions.append(tuple(float(value) for value in line.split()[1:4]))
+                    except (ValueError, IndexError):
+                        errors.append("Reinforced Titan Frame OBJ contains a malformed vertex.")
+            if positions:
+                bounds = [
+                    (min(point[axis] for point in positions), max(point[axis] for point in positions))
+                    for axis in range(3)
+                ]
+                expected_extents = ((-46.0, 46.0), (-32.0, 32.0), (-32.0, 32.0))
+                if bounds != list(expected_extents):
+                    errors.append("Reinforced Titan Frame mesh must retain its 92 x 64 x 64 cm envelope.")
 
     # The native Ferravium source slice must be registered and match its asset importer.
     ferravium_header = PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITFerraviumContent.h"
@@ -704,6 +747,7 @@ def main() -> int:
             "UFICSITFerraviumIngotDescriptor",
             "UFICSITTitanAlloyIngotDescriptor",
             "UFICSITTitanAlloyBeamDescriptor",
+            "UFICSITReinforcedTitanFrameDescriptor",
             "UFICSITTitanAlloyRecipe",
             "UFICSITTitanAlloyBeamRecipe",
             "UFICSITTitanAlloyRecipeUnlock",
@@ -735,6 +779,14 @@ def main() -> int:
             "UFICSITTitanAlloyRecipe::UFICSITTitanAlloyRecipe()",
             "mRecipes.Add(UFICSITTitanAlloyRecipe::StaticClass())",
             "UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()",
+            "UFICSITReinforcedTitanFrameDescriptor::UFICSITReinforcedTitanFrameDescriptor()",
+            "UFICSITReinforcedTitanFrameRecipe::UFICSITReinforcedTitanFrameRecipe()",
+            "mRecipes.Add(UFICSITReinforcedTitanFrameRecipe::StaticClass())",
+            "mProduct.Emplace(UFICSITReinforcedTitanFrameDescriptor::StaticClass(), 2)",
+            'FICSITTitanAlloyBeamDescriptor"), 8)',
+            'Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C"), 2)',
+            "Build_ManufacturerMk1.Build_ManufacturerMk1_C",
+
             "mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass())",
             "mRecipes.Add(UFICSITAdvancedAlloyFoundryBuildRecipe::StaticClass())",
             "AFICSITAdvancedAlloyFoundry::AFICSITAdvancedAlloyFoundry()",
@@ -787,6 +839,7 @@ def main() -> int:
             "TX_FerraviumIngot_256",
             "TX_TitanAlloyIngot_256",
             "TX_TitanAlloyBeam_256",
+            "TX_ReinforcedTitanFrame_256",
             "TX_FerraviumSmelter_256",
         ):
             if required not in importer_text:
