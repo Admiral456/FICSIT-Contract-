@@ -7,7 +7,10 @@
 #include "FICSITContractsSubsystem.generated.h"
 
 class AFGCharacterPlayer;
+class AFGGamePhaseManager;
+class AFGSchematicManager;
 class UFGItemDescriptor;
+class UFGSchematic;
 
 namespace FicsitContracts { class EndgameProgression; }
 
@@ -109,6 +112,7 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
     UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -124,9 +128,18 @@ private:
     UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard)
     TArray<uint8> ElevatorExtensionsComplete;
     FTimerHandle ExpiryTimerHandle;
+    FTimerHandle ProgressionBindingRetryTimerHandle;
+    int32 ProgressionBindingAttempts = 0;
+    bool bGamePhaseEventsBound = false;
+    bool bSchematicEventsBound = false;
 
     UFUNCTION() void OnRep_ContractBoard();
     UFUNCTION() void RefreshExpiredContracts();
+    UFUNCTION() void HandleVanillaGameCompleted(bool bSuppressNarrativeMessages);
+    UFUNCTION() void HandleSchematicPurchased(TSubclassOf<UFGSchematic> PurchasedSchematic, AFGCharacterPlayer* PurchaseInstigator);
+    void TryBindProgressionEvents();
+    void UnbindProgressionEvents();
+    void RefreshPurchasedSchematicProgression();
     void GenerateInitialBoard();
     FicsitContracts::Snapshot BuildSnapshot() const;
     void ApplySnapshot(const FicsitContracts::Snapshot& Snapshot);
