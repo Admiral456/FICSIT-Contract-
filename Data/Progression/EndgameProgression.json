@@ -91,7 +91,7 @@
             300
           ],
           [
-            "INTERPLANETARY_COMMAND_PROCESSOR",
+            "ORBITAL_PREASSEMBLY_PROCESSOR",
             100
           ]
         ]
@@ -128,7 +128,9 @@
         "RCP_FERRAVIUM_INGOT",
         "RCP_FERRAVIUM_PLATE",
         "RCP_SURVEY_COMPUTER",
-        "RCP_FERRAVIUM_DARTS"
+        "RCP_FERRAVIUM_DARTS",
+        "RCP_PRECISION_REBAR_RIFLE",
+        "RCP_BLUEPRINT_MK4"
       ]
     },
     {
@@ -166,7 +168,9 @@
         "RCP_HARDENED_AMMO",
         "RCP_FERRAVIUM_STRUCTURAL_MATRIX",
         "RCP_DEEP_CORE_EXTRACTOR_MODULE",
-        "RCP_ADVANCED_SURVEY_COMPUTER"
+        "RCP_ADVANCED_SURVEY_COMPUTER",
+        "RCP_HEAVY_REBAR_REPEATER",
+        "RCP_EXOSUIT_MK1"
       ]
     },
     {
@@ -200,7 +204,10 @@
         "RCP_SUPERCONDUCTIVE_COIL",
         "RCP_CRYO_ENGINE",
         "RCP_CRYO_AMMO",
-        "RCP_CRYOGENIC_POWER_REGULATOR"
+        "RCP_CRYOGENIC_POWER_REGULATOR",
+        "RCP_CRYO_PROJECTOR",
+        "RCP_CRYO_GRENADE",
+        "RCP_CRYO_SUIT"
       ]
     },
     {
@@ -239,7 +246,9 @@
         "RCP_QUANTUM_ROUTING_ARRAY",
         "RCP_PHOTONIC_CELL",
         "RCP_PHOTONIC_ROUTING_ARRAY",
-        "RCP_QUANTUM_COMMUNICATION_CORE"
+        "RCP_QUANTUM_COMMUNICATION_CORE",
+        "RCP_PHOTONIC_RIFLE",
+        "RCP_BLUEPRINT_MK5"
       ]
     },
     {
@@ -274,7 +283,14 @@
         "RCP_GRAVITIC_CORE",
         "RCP_GRAVITIC_STABILIZER",
         "RCP_QUANTUM_LOGISTICS_ENGINE",
-        "RCP_GRAVITIC_TRANSIT_CORE"
+        "RCP_GRAVITIC_TRANSIT_CORE",
+        "RCP_ORBITAL_LOGISTICS_MODULE",
+        "RCP_GRAVITIC_LAUNCHER",
+        "RCP_GRAVITY_GRENADE",
+        "RCP_REPULSION_GRENADE",
+        "RCP_GRAVITY_BOOTS",
+        "RCP_PERSONAL_SHIELD",
+        "RCP_ORBITAL_PREASSEMBLY_PROCESSOR"
       ]
     },
     {
@@ -306,7 +322,6 @@
       ],
       "recipeIds": [
         "RCP_QUANTUM_CARGO_CORE",
-        "RCP_ORBITAL_LOGISTICS_MODULE",
         "RCP_QUANTUM_STORAGE_MATRIX",
         "RCP_COMMAND_PROCESSOR",
         "RCP_ORBITAL_ASSEMBLY_FRAME"
@@ -1766,8 +1781,8 @@
     },
     {
       "id": "RCP_ORBITAL_LOGISTICS_MODULE",
-      "phase": 6,
-      "machine": "Orbital Assembly Plant",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
       "cycleSeconds": 30,
       "inputs": [
         {
@@ -1911,7 +1926,7 @@
     {
       "id": "RCP_ADVANCED_SURVEY_COMPUTER",
       "phase": 2,
-      "machine": "Quantum Circuit Assembler",
+      "machine": "Assembler",
       "cycleSeconds": 24,
       "inputs": [
         {
@@ -1919,12 +1934,12 @@
           "amount": 2
         },
         {
-          "itemId": "PHOTONIC_PROCESSOR",
-          "amount": 1
-        },
-        {
           "itemId": "TITAN_ALLOY_INGOT",
           "amount": 4
+        },
+        {
+          "itemId": "VANILLA_CIRCUIT_BOARD",
+          "amount": 2
         }
       ],
       "outputs": [
@@ -2037,6 +2052,388 @@
           "amount": 1
         }
       ]
+    },
+    {
+      "id": "RCP_PRECISION_REBAR_RIFLE",
+      "phase": 1,
+      "machine": "Field Workshop",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 12
+        },
+        {
+          "itemId": "VANILLA_REBAR_GUN",
+          "amount": 1
+        },
+        {
+          "itemId": "SURVEY_COMPUTER",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PRECISION_REBAR_RIFLE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_HEAVY_REBAR_REPEATER",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "PRECISION_REBAR_RIFLE",
+          "amount": 1
+        },
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "HEAVY_REBAR_REPEATER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_EXOSUIT_MK1",
+      "phase": 2,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 8
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "EXOSUIT_MK1",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_PROJECTOR",
+      "phase": 3,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 2
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_PROJECTOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_GRENADE",
+      "phase": 3,
+      "machine": "Assembler",
+      "cycleSeconds": 8,
+      "inputs": [
+        {
+          "itemId": "CRYO_CHARGE",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_ALUMINUM_CASING",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_GRENADE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYO_SUIT",
+      "phase": 3,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 1
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 6
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYO_SUIT_MK1",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_RIFLE",
+      "phase": 4,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 40,
+      "inputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 4
+        },
+        {
+          "itemId": "ASTERITE_WAFER",
+          "amount": 8
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_RIFLE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITIC_LAUNCHER",
+      "phase": 5,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 50,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 2
+        },
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "HEAVY_REBAR_REPEATER",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITIC_LAUNCHER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITY_GRENADE",
+      "phase": 5,
+      "machine": "Assembler",
+      "cycleSeconds": 12,
+      "inputs": [
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_NOBELISK",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITY_GRENADE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_REPULSION_GRENADE",
+      "phase": 5,
+      "machine": "Assembler",
+      "cycleSeconds": 15,
+      "inputs": [
+        {
+          "itemId": "STABILIZED_GRAVIONITE",
+          "amount": 2
+        },
+        {
+          "itemId": "VANILLA_NOBELISK",
+          "amount": 1
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "REPULSION_GRENADE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITY_BOOTS",
+      "phase": 5,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_STABILIZER",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_PLATE",
+          "amount": 6
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITY_BOOTS",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PERSONAL_SHIELD",
+      "phase": 5,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 1
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PERSONAL_SHIELD_GENERATOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_ORBITAL_PREASSEMBLY_PROCESSOR",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 35,
+      "inputs": [
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 2
+        },
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ORBITAL_PREASSEMBLY_PROCESSOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_BLUEPRINT_MK4",
+      "phase": 1,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 45,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 10
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 8
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "BLUEPRINT_DESIGNER_MK4",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_BLUEPRINT_MK5",
+      "phase": 4,
+      "machine": "Equipment Workshop",
+      "cycleSeconds": 60,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 20
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 10
+        },
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "BLUEPRINT_DESIGNER_MK5",
+          "amount": 1
+        }
+      ]
     }
   ],
   "balanceTargets": {
@@ -2071,5 +2468,86 @@
     "New weapons and equipment must use valid native equipment descriptors, ammo, damage, inventory and multiplayer replication paths.",
     "Defensive AI, drones, remote factory control and quantum cargo transfer are higher-risk features and need dedicated technical prototypes.",
     "Do not ship invented vanilla item class paths; resolve all vanilla dependencies from the target game's asset registry before content packaging."
+  ],
+  "elevator": [
+    {
+      "phase": 6,
+      "id": "SPACE_ELEVATOR_PHASE_06",
+      "title": "Frontier Expansion",
+      "unlocksTerminalPhases": [
+        3,
+        4
+      ],
+      "requirements": [
+        [
+          "FERRAVIUM_STRUCTURAL_MATRIX",
+          1500
+        ],
+        [
+          "DEEP_CORE_EXTRACTOR_MODULE",
+          800
+        ],
+        [
+          "TITAN_ALLOY_BEAM",
+          1200
+        ],
+        [
+          "ADVANCED_SURVEY_COMPUTER",
+          400
+        ]
+      ]
+    },
+    {
+      "phase": 7,
+      "id": "SPACE_ELEVATOR_PHASE_07",
+      "title": "Planetary Network",
+      "unlocksTerminalPhases": [
+        5
+      ],
+      "requirements": [
+        [
+          "CRYOGENIC_POWER_REGULATOR",
+          1200
+        ],
+        [
+          "PHOTONIC_ROUTING_ARRAY",
+          800
+        ],
+        [
+          "SUPERCONDUCTIVE_COIL",
+          1500
+        ],
+        [
+          "QUANTUM_COMMUNICATION_CORE",
+          400
+        ]
+      ]
+    },
+    {
+      "phase": 8,
+      "id": "SPACE_ELEVATOR_PHASE_08",
+      "title": "Orbital Assembly",
+      "unlocksTerminalPhases": [
+        6
+      ],
+      "requirements": [
+        [
+          "GRAVITIC_TRANSIT_CORE",
+          1000
+        ],
+        [
+          "ORBITAL_LOGISTICS_MODULE",
+          600
+        ],
+        [
+          "QUANTUM_LOGISTICS_ENGINE",
+          300
+        ],
+        [
+          "ORBITAL_PREASSEMBLY_PROCESSOR",
+          100
+        ]
+      ]
+    }
   ]
 }
