@@ -80,7 +80,7 @@ Ferravium, průzkum ložisek, první endgame vybavení, zbraň a Blueprint Desig
 
 Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.
 
-**Implementovaný Phase II source slice:** nativní Titan Alloy Ingot a Titan Alloy Beam descriptory s oddělenými OBJ meshi a ikonami. Schéma Advanced Metallurgy je registrované a po potvrzeném nákupu označí Terminal II jako dokončený. Zatím jsou přidány dva bootstrap recepty ve vanilla Foundry Mk1: `RCP_TITAN_ALLOY` (60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots / 8 s) a `RCP_TITAN_BEAM` (30 Titan Alloy Ingots + 60 Steel Pipes → 30 Titan Alloy Beams / 12 s). Dedicated Advanced Alloy Foundry a ostatní fáze výrobního řetězce zůstávají plánované.
+**Implementovaný Phase II source slice:** nativní Titan Alloy Ingot a Titan Alloy Beam descriptory s oddělenými OBJ meshi a ikonami. Schéma Advanced Metallurgy je registrované a po potvrzeném nákupu označí Terminal II jako dokončený. Zatím jsou přidány dva bootstrap recepty ve vanilla Foundry Mk1: `RCP_TITAN_ALLOY` (60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots / 8 s) a `RCP_TITAN_BEAM_BOOTSTRAP` (30 Titan Alloy Ingots + 60 Steel Pipes → 30 Titan Alloy Beams / 12 s). Bootstrap je oddělen od návrhového receptu `RCP_TITAN_BEAM`, který v cílovém řetězci zůstává receptem Industrial Press (30 Titan Alloy Ingots → 15 Titan Alloy Beams / 8 s). Dedicated Advanced Alloy Foundry, Industrial Press a ostatní fáze výrobního řetězce zůstávají plánované.
 
 **Odemykatelné technologie:**
 
@@ -417,7 +417,7 @@ Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy
 1. Zkopíruj `Mods/GameFeatures/FICSITContracts`, `Mods/FICSITContracts/ContentSource` a `Tools/Unreal` do Satisfactory Modding Starter Projectu.
 2. V Unreal Editoru spusť `Tools/Unreal/BuildFICSITContractsAssets.py` pro vytvoření původního Dispatch Terminal mesh/icon a Game Feature Data assetu.
 3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy položek, smelteru a pěti ikon a pěti meshů.
-4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`, včetně `SM_TitanAlloyIngot` a `TX_TitanAlloyIngot_256`.
+4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium` a `/FICSITContracts/Buildables/FerraviumSmelter`, včetně `SM_TitanAlloyIngot`, `SM_TitanAlloyBeam`, `TX_TitanAlloyIngot_256` a `TX_TitanAlloyBeam_256`.
 5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
 
 ## Stav prvních obsahových prototypů: Ferravium a Titan Alloy
@@ -441,7 +441,7 @@ Druhý native source slice obsahuje:
 - Serverové potvrzení nákupu, které ukládá Terminal II jako dokončený a reconciliuje existující save v pořadí Terminal I → Terminal II.
 - OBJ/MTL mesh, pětici generovaných UI ikon a editorový import assetů.
 
-**Omezení druhé iterace:** vanilla Foundry Mk1 je dočasný kompatibilní bootstrap. Dedicated Advanced Alloy Foundry, Industrial Press, Titan Alloy Beam, Reinforced Titan Frame a ostatní recepty Phase II ještě nejsou implementované. Nativní zdrojové třídy nejsou dosud UHT/UE zkompilované ani otestované ve hře.
+**Omezení druhé iterace:** vanilla Foundry Mk1 je dočasný kompatibilní bootstrap pro ingot i beam. Dedicated Advanced Alloy Foundry a Industrial Press, Reinforced Titan Frame a ostatní recepty Phase II ještě nejsou implementované. Titan Alloy Beam má vlastní native descriptor, mesh, ikonu a Foundry bootstrap, ale konečný návrhový Industrial Press řetězec zůstává samostatně plánovaný. Nativní zdrojové třídy nejsou dosud UHT/UE zkompilované ani otestované ve hře.
 
 V cílovém SML Starter Projectu je nutné spustit nejprve `BuildFICSITContractsAssets.py` a potom `BuildFerraviumAssets.py`, zkompilovat `FactoryGameEditor`, zkontrolovat asset registry a provést in-game test obou výrobních linek i obou schémat. Portable CI ani statická kontrola tuto herní validaci nenahrazují.
 
