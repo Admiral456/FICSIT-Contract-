@@ -55,6 +55,8 @@ def main() -> int:
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsGameInstanceModule.h",
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsGameInstanceModule.cpp",
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITDispatchTerminalContent.h",
+        ROOT / "Source/FICSITContractsCore/EndgameProgression.h",
+        ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp",
     ]
     errors.extend(
         f"Required source file missing: {path.relative_to(ROOT)}"
@@ -282,6 +284,44 @@ def main() -> int:
             constraints = " ".join(progression.get("implementationConstraints", []))
             if "World Partition" not in constraints or "asset registry" not in constraints:
                 errors.append("The endgame design must retain World Partition and vanilla asset-path implementation caveats.")
+
+    # Verify the portable progression state machine matches every unlock ID in the catalog.
+    progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
+    progression_tests = ROOT / "Tests/ContractEngineTests.cpp"
+    cmake_file = ROOT / "CMakeLists.txt"
+    if progression_engine.is_file():
+        engine_text = progression_engine.read_text(encoding="utf-8")
+        for unlock in (progression.get("unlocks", []) if "progression" in locals() and progression else []):
+            expected_mapping = f'{{"{unlock.get("id")}", {unlock.get("phase")}}}'
+            if expected_mapping not in engine_text:
+                errors.append(f"Portable progression engine is missing unlock mapping: {unlock.get('id')}")
+        for required in (
+            "canResearchTerminalPhase",
+            "completeTerminalPhase",
+            "canCompleteElevatorPhase",
+            "completeElevatorPhase",
+            "availableTerminalPhase",
+            "availableElevatorPhase",
+            "normalize",
+        ):
+            if required not in engine_text:
+                errors.append(f"Portable progression engine is missing required gate logic: {required}")
+    if cmake_file.is_file():
+        cmake_text = cmake_file.read_text(encoding="utf-8")
+        if "Source/FICSITContractsCore/EndgameProgression.cpp" not in cmake_text:
+            errors.append("CMake must compile the portable endgame progression engine.")
+    if progression_tests.is_file():
+        progression_test_text = progression_tests.read_text(encoding="utf-8")
+        for required in (
+            "EndgameProgression progression",
+            "vanilla Phase V unlocks Terminal I",
+            "Terminal II unlocks Elevator VI",
+            "Elevator VII unlocks Terminal V",
+            "Elevator VIII unlocks Terminal VI",
+            "malformed endgame save",
+        ):
+            if required not in progression_test_text:
+                errors.append(f"Endgame progression regression test is missing: {required}")
 
     # Parse the Editor utility without importing Unreal's Python module.
     asset_script = source_assets[-1]
