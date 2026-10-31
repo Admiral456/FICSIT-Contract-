@@ -63,10 +63,9 @@
 - [x] Add the Advanced Metallurgy / Terminal II schematic, gated by purchased Frontier Survey and the saved Phase II availability state.
 - [x] Add the native Titan Alloy Ingot descriptor and 8-second Advanced Alloy Foundry recipe (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots).
 - [x] Add Titan Alloy Beam as a second Phase II product: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second Advanced Alloy Foundry cycle, with its own descriptor, OBJ mesh and icon source.
-- [x] Add Reinforced Titan Frame as a third Phase II source prototype: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second Manufacturer Mk1 bootstrap; keep the planned Heavy-Duty Assembler recipe separate.
 - [x] Add Reinforced Titan Frame as a third Phase II product: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second Manufacturer Mk1 bootstrap cycle, with its own descriptor, open-cage OBJ mesh and icon source; keep the final Heavy-Duty Assembler recipe separate.
 - [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
-- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and the Advanced Alloy Foundry with eight generated icons.
+- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, Advanced Alloy Foundry and Reinforced Titan Frame with eight generated icons.
 - [ ] Import all Ferravium/Titan Alloy/Reinforced Frame/Foundry assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
@@ -74,7 +73,6 @@
 - [x] Implement the native Advanced Alloy Foundry manufacturer, buildable descriptor, Build Gun recipe, mixed-feed conveyor input/output, 125 MW base power and source OBJ/MTL model.
 - [x] Move both Titan Alloy prototype recipes from the vanilla Foundry Mk1 to the dedicated Advanced Alloy Foundry; register the building recipe in the Advanced Metallurgy unlock.
 - [x] Add Reinforced Titan Frame descriptor, Manufacturer Mk1 bootstrap recipe, separate OBJ mesh and generated icon; keep the Heavy-Duty Assembler recipe as the final design target.
-- [x] Add the Reinforced Titan Frame Manufacturer Mk1 bootstrap recipe and separate design-recipe mapping.
 - [ ] Prototype the dedicated Heavy-Duty Assembler and move the final Reinforced Titan Frame recipe there after in-game balancing.
 - [ ] Balance the Advanced Alloy Foundry's production, power and construction costs in the target game.
 - [ ] Resolve a supported new resource deposit/node path and ore scanner integration.
