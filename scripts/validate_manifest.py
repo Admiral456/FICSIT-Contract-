@@ -3,6 +3,7 @@
 
 import ast
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -221,6 +222,66 @@ def main() -> int:
             if len(unlock_ids) != len(set(unlock_ids)) or any(not value for value in unlock_ids):
                 errors.append("Endgame unlock IDs must be non-empty and globally unique.")
             unlock_by_id = {entry.get("id"): entry for entry in unlock_list if entry.get("id")}
+
+            # Keep the runtime C++ lookup table synchronized with the editable JSON
+            # catalogue. A drift here would make valid unlocks report no research phase
+            # (or, worse, associate them with the wrong terminal chapter).
+            progression_core_path = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
+            if not progression_core_path.is_file():
+                errors.append("Portable endgame progression source is missing; unlock mapping cannot be verified.")
+            else:
+                progression_core_text = progression_core_path.read_text(encoding="utf-8")
+                mapping_block = re.search(
+                    r"constexpr\\s+UnlockPhase\\s+kUnlockPhases\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\n\\};",
+                    progression_core_text,
+                )
+                if mapping_block is None:
+                    errors.append("Portable progression engine is missing its kUnlockPhases lookup table.")
+                else:
+                    cpp_entries = re.findall(
+                        r'\\{\\s*"([A-Z0-9_]+)"\\s*,\\s*(\\d+)\\s*\\}',
+                        mapping_block.group(1),
+                    )
+                    cpp_unlock_map: dict[str, int] = {}
+                    for unlock_id, phase_text in cpp_entries:
+                        if unlock_id in cpp_unlock_map:
+                            errors.append(f"C++ endgame unlock mapping contains duplicate ID: {unlock_id}")
+                        cpp_unlock_map[unlock_id] = int(phase_text)
+
+                    catalog_unlock_map = {
+                        entry.get("id"): entry.get("phase")
+                        for entry in unlock_list
+                        if entry.get("id")
+                    }
+                    missing_cpp = sorted(set(catalog_unlock_map) - set(cpp_unlock_map))
+                    extra_cpp = sorted(set(cpp_unlock_map) - set(catalog_unlock_map))
+                    if missing_cpp:
+                        errors.append(
+                            "C++ endgame mapping is missing catalogue unlocks: " + ", ".join(missing_cpp)
+                        )
+                    if extra_cpp:
+                        errors.append(
+                            "C++ endgame mapping contains unlocks absent from the catalogue: " + ", ".join(extra_cpp)
+                        )
+                    wrong_phase = sorted(
+                        unlock_id
+                        for unlock_id in set(catalog_unlock_map) & set(cpp_unlock_map)
+                        if catalog_unlock_map[unlock_id] != cpp_unlock_map[unlock_id]
+                    )
+                    if wrong_phase:
+                        errors.append(
+                            "C++ endgame mapping assigns the wrong terminal phase to: " + ", ".join(wrong_phase)
+                        )
+                    invalid_cpp_phases = sorted(
+                        unlock_id for unlock_id, phase in cpp_unlock_map.items()
+                        if phase not in range(1, 7)
+                    )
+                    if invalid_cpp_phases:
+                        errors.append(
+                            "C++ endgame mapping contains invalid terminal phases for: "
+                            + ", ".join(invalid_cpp_phases)
+                        )
+
             allowed_categories = {
                 "building", "miner", "logistics", "power", "automation", "weapon", "material",
                 "ammo", "equipment", "vehicle", "blueprint", "scanner", "defense",
