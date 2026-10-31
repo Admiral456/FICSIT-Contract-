@@ -40,6 +40,14 @@ public:
     UFICSITFerraviumIngotDescriptor();
 };
 
+UCLASS()
+class FICSITCONTRACTS_API UFICSITTitanAlloyIngotDescriptor : public UFGItemDescriptor
+{
+    GENERATED_BODY()
+public:
+    UFICSITTitanAlloyIngotDescriptor();
+};
+
 /** Native manufacturer for the first Ferravium processing line. */
 UCLASS()
 class FICSITCONTRACTS_API AFICSITFerraviumSmelter : public AFGBuildableManufacturer
@@ -103,11 +111,27 @@ public:
 };
 
 UCLASS()
+class FICSITCONTRACTS_API UFICSITTitanAlloyRecipe : public UFGRecipe
+{
+    GENERATED_BODY()
+public:
+    UFICSITTitanAlloyRecipe();
+};
+
+UCLASS()
 class FICSITCONTRACTS_API UFICSITFerraviumRecipeUnlock : public UFGUnlockRecipe
 {
     GENERATED_BODY()
 public:
     UFICSITFerraviumRecipeUnlock();
+};
+
+UCLASS()
+class FICSITCONTRACTS_API UFICSITTitanAlloyRecipeUnlock : public UFGUnlockRecipe
+{
+    GENERATED_BODY()
+public:
+    UFICSITTitanAlloyRecipeUnlock();
 };
 
 /** Keeps Frontier Survey hidden until the actual Phase V callback has opened Terminal I. */
@@ -126,4 +150,22 @@ class FICSITCONTRACTS_API UFICSITFrontierSurveySchematic : public UFGSchematic
     GENERATED_BODY()
 public:
     UFICSITFrontierSurveySchematic();
+};
+
+/** Keeps Advanced Metallurgy behind the confirmed Frontier Survey purchase and Terminal I state. */
+UCLASS()
+class FICSITCONTRACTS_API UFICSITAdvancedMetallurgyPrerequisite : public UFGSchematicPurchasedDependency
+{
+    GENERATED_BODY()
+public:
+    UFICSITAdvancedMetallurgyPrerequisite();
+    virtual bool AreDependenciesMet(UObject* WorldContext) const override;
+};
+
+UCLASS()
+class FICSITCONTRACTS_API UFICSITAdvancedMetallurgySchematic : public UFGSchematic
+{
+    GENERATED_BODY()
+public:
+    UFICSITAdvancedMetallurgySchematic();
 };
