@@ -343,6 +343,8 @@ int main() {
         "survey building is mapped to Terminal I");
     expect(EndgameProgression::terminalPhaseForUnlock("TITAN_ALLOY_INGOT") == 2,
         "Titan Alloy recipe is mapped to Terminal II");
+    expect(EndgameProgression::terminalPhaseForUnlock("TITAN_ALLOY_BEAM") == 2,
+        "Titan Alloy Beam is mapped to Terminal II");
     expect(EndgameProgression::terminalPhaseForUnlock("BLUEPRINT_DESIGNER_MK5") == 4,
         "Blueprint Designer Mk5 is mapped to Terminal IV");
     expect(EndgameProgression::terminalPhaseForUnlock("ORBITAL_FREIGHT_HUB") == 6,
