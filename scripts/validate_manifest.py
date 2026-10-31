@@ -443,6 +443,7 @@ def main() -> int:
             "CompleteTerminalResearchPhase(ResearchPhase)",
             "RemoveDynamic",
             "ProgressionBindingRetryTimerHandle",
+            "SchematicPurchaseRetryTimerHandle",
         ):
             if required not in runtime_text:
                 errors.append(f"SML runtime progression integration is missing: {required}")
