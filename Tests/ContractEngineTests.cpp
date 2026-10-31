@@ -347,6 +347,8 @@ int main() {
         "Titan Alloy Beam is mapped to Terminal II");
     expect(EndgameProgression::terminalPhaseForUnlock("REINFORCED_TITAN_FRAME") == 2,
         "Reinforced Titan Frame is mapped to Terminal II");
+    expect(EndgameProgression::terminalPhaseForUnlock("HEAVY_INDUSTRIAL_ROTOR") == 2,
+        "Heavy Industrial Rotor is mapped to Terminal II");
     expect(EndgameProgression::terminalPhaseForUnlock("BLUEPRINT_DESIGNER_MK5") == 4,
         "Blueprint Designer Mk5 is mapped to Terminal IV");
     expect(EndgameProgression::terminalPhaseForUnlock("ORBITAL_FREIGHT_HUB") == 6,
