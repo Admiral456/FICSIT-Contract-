@@ -9,7 +9,7 @@
     "unreal": "custom UE 5.6.1"
   },
   "implementationStatus": "design_only",
-  "sourceOfTruthNote": "The wider six-phase catalogue remains design data. Native source prototypes include Ferravium processing and the Phase II Titan Alloy Ingot, Titan Alloy Beam and Reinforced Titan Frame products. Titan Alloy materials use the custom Advanced Alloy Foundry; Reinforced Titan Frames temporarily use the vanilla Manufacturer Mk1, separately from the planned Heavy-Duty Assembler recipe. Natural Ferravium node placement and full UHT/UE/game validation remain pending.",
+  "sourceOfTruthNote": "The full catalogue remains design data. Native source prototypes now exist for Ferravium processing and the first Advanced Metallurgy slice (Titan Alloy items plus the Advanced Alloy Foundry). Vanilla finale and the Frontier Survey / Advanced Metallurgy schematic purchase events are wired at source level; natural Ferravium nodes, editor import, UHT/UE compilation, Alpakit packaging and in-game validation remain pending.",
   "progression": {
     "vanillaPhase5UnlocksTerminalPhases": [
       1,
