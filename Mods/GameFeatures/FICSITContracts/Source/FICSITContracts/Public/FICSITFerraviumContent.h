@@ -48,6 +48,15 @@ public:
     UFICSITTitanAlloyIngotDescriptor();
 };
 
+/** Structural beam made from Titan Alloy for the Phase II heavy-industry chain. */
+UCLASS()
+class FICSITCONTRACTS_API UFICSITTitanAlloyBeamDescriptor : public UFGItemDescriptor
+{
+    GENERATED_BODY()
+public:
+    UFICSITTitanAlloyBeamDescriptor();
+};
+
 /** Native manufacturer for the first Ferravium processing line. */
 UCLASS()
 class FICSITCONTRACTS_API AFICSITFerraviumSmelter : public AFGBuildableManufacturer
@@ -116,6 +125,14 @@ class FICSITCONTRACTS_API UFICSITTitanAlloyRecipe : public UFGRecipe
     GENERATED_BODY()
 public:
     UFICSITTitanAlloyRecipe();
+};
+
+UCLASS()
+class FICSITCONTRACTS_API UFICSITTitanAlloyBeamRecipe : public UFGRecipe
+{
+    GENERATED_BODY()
+public:
+    UFICSITTitanAlloyBeamRecipe();
 };
 
 UCLASS()
