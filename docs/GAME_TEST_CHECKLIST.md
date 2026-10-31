@@ -81,7 +81,11 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Attempt to complete an out-of-order phase through the server adapter and confirm it is rejected without modifying the save.
 - [ ] Load a pre-expansion save and verify empty/missing progression arrays normalize safely to all phases locked.
 - [ ] Save/reload after each milestone and verify completed flags persist without granting future phases.
-- [ ] Confirm the vanilla Phase V flag is only recorded after the actual game completion event is integrated; until then it must remain unconfirmed.
+- [ ] Verify `AFGGamePhaseManager::mOnGameCompleted` records vanilla Phase V only after the final Project Assembly/game-completed event, and never merely when a phase is paid off.
+- [ ] Load a save where the vanilla finale was completed before the mod was installed and verify `GetGameIsCompleted()` reconciliation records the Phase V gate.
+- [ ] Purchase Frontier Survey and verify `PurchasedSchematicInstigatorDelegate` plus `IsSchematicPurchased()` completes Terminal I exactly once.
+- [ ] Verify an unrelated purchased schematic does not alter Terminal/Elevator progression.
+- [ ] Verify manager-binding retries recover when either manager is unavailable during the subsystem's first BeginPlay, and delegates are removed on world teardown.
 - [ ] Save/reload and verify completed schematics and unlock state persist in multiplayer.
 
 ### Ferravium source prototype (pending target-game test)
@@ -89,7 +93,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify all Ferravium meshes/icons import under the expected plugin mount.
 - [ ] Confirm the native ore, concentrate and ingot descriptors load without missing mesh/icon/category warnings.
 - [ ] Confirm Frontier Survey remains hidden before vanilla Space Elevator Phase V and Terminal I are available.
-- [ ] After the real Phase V callback is connected, confirm Frontier Survey appears and can be purchased only once.
+- [ ] After the vanilla final-game event integration is verified in-game, confirm Frontier Survey appears and can be purchased only once; confirm its purchase marks Terminal I complete.
 - [ ] Build the Ferravium Smelter and verify placement clearance, collision, dismantle refund and power connection.
 - [ ] Confirm the smelter consumes 90 MW at base potential and that overclocking behaves correctly.
 - [ ] Connect an input belt and output belt; verify the conveyor ports snap, orient and transfer items in the expected directions.
