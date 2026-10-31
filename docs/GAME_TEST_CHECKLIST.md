@@ -88,6 +88,19 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Verify manager-binding retries recover when either manager is unavailable during the subsystem's first BeginPlay, and delegates are removed on world teardown.
 - [ ] Save/reload and verify completed schematics and unlock state persist in multiplayer.
 
+### Advanced Metallurgy / Terminal II source prototype (pending target-game test)
+
+- [ ] Complete vanilla Project Assembly, purchase Frontier Survey and verify Terminal I becomes COMPLETE / Terminal II becomes AVAILABLE.
+- [ ] Verify Advanced Metallurgy remains hidden before Frontier Survey is purchased and Terminal II is available.
+- [ ] Purchase Advanced Metallurgy and verify Terminal II becomes COMPLETE exactly once on the host and clients.
+- [ ] Load a save where both Frontier Survey and Advanced Metallurgy were already purchased before mod installation and verify reconciliation marks Terminal I then Terminal II complete.
+- [ ] Verify purchasing an unrelated schematic does not advance endgame progression.
+- [ ] Confirm Titan Alloy Ingot recipe appears only after Advanced Metallurgy is purchased.
+- [ ] Import the Titan Alloy Ingot OBJ and generated icon; confirm the mesh and icon resolve under the plugin resource mount.
+- [ ] Run the Foundry Mk1 recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
+- [ ] Save/reload with Titan Alloy production active and verify recipe unlock and item references persist.
+- [ ] Confirm the recipe is intentionally using vanilla Foundry Mk1; do not mark the dedicated Advanced Alloy Foundry as implemented.
+
 ### Ferravium source prototype (pending target-game test)
 
 - [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify all Ferravium meshes/icons import under the expected plugin mount.
