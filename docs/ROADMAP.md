@@ -64,7 +64,7 @@
 - [x] Add the native Titan Alloy Ingot descriptor and the 8-second Foundry Mk1 bootstrap recipe (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots).
 - [x] Add Titan Alloy Beam as a second Phase II product: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second Foundry Mk1 cycle, with its own descriptor, OBJ mesh and icon source.
 - [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
-- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and five generated icons.
+- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and six generated icons.
 - [ ] Import Ferravium and Titan Alloy assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
