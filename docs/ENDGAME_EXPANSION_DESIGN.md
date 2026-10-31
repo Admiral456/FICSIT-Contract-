@@ -417,7 +417,7 @@ Přístup k schematice vyžaduje zakoupený FICSIT Dispatch Terminal a stav, kdy
 1. Zkopíruj `Mods/GameFeatures/FICSITContracts`, `Mods/FICSITContracts/ContentSource` a `Tools/Unreal` do Satisfactory Modding Starter Projectu.
 2. V Unreal Editoru spusť `Tools/Unreal/BuildFICSITContractsAssets.py` pro vytvoření původního Dispatch Terminal mesh/icon a Game Feature Data assetu.
 3. Poté spusť `Tools/Unreal/BuildFerraviumAssets.py` pro import Ferravium/Titan Alloy/Reinforced Titan Frame položek, Ferravium Smelteru, Advanced Alloy Foundry a devíti ikon.
-4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium`, `/FICSITContracts/Buildables/FerraviumSmelter` a `/FICSITContracts/Buildables/AdvancedAlloyFoundry`, včetně `SM_TitanAlloyIngot`, `SM_TitanAlloyBeam`, `SM_ReinforcedTitanFrame`, `SM_AdvancedAlloyFoundry` a odpovídajících ikon.
+4. Zkontroluj v Content Browseru cesty pod `/FICSITContracts/Resources/Ferravium`, `/FICSITContracts/Buildables/FerraviumSmelter` a `/FICSITContracts/Buildables/AdvancedAlloyFoundry`, včetně `SM_TitanAlloyIngot`, `SM_TitanAlloyBeam`, `SM_ReinforcedTitanFrame`, `SM_HeavyIndustrialRotor`, `SM_AdvancedAlloyFoundry` a odpovídajících ikon.
 5. Zkompiluj `FactoryGameEditor`, spusť Alpakit a otestuj schematiku, build gun, pásové porty, power draw, celý výrobní řetězec a save/load.
 
 ## Stav prvních obsahových prototypů: Ferravium, Titan Alloy a Advanced Alloy Foundry
