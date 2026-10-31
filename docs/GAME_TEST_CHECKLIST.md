@@ -115,6 +115,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Save/reload with both Titan Alloy Ingot and Beam production active and verify recipe unlocks, item descriptors and conveyor mesh references persist.
 - [ ] Verify neither Titan Alloy production recipe lists vanilla Foundry Mk1 as a producer, and that the Advanced Alloy Foundry build recipe is granted by the Advanced Metallurgy unlock.
 - [ ] Verify the Reinforced Titan Frame bootstrap alone uses vanilla Manufacturer Mk1 and cannot be confused with the planned Heavy-Duty Assembler recipe.
+- [ ] Save/reload while the Manufacturer Mk1 is producing Reinforced Titan Frames and confirm partial progress, recipe unlock and inventory persist.
 
 ### Ferravium source prototype (pending target-game test)
 
