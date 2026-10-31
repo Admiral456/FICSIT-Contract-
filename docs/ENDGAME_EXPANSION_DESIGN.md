@@ -439,7 +439,7 @@ Druhý native source slice obsahuje:
 - Výrobní cyklus 60 Ferravium Ingots + 60 Steel Ingots → 60 Titan Alloy Ingots za 8 sekund v Advanced Alloy Foundry.
 - Výrobní cyklus 30 Titan Alloy Ingots + 60 Steel Pipes → 30 Titan Alloy Beams za 12 sekund v Advanced Alloy Foundry.
 - `UFICSITReinforcedTitanFrameDescriptor` s vlastním 92 × 64 × 64 cm otevřeným cage OBJ/MTL modelem a ikonou.
-- `UFICSITHeavyIndustrialRotorDescriptor` s vlastním 116 × 106 × 106 cm rotorovým OBJ/MTL modelem a generovanou ikonou.
+- `UFICSITHeavyIndustrialRotorDescriptor` s vlastním 44 × 44 × 84 cm rotorovým OBJ/MTL modelem a generovanou ikonou.
 - Bootstrap výrobní cyklus ve vanilla Manufacturer Mk1: 8 Titan Alloy Beams + 2 Heavy Modular Frames → 2 Reinforced Titan Frames za 24 sekund.
 - Heavy Industrial Rotor bootstrap ve vanilla Manufacturer Mk1: 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors → 2 Heavy Industrial Rotors za 18 sekund.
 - Finální `RCP_HEAVY_ROTOR` recept v Heavy-Duty Assembleru zůstává oddělený od `RCP_HEAVY_ROTOR_BOOTSTRAP`.
