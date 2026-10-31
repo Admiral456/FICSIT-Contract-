@@ -202,7 +202,7 @@ void AFICSITContractsSubsystem::GenerateInitialBoard()
     if (!HasAuthority()) return;
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     const int64 Now = GetUtcUnixTime();
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
 }
 
@@ -217,7 +217,7 @@ void AFICSITContractsSubsystem::RefreshExpiredContracts()
     if (!bHasExpiredContract) return;
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     Engine.expire(Now);
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
 }
 
@@ -227,7 +227,7 @@ bool AFICSITContractsSubsystem::AcceptContract(FName ContractId, FString& OutMes
     FicsitContracts::ContractEngine Engine(BuildSnapshot());
     const int64 Now = GetUtcUnixTime();
     const bool bAccepted = Engine.accept(ToUtf8(ContractId.ToString()), Now);
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
     if (!bAccepted)
     {
@@ -338,7 +338,7 @@ int32 AFICSITContractsSubsystem::DeliverFromInventory(AFGCharacterPlayer* Player
         }
     }
 
-    Engine.ensureOffers(3, Now, static_cast<uint32>(NextSerial + Now));
+    Engine.ensureOffers(5, Now, static_cast<uint32>(NextSerial + Now));
     ApplySnapshot(Engine.state());
     if (TotalDelivered <= 0)
     {
@@ -369,26 +369,41 @@ FString AFICSITContractsSubsystem::FormatContract(const FFICSITContract& Contrac
     FString Result = FString::Printf(TEXT("%s | %s | %s | +%d REP | %d%%"),
         *Contract.ContractId.ToString(), *Contract.Title, DifficultyLabel(Contract.Difficulty),
         Contract.RewardReputation, Contract.GetProgressPercent());
-    if (Contract.bLongTerm) Result += TEXT(" | LONG-TERM");
+    if (Contract.bLongTerm) Result += TEXT(" | STRATEGIC PROGRAM");
     if (Contract.bTimeLimited && Contract.ExpiresAtUnix > 0)
     {
         const int64 SecondsRemaining = FMath::Max<int64>(0, Contract.ExpiresAtUnix - GetUtcUnixTime());
-        Result += FString::Printf(TEXT(" | %lld min left"), SecondsRemaining / 60);
+        Result += FString::Printf(TEXT(" | DEADLINE %lld min"), SecondsRemaining / 60);
     }
+
     if (Contract.Stages.Num() > 0)
     {
-        Result += FString::Printf(TEXT(" | STAGE %d/%d: %s"),
-            Contract.CurrentStageIndex + 1, Contract.Stages.Num(), *Contract.GetCurrentStageTitle());
-        if (Contract.Stages.IsValidIndex(Contract.CurrentStageIndex))
+        Result += FString::Printf(TEXT("\nPROGRAM ROUTE // %d PHASES // CURRENT %d/%d"),
+            Contract.Stages.Num(), FMath::Clamp(Contract.CurrentStageIndex + 1, 1, Contract.Stages.Num()),
+            Contract.Stages.Num());
+
+        for (int32 StageIndex = 0; StageIndex < Contract.Stages.Num(); ++StageIndex)
         {
-            for (const FFICSITContractRequirement& Requirement : Contract.Stages[Contract.CurrentStageIndex].Requirements)
-                Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+            const FFICSITContractStage& Stage = Contract.Stages[StageIndex];
+            const TCHAR* StageState = Contract.bCompleted || StageIndex < Contract.CurrentStageIndex
+                ? TEXT("COMPLETE")
+                : StageIndex == Contract.CurrentStageIndex ? TEXT("CURRENT") : TEXT("LOCKED");
+            Result += FString::Printf(TEXT("\n  [%s] %02d. %s"), StageState, StageIndex + 1, *Stage.StageTitle);
+            for (const FFICSITContractRequirement& Requirement : Stage.Requirements)
+            {
+                Result += FString::Printf(TEXT("\n      - %s: %d / %d"),
+                    *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+            }
         }
     }
     else
     {
+        Result += TEXT("\nDELIVERY MANIFEST");
         for (const FFICSITContractRequirement& Requirement : Contract.Requirements)
-            Result += FString::Printf(TEXT("\n  - %s: %d / %d"), *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+        {
+            Result += FString::Printf(TEXT("\n  - %s: %d / %d"),
+                *Requirement.DisplayName, Requirement.DeliveredAmount, Requirement.RequiredAmount);
+        }
     }
     return Result;
 }
