@@ -163,7 +163,10 @@
         "RCP_TITAN_BEAM",
         "RCP_REINFORCED_TITAN_FRAME",
         "RCP_HEAVY_ROTOR",
-        "RCP_HARDENED_AMMO"
+        "RCP_HARDENED_AMMO",
+        "RCP_FERRAVIUM_STRUCTURAL_MATRIX",
+        "RCP_DEEP_CORE_EXTRACTOR_MODULE",
+        "RCP_ADVANCED_SURVEY_COMPUTER"
       ]
     },
     {
@@ -196,7 +199,8 @@
         "RCP_REFINED_CRYONITE",
         "RCP_SUPERCONDUCTIVE_COIL",
         "RCP_CRYO_ENGINE",
-        "RCP_CRYO_AMMO"
+        "RCP_CRYO_AMMO",
+        "RCP_CRYOGENIC_POWER_REGULATOR"
       ]
     },
     {
@@ -233,7 +237,9 @@
         "RCP_PHOTONIC_FIBER",
         "RCP_PHOTONIC_PROCESSOR",
         "RCP_QUANTUM_ROUTING_ARRAY",
-        "RCP_PHOTONIC_CELL"
+        "RCP_PHOTONIC_CELL",
+        "RCP_PHOTONIC_ROUTING_ARRAY",
+        "RCP_QUANTUM_COMMUNICATION_CORE"
       ]
     },
     {
@@ -267,7 +273,8 @@
         "RCP_STABILIZED_GRAVIONITE",
         "RCP_GRAVITIC_CORE",
         "RCP_GRAVITIC_STABILIZER",
-        "RCP_QUANTUM_LOGISTICS_ENGINE"
+        "RCP_QUANTUM_LOGISTICS_ENGINE",
+        "RCP_GRAVITIC_TRANSIT_CORE"
       ]
     },
     {
@@ -1845,6 +1852,188 @@
       "outputs": [
         {
           "itemId": "ORBITAL_ASSEMBLY_FRAME",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_STRUCTURAL_MATRIX",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "FERRAVIUM_PLATE",
+          "amount": 12
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 6
+        },
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_STRUCTURAL_MATRIX",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "RCP_DEEP_CORE_EXTRACTOR_MODULE",
+      "phase": 2,
+      "machine": "Heavy-Duty Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "DEEP_CORE_MODULE",
+          "amount": 4
+        },
+        {
+          "itemId": "HEAVY_INDUSTRIAL_ROTOR",
+          "amount": 2
+        },
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "DEEP_CORE_EXTRACTOR_MODULE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_ADVANCED_SURVEY_COMPUTER",
+      "phase": 2,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "SURVEY_COMPUTER",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 1
+        },
+        {
+          "itemId": "TITAN_ALLOY_INGOT",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ADVANCED_SURVEY_COMPUTER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_CRYOGENIC_POWER_REGULATOR",
+      "phase": 3,
+      "machine": "Superconductive Assembler",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "CRYOGENIC_ENGINE",
+          "amount": 2
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 4
+        },
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "CRYOGENIC_POWER_REGULATOR",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_PHOTONIC_ROUTING_ARRAY",
+      "phase": 4,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "PHOTONIC_FIBER",
+          "amount": 8
+        },
+        {
+          "itemId": "OPTICAL_GLASS",
+          "amount": 10
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "PHOTONIC_ROUTING_ARRAY",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_QUANTUM_COMMUNICATION_CORE",
+      "phase": 4,
+      "machine": "Quantum Circuit Assembler",
+      "cycleSeconds": 30,
+      "inputs": [
+        {
+          "itemId": "PHOTONIC_PROCESSOR",
+          "amount": 4
+        },
+        {
+          "itemId": "QUANTUM_ROUTING_ARRAY",
+          "amount": 2
+        },
+        {
+          "itemId": "SUPERCONDUCTIVE_COIL",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "QUANTUM_COMMUNICATION_CORE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "RCP_GRAVITIC_TRANSIT_CORE",
+      "phase": 5,
+      "machine": "Gravitic Assembler",
+      "cycleSeconds": 45,
+      "inputs": [
+        {
+          "itemId": "GRAVITIC_CORE",
+          "amount": 2
+        },
+        {
+          "itemId": "GRAVITIC_STABILIZER",
+          "amount": 2
+        },
+        {
+          "itemId": "QUANTUM_LOGISTICS_ENGINE",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "GRAVITIC_TRANSIT_CORE",
           "amount": 1
         }
       ]
