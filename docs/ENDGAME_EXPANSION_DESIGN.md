@@ -429,7 +429,7 @@ První native source slice obsahuje:
 - Recipe unlock, který zpřístupňuje recovery, washing, smelting i konstrukci pece.
 - Zdrojové OBJ/MTL modely a Editor importér pro základní Ferravium modely a čtyři základní ikony; společný importér nyní generuje celkem osm ikon pro všechny implementované prototypy.
 
-**Omezení první iterace:** přirozené Ferravium resource nodes ještě nejsou umístěné v herním světě. Prozatím se ruda získává přes recept Ferravium Recovery ve vanilla Oil Refinery. Je to pouze testovací bootstrap cesta, nikoli náhrada finální hlubinné těžby. Frontier Survey je navíc záměrně skrytý, dokud nebude skutečná vanilla Space Elevator Phase V událost volat serverovou metodu, která zpřístupní Terminal I.
+**Omezení první iterace:** přirozené Ferravium resource nodes ještě nejsou umístěné v herním světě. Prozatím se ruda získává přes recept Ferravium Recovery ve vanilla Oil Refinery. Je to pouze testovací bootstrap cesta, nikoli náhrada finální hlubinné těžby. Frontier Survey zůstává záměrně skrytý, dokud hra skutečně neoznámí dokončení Project Assembly. Serverový subsystem je nyní napojen na `AFGGamePhaseManager::mOnGameCompleted` a starší save reconciliuje přes `GetGameIsCompleted()`.
 
 ## Stav druhého obsahového prototypu: Advanced Metallurgy
 
@@ -448,9 +448,10 @@ Druhý native source slice obsahuje:
 - Serverové potvrzení nákupu, které ukládá Terminal II jako dokončený a reconciliuje existující save v pořadí Terminal I → Terminal II.
 - Advanced Alloy Foundry s `Input0`/`Output0`, 125 MW source power setting, build descriptor a Build Gun recept zahrnutý do Advanced Metallurgy unlocku.
 - Dva výrobní recepty přesunuty do Advanced Alloy Foundry: Titan Alloy Ingot / 8 s a Titan Alloy Beam bootstrap / 12 s.
-- OBJ/MTL Foundry a Reinforced Titan Frame modely, jejich samostatné ikonky a rozšířený Editor import.
+- Heavy Industrial Rotor bootstrap 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors → 2 rotory / 18 s v Manufacturer Mk1; finální Heavy-Duty Assembler recept zůstává samostatný.
+- OBJ/MTL Foundry, Reinforced Titan Frame a Heavy Industrial Rotor modely, jejich samostatné ikonky a rozšířený Editor import.
 
-**Omezení druhé iterace:** Advanced Alloy Foundry je zatím source-level manufacturer prototype; její import, UHT/UE kompilace, Alpakit cook, umístění, napájení a pásové přenosy nebyly ověřeny v cílové hře. Reinforced Titan Frame má nativní descriptor, vlastní mesh/ikonu a 24sekundový bootstrap přes vanilla Manufacturer Mk1 (8 Titan Alloy Beams + 2 Heavy Modular Frames → 2 rámy). Finální Heavy-Duty Assembler recept a samotný stroj zatím implementované nejsou. Industrial Press, Heavy-Duty Assembler a ostatní recepty Phase II zůstávají plánované. Heavy Industrial Rotor má nyní vlastní descriptor, OBJ/MTL mesh, ikonu a Manufacturer Mk1 bootstrap, ale finální návrhový Heavy-Duty Assembler recept zůstává oddělený. Titan Alloy Beam má vlastní native descriptor, mesh a ikonu a současný bootstrap recept, ale konečný návrhový Industrial Press řetězec zůstává samostatně plánovaný.
+**Omezení druhé iterace:** Advanced Alloy Foundry je zatím source-level manufacturer prototype; její import, UHT/UE kompilace, Alpakit cook, umístění, napájení a pásové přenosy nebyly ověřeny v cílové hře. Reinforced Titan Frame má nativní descriptor, vlastní mesh/ikonu a 24sekundový bootstrap přes vanilla Manufacturer Mk1 (8 Titan Alloy Beams + 2 Heavy Modular Frames → 2 rámy). Finální Heavy-Duty Assembler recept a samotný stroj zatím implementované nejsou. Industrial Press, Heavy-Duty Assembler a ostatní recepty Phase II zůstávají plánované. Heavy Industrial Rotor je nyní dostupný přes Manufacturer Mk1 bootstrap; jeho finální Heavy-Duty Assembler recept zůstává návrhový. Heavy Industrial Rotor má nyní vlastní descriptor, OBJ/MTL mesh, ikonu a Manufacturer Mk1 bootstrap, ale finální návrhový Heavy-Duty Assembler recept zůstává oddělený. Titan Alloy Beam má vlastní native descriptor, mesh a ikonu a současný bootstrap recept, ale konečný návrhový Industrial Press řetězec zůstává samostatně plánovaný.
 
 V cílovém SML Starter Projectu je nutné spustit nejprve `BuildFICSITContractsAssets.py` a potom `BuildFerraviumAssets.py`, zkompilovat `FactoryGameEditor`, zkontrolovat asset registry a provést in-game test obou výrobních linek i obou schémat. Portable CI ani statická kontrola tuto herní validaci nenahrazují.
 
