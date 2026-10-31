@@ -48,9 +48,9 @@
 ## 0.3.0 — Endgame progression foundation
 
 - [x] Define six new Dispatch Terminal chapters and Space Elevator extensions VI–VIII.
-- [x] Add the machine-readable endgame progression catalog with 96 planned unlocks.
+- [x] Add the machine-readable endgame progression catalog with 95 planned unlocks plus four explicitly tracked source prototypes (99 total).
 - [x] Add four proposed resource families and their visual/processing identities.
-- [x] Add 54 proposed production and equipment recipes.
+- [x] Add 56 designed production/equipment recipes plus separately tracked prototype/bootstrap and Build Gun recipes.
 - [x] Design weapon, ammunition, personal equipment, vehicle, blueprint, defense and automation categories.
 - [x] Continue from the existing vanilla Blueprint Designer Mk3 with planned Mk4/Mk5 extensions.
 - [x] Add validation for unique unlock/recipe IDs, phase ownership, catalog references, elevator gates and required component production.
@@ -63,6 +63,7 @@
 - [x] Add the Advanced Metallurgy / Terminal II schematic, gated by purchased Frontier Survey and the saved Phase II availability state.
 - [x] Add the native Titan Alloy Ingot descriptor and 8-second Advanced Alloy Foundry recipe (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots).
 - [x] Add Titan Alloy Beam as a second Phase II product: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second Advanced Alloy Foundry cycle, with its own descriptor, OBJ mesh and icon source.
+- [x] Add Reinforced Titan Frame as a third Phase II product: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second Manufacturer Mk1 bootstrap cycle, with its own descriptor, open-cage OBJ mesh and icon source; keep the final Heavy-Duty Assembler recipe separate.
 - [x] Add Reinforced Titan Frame as a third Phase II source prototype: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second Manufacturer Mk1 bootstrap cycle; keep the planned Heavy-Duty Assembler recipe separate.
 - [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
 - [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and the Advanced Alloy Foundry with eight generated icons.
@@ -72,6 +73,8 @@
 - [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
 - [x] Implement the native Advanced Alloy Foundry manufacturer, buildable descriptor, Build Gun recipe, mixed-feed conveyor input/output, 125 MW base power and source OBJ/MTL model.
 - [x] Move both Titan Alloy prototype recipes from the vanilla Foundry Mk1 to the dedicated Advanced Alloy Foundry; register the building recipe in the Advanced Metallurgy unlock.
+- [x] Add the Reinforced Titan Frame Manufacturer Mk1 bootstrap recipe and separate design-recipe mapping.
+- [ ] Prototype the dedicated Heavy-Duty Assembler and move the final Reinforced Titan Frame recipe there after in-game balancing.
 - [ ] Balance the Advanced Alloy Foundry's production, power and construction costs in the target game.
 - [ ] Resolve a supported new resource deposit/node path and ore scanner integration.
 - [x] Add read-only Terminal/Space Elevator phase status to the Dispatch Terminal and `/contracts progression`.
