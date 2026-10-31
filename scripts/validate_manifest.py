@@ -66,6 +66,33 @@ def main() -> int:
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/DispatchTerminal/DispatchTerminal.mtl",
         ROOT / "Tools/Unreal/BuildFICSITContractsAssets.py",
     ]
+
+    # Keep the expanded gameplay catalog and board capacities from silently shrinking.
+    core_source = ROOT / "Source/FICSITContractsCore/ContractEngine.cpp"
+    subsystem_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsSubsystem.cpp"
+    if core_source.is_file():
+        core_text = core_source.read_text(encoding="utf-8")
+        for template_id in (
+            "SUP-COPPER-CIRCUIT",
+            "SUP-POWER-DISTRIBUTION",
+            "URGENT-GRID-RECOVERY",
+            "SPECIAL-FACTORY-BACKBONE",
+            "SPECIAL-FOUNDRY-EXPANSION",
+            "SPECIAL-AUTOMATION-ROLLOUT",
+            "SPECIAL-POWER-GRID",
+            "SPECIAL-PLANETARY-LOGISTICS",
+            "SPECIAL-ORBITAL-LOGISTICS",
+        ):
+            if template_id not in core_text:
+                errors.append(f"Expanded contract catalog is missing template: {template_id}")
+        if "int ContractEngine::activeContractLimit() noexcept { return 4; }" not in core_text:
+            errors.append("The expanded board must retain four active contract slots.")
+    if subsystem_source.is_file():
+        subsystem_text = subsystem_source.read_text(encoding="utf-8")
+        if subsystem_text.count("ensureOffers(5,") < 4:
+            errors.append("All board refresh paths must maintain five available offers.")
+        if "PROGRAM ROUTE" not in subsystem_text or "LOCKED" not in subsystem_text:
+            errors.append("Terminal/command output must expose the complete locked multi-phase route.")
     errors.extend(
         f"Required Dispatch Terminal source asset missing: {path.relative_to(ROOT)}"
         for path in source_assets if not path.is_file()
@@ -154,7 +181,15 @@ def main() -> int:
     obj_path, mtl_path = source_assets[0], source_assets[1]
     if obj_path.is_file() and mtl_path.is_file():
         obj_lines = obj_path.read_text(encoding="utf-8").splitlines()
-        vertex_count = sum(line.startswith("v ") for line in obj_lines)
+        vertex_positions: list[tuple[float, float, float]] = []
+        for line in obj_lines:
+            if line.startswith("v "):
+                try:
+                    x, y, z = (float(value) for value in line.split()[1:4])
+                    vertex_positions.append((x, y, z))
+                except (ValueError, IndexError):
+                    errors.append("Dispatch Terminal OBJ contains a malformed vertex.")
+        vertex_count = len(vertex_positions)
         uv_count = sum(line.startswith("vt ") for line in obj_lines)
         face_lines = [line for line in obj_lines if line.startswith("f ")]
         used_materials = {line[7:].strip() for line in obj_lines if line.startswith("usemtl ")}
@@ -165,6 +200,17 @@ def main() -> int:
         }
         if vertex_count == 0 or uv_count == 0 or not face_lines:
             errors.append("Dispatch Terminal OBJ must contain vertices, UVs and faces.")
+        if vertex_positions:
+            bounds = [
+                (min(point[axis] for point in vertex_positions), max(point[axis] for point in vertex_positions))
+                for axis in range(3)
+            ]
+            if bounds[0][0] < -85.0 or bounds[0][1] > 85.0:
+                errors.append("Dispatch Terminal OBJ exceeds the buildable X clearance.")
+            if bounds[1][0] < -66.0 or bounds[1][1] > 60.0:
+                errors.append("Dispatch Terminal OBJ exceeds the buildable Y clearance.")
+            if bounds[2][0] < 0.0 or bounds[2][1] > 235.0:
+                errors.append("Dispatch Terminal OBJ exceeds the buildable Z clearance.")
         for face_number, face in enumerate(face_lines, start=1):
             for corner in face[2:].split():
                 parts = corner.split("/")
