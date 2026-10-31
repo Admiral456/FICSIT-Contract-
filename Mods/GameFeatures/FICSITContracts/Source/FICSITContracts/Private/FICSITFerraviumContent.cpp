@@ -6,6 +6,7 @@
 #include "Equipment/FGBuildGun.h"
 #include "FGFactoryConnectionComponent.h"
 #include "FGBuildCategory.h"
+#include "FGCategory.h"
 #include "FGSchematicCategory.h"
 #include "FGClearanceData.h"
 #include "IncludeInBuild.h"
@@ -85,6 +86,7 @@ UFICSITFerraviumOreDescriptor::UFICSITFerraviumOreDescriptor()
     mDecalSize = 180.0f;
     mSmallIcon = mCompassTexture;
     mPersistentBigIcon = mCompassTexture;
+    mCategory = LoadClass<UFGCategory>(nullptr, TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_RawMaterials.Cat_RawMaterials_C"));
 }
 
 UFICSITFerraviumConcentrateDescriptor::UFICSITFerraviumConcentrateDescriptor()
@@ -101,6 +103,7 @@ UFICSITFerraviumConcentrateDescriptor::UFICSITFerraviumConcentrateDescriptor()
     mConveyorMesh = LoadObject<UStaticMesh>(nullptr, ConcentrateMeshPath);
     mSmallIcon = LoadFerraviumIcon(TEXT("TX_FerraviumConcentrate_256"));
     mPersistentBigIcon = mSmallIcon;
+    mCategory = LoadClass<UFGCategory>(nullptr, TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_Minerals.Cat_Minerals_C"));
 }
 
 UFICSITFerraviumIngotDescriptor::UFICSITFerraviumIngotDescriptor()
@@ -117,6 +120,7 @@ UFICSITFerraviumIngotDescriptor::UFICSITFerraviumIngotDescriptor()
     mConveyorMesh = LoadObject<UStaticMesh>(nullptr, IngotMeshPath);
     mSmallIcon = LoadFerraviumIcon(TEXT("TX_FerraviumIngot_256"));
     mPersistentBigIcon = mSmallIcon;
+    mCategory = LoadClass<UFGCategory>(nullptr, TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_Ingots.Cat_Ingots_C"));
 }
 
 AFICSITFerraviumSmelter::AFICSITFerraviumSmelter(const FObjectInitializer& ObjectInitializer)
