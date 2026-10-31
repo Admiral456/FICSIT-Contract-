@@ -66,7 +66,7 @@
 - [x] Add Reinforced Titan Frame as a third Phase II product: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second Manufacturer Mk1 bootstrap cycle, with its own descriptor, open-cage OBJ mesh and icon source; keep the final Heavy-Duty Assembler recipe separate.
 - [x] Add Heavy Industrial Rotor as a fourth Phase II source prototype: 12 Titan Alloy Ingots + 6 vanilla Rotors + 2 Motors -> 2 rotors per 18-second Manufacturer Mk1 bootstrap, with its own descriptor, OBJ mesh and generated icon; keep the final Heavy-Duty Assembler recipe separate.
 - [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
-- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, Advanced Alloy Foundry and Reinforced Titan Frame with nine generated icons.
+- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, Advanced Alloy Foundry, Reinforced Titan Frame and Heavy Industrial Rotor with nine generated icons.
 - [ ] Import all Ferravium/Titan Alloy/Reinforced Frame/Foundry assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
