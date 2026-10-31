@@ -74,6 +74,7 @@ def main() -> int:
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumOre.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumConcentrate.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumIngot.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyIngot.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
         ROOT / "Tools/Unreal/BuildFerraviumAssets.py",
@@ -426,6 +427,16 @@ def main() -> int:
             if required not in runtime_text:
                 errors.append(f"SML runtime progression integration is missing: {required}")
 
+    if subsystem_runtime.is_file():
+        for required in (
+            "UFICSITAdvancedMetallurgySchematic::StaticClass()",
+            "CompleteTerminalResearchPhase(ResearchPhase)",
+            "IsSchematicPurchased(UFICSITFrontierSurveySchematic::StaticClass())",
+            "IsSchematicPurchased(UFICSITAdvancedMetallurgySchematic::StaticClass())",
+        ):
+            if required not in runtime_text:
+                errors.append(f"Advanced Metallurgy progression integration is missing: {required}")
+
     if chat_command.is_file():
         chat_text = chat_command.read_text(encoding="utf-8")
         if 'Subcommand == TEXT("progression")' not in chat_text or "GetEndgameProgressionSummary" not in chat_text:
@@ -513,6 +524,10 @@ def main() -> int:
             ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
         ),
         (
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/TitanAlloyIngot.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ),
+        (
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
             ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
         ),
@@ -579,6 +594,9 @@ def main() -> int:
             "UFICSITFerraviumOreDescriptor",
             "UFICSITFerraviumConcentrateDescriptor",
             "UFICSITFerraviumIngotDescriptor",
+            "UFICSITTitanAlloyIngotDescriptor",
+            "UFICSITTitanAlloyRecipe",
+            "UFICSITAdvancedMetallurgySchematic",
             "AFICSITFerraviumSmelter",
             "UFICSITFrontierSurveySchematic",
         ):
@@ -599,6 +617,11 @@ def main() -> int:
             "mRecipes.Add(UFICSITFerraviumSmeltingRecipe::StaticClass())",
             "mRecipes.Add(UFICSITFerraviumSmelterBuildRecipe::StaticClass())",
             "GetAvailableTerminalResearchPhase() == 1",
+            "UFICSITTitanAlloyRecipe::UFICSITTitanAlloyRecipe()",
+            "Desc_SteelIngot.Desc_SteelIngot_C",
+            "Build_FoundryMk1.Build_FoundryMk1_C",
+            "GetAvailableTerminalResearchPhase() == 2",
+            "UFICSITFrontierSurveySchematic::StaticClass()",
             "UFICSITDispatchTerminalSchematic::StaticClass()",
         ):
             if required not in ferravium_text:
@@ -608,6 +631,7 @@ def main() -> int:
         if (
             '#include "FICSITFerraviumContent.h"' not in world_text
             or "mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass())" not in world_text
+            or "mSchematics.Add(UFICSITAdvancedMetallurgySchematic::StaticClass())" not in world_text
         ):
             errors.append("Frontier Survey schematic must be registered in the SML world module.")
 
@@ -618,10 +642,12 @@ def main() -> int:
             "FerraviumOre.obj",
             "FerraviumConcentrate.obj",
             "FerraviumIngot.obj",
+            "TitanAlloyIngot.obj",
             "FerraviumSmelter.obj",
             "TX_FerraviumOre_256",
             "TX_FerraviumConcentrate_256",
             "TX_FerraviumIngot_256",
+            "TX_TitanAlloyIngot_256",
             "TX_FerraviumSmelter_256",
         ):
             if required not in importer_text:
