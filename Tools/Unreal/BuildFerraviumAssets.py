@@ -1,4 +1,4 @@
-"""Import Ferravium item meshes, smelter mesh and generated item icons in the SML Starter Project."""
+"""Import Ferravium and Titan Alloy item meshes, the smelter and generated icons in the SML Starter Project."""
 import os
 import struct
 import zlib
