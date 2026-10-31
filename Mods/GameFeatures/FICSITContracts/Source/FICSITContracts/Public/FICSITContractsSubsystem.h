@@ -9,6 +9,8 @@
 class AFGCharacterPlayer;
 class UFGItemDescriptor;
 
+namespace FicsitContracts { class EndgameProgression; }
+
 UENUM(BlueprintType)
 enum class EFICSITContractDifficulty : uint8
 {
@@ -79,6 +81,17 @@ public:
     UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") TArray<FFICSITContract> GetAvailableContracts() const { return AvailableContracts; }
     UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") TArray<FFICSITContract> GetActiveContracts() const { return ActiveContracts; }
     UFUNCTION(BlueprintPure, Category = "FICSIT Contracts") TArray<FFICSITContract> GetContractHistory() const { return ContractHistory; }
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts|Progression") int32 GetAvailableTerminalResearchPhase() const;
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts|Progression") int32 GetAvailableElevatorExtensionPhase() const;
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts|Progression") bool IsTerminalResearchPhaseComplete(int32 Phase) const;
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts|Progression") bool IsElevatorExtensionComplete(int32 Phase) const;
+    UFUNCTION(BlueprintPure, Category = "FICSIT Contracts|Progression") FString GetEndgameProgressionSummary() const;
+
+    // Server-only progression adapter calls. Invoke these only after the corresponding
+    // vanilla finale or custom schematic purchase has been authoritatively verified.
+    bool RecordVanillaSpaceElevatorPhase5Complete();
+    bool CompleteTerminalResearchPhase(int32 Phase);
+    bool CompleteElevatorExtensionPhase(int32 Phase);
 
     bool AcceptContract(FName ContractId, FString& OutMessage);
     bool AbandonContract(FName ContractId, FString& OutMessage);
@@ -104,6 +117,12 @@ private:
     UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard) TArray<FFICSITContract> AvailableContracts;
     UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard) TArray<FFICSITContract> ActiveContracts;
     UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard) TArray<FFICSITContract> ContractHistory;
+    UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard)
+    bool bVanillaSpaceElevatorPhase5Complete = false;
+    UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard)
+    TArray<uint8> TerminalResearchPhasesComplete;
+    UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard)
+    TArray<uint8> ElevatorExtensionsComplete;
     FTimerHandle ExpiryTimerHandle;
 
     UFUNCTION() void OnRep_ContractBoard();
@@ -111,4 +130,6 @@ private:
     void GenerateInitialBoard();
     FicsitContracts::Snapshot BuildSnapshot() const;
     void ApplySnapshot(const FicsitContracts::Snapshot& Snapshot);
+    FicsitContracts::EndgameProgression BuildEndgameProgression() const;
+    void ApplyEndgameProgression(const FicsitContracts::EndgameProgression& Progression);
 };
