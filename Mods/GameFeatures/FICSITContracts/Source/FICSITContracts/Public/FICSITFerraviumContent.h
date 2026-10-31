@@ -57,6 +57,15 @@ public:
     UFICSITTitanAlloyBeamDescriptor();
 };
 
+/** Reinforced structural frame made from Titan Alloy Beams and a Heavy Modular Frame. */
+UCLASS()
+class FICSITCONTRACTS_API UFICSITReinforcedTitanFrameDescriptor : public UFGItemDescriptor
+{
+    GENERATED_BODY()
+public:
+    UFICSITReinforcedTitanFrameDescriptor();
+};
+
 /** Native manufacturer for the first Ferravium processing line. */
 UCLASS()
 class FICSITCONTRACTS_API AFICSITFerraviumSmelter : public AFGBuildableManufacturer
@@ -171,6 +180,14 @@ class FICSITCONTRACTS_API UFICSITTitanAlloyBeamRecipe : public UFGRecipe
     GENERATED_BODY()
 public:
     UFICSITTitanAlloyBeamRecipe();
+};
+
+UCLASS()
+class FICSITCONTRACTS_API UFICSITReinforcedTitanFrameRecipe : public UFGRecipe
+{
+    GENERATED_BODY()
+public:
+    UFICSITReinforcedTitanFrameRecipe();
 };
 
 UCLASS()
