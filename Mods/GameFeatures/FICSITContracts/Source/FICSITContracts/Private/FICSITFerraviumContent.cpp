@@ -27,6 +27,7 @@ namespace
     constexpr const TCHAR* IngotMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_FerraviumIngot.SM_FerraviumIngot");
     constexpr const TCHAR* TitanAlloyIngotMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyIngot.SM_TitanAlloyIngot");
     constexpr const TCHAR* TitanAlloyBeamMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_TitanAlloyBeam.SM_TitanAlloyBeam");
+    constexpr const TCHAR* ReinforcedTitanFrameMeshPath = TEXT("/FICSITContracts/Resources/Ferravium/Mesh/SM_ReinforcedTitanFrame.SM_ReinforcedTitanFrame");
     constexpr const TCHAR* SmelterMeshPath = TEXT("/FICSITContracts/Buildables/FerraviumSmelter/SM_FerraviumSmelter.SM_FerraviumSmelter");
     constexpr const TCHAR* AdvancedAlloyFoundryMeshPath = TEXT("/FICSITContracts/Buildables/AdvancedAlloyFoundry/SM_AdvancedAlloyFoundry.SM_AdvancedAlloyFoundry");
 
@@ -156,6 +157,24 @@ UFICSITTitanAlloyBeamDescriptor::UFICSITTitanAlloyBeamDescriptor()
     mRadioactiveDecay = 0.0f;
     mConveyorMesh = LoadObject<UStaticMesh>(nullptr, TitanAlloyBeamMeshPath);
     mSmallIcon = LoadFerraviumIcon(TEXT("TX_TitanAlloyBeam_256"));
+    mPersistentBigIcon = mSmallIcon;
+    mCategory = LoadClass<UFGCategory>(nullptr,
+        TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_SteelParts.Cat_SteelParts_C"));
+}
+
+UFICSITReinforcedTitanFrameDescriptor::UFICSITReinforcedTitanFrameDescriptor()
+{
+    mUseDisplayNameAndDescription = true;
+    mDisplayName = FText::FromString(TEXT("Reinforced Titan Frame"));
+    mDescription = FText::FromString(TEXT("A high-strength structural frame reinforced with Titan Alloy Beams."));
+    mAbbreviatedDisplayName = FText::FromString(TEXT("R-TFRAME"));
+    mForm = EResourceForm::RF_SOLID;
+    mStackSize = EStackSize::SS_BIG;
+    mCanBeDiscarded = true;
+    mRememberPickUp = true;
+    mRadioactiveDecay = 0.0f;
+    mConveyorMesh = LoadObject<UStaticMesh>(nullptr, ReinforcedTitanFrameMeshPath);
+    mSmallIcon = LoadFerraviumIcon(TEXT("TX_ReinforcedTitanFrame_256"));
     mPersistentBigIcon = mSmallIcon;
     mCategory = LoadClass<UFGCategory>(nullptr,
         TEXT("/Game/FactoryGame/Resource/ItemCategories/Cat_SteelParts.Cat_SteelParts_C"));
@@ -429,6 +448,19 @@ UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()
     mProducedIn.Add(TSoftClassPtr<UObject>(AFICSITAdvancedAlloyFoundry::StaticClass()));
 }
 
+UFICSITReinforcedTitanFrameRecipe::UFICSITReinforcedTitanFrameRecipe()
+{
+    mDisplayNameOverride = true;
+    mDisplayName = FText::FromString(TEXT("Reinforced Titan Frame"));
+    mManufactoringDuration = 24.0f;
+    mManualManufacturingMultiplier = 1.0f;
+    mProduct.Emplace(UFICSITReinforcedTitanFrameDescriptor::StaticClass(), 2);
+
+    AddItem(mIngredients, TEXT("/Script/FICSITContracts.FICSITTitanAlloyBeamDescriptor"), 8);
+    AddItem(mIngredients, TEXT("/Game/FactoryGame/Resource/Parts/ModularFrameHeavy/Desc_ModularFrameHeavy.Desc_ModularFrameHeavy_C"), 2);
+    AddProducer(mProducedIn, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C"));
+}
+
 
 UFICSITFerraviumRecipeUnlock::UFICSITFerraviumRecipeUnlock()
 {
@@ -442,6 +474,7 @@ UFICSITTitanAlloyRecipeUnlock::UFICSITTitanAlloyRecipeUnlock()
 {
     mRecipes.Add(UFICSITTitanAlloyRecipe::StaticClass());
     mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass());
+    mRecipes.Add(UFICSITReinforcedTitanFrameRecipe::StaticClass());
     mRecipes.Add(UFICSITAdvancedAlloyFoundryBuildRecipe::StaticClass());
 }
 
