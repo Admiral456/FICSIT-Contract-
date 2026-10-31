@@ -162,6 +162,7 @@ void AFICSITContractsSubsystem::EndPlay(const EEndPlayReason::Type EndPlayReason
 {
     GetWorldTimerManager().ClearTimer(ExpiryTimerHandle);
     GetWorldTimerManager().ClearTimer(ProgressionBindingRetryTimerHandle);
+    GetWorldTimerManager().ClearTimer(SchematicPurchaseRetryTimerHandle);
     UnbindProgressionEvents();
     Super::EndPlay(EndPlayReason);
 }
@@ -276,7 +277,20 @@ void AFICSITContractsSubsystem::HandleSchematicPurchased(
         return;
 
     AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
-    if (!SchematicManager || !SchematicManager->IsSchematicPurchased(PurchasedSchematic)) return;
+    if (!SchematicManager) return;
+    if (!SchematicManager->IsSchematicPurchased(PurchasedSchematic))
+    {
+        // Some purchase flows can broadcast before the replicated/saved purchased list
+        // is queryable. Re-check once on the next short server timer instead of losing
+        // the progression transition.
+        GetWorldTimerManager().SetTimer(
+            SchematicPurchaseRetryTimerHandle,
+            this,
+            &AFICSITContractsSubsystem::RefreshPurchasedSchematicProgression,
+            0.25f,
+            false);
+        return;
+    }
 
     if (CompleteTerminalResearchPhase(ResearchPhase))
     {
