@@ -62,3 +62,63 @@ This checklist intentionally remains unchecked until tested in the target Satisf
 - [ ] Confirm Deliver only consumes the requesting player's main inventory.
 - [ ] Save/reload with one or more terminals placed and confirm all remain usable.
 - [ ] Confirm multiple terminals access the same board rather than generating duplicate contract state.
+
+## Endgame Expansion — pending implementation and in-game validation
+
+These are acceptance tests for the planned 0.3.x+ content. They must remain unchecked until the content is implemented and tested in Satisfactory.
+
+### Progression and Space Elevator
+
+- [ ] Verify vanilla Space Elevator Phase V remains unchanged.
+- [ ] Complete vanilla Phase V and confirm Terminal Chapters I and II become available.
+- [ ] Complete custom Space Elevator Phase VI and confirm Terminal Chapters III and IV become available.
+- [ ] Complete custom Space Elevator Phase VII and confirm Terminal Chapter V becomes available.
+- [ ] Complete custom Space Elevator Phase VIII and confirm Terminal Chapter VI becomes available.
+- [ ] Verify no chapter or Elevator project can be purchased before its prerequisites.
+- [ ] Save/reload and verify completed schematics and unlock state persist in multiplayer.
+
+### Custom resources and production
+
+- [ ] Spawn and harvest Ferravium in a supported vanilla-world resource/deposit path.
+- [ ] Confirm Ferravium appears in the resource scanner and map markers.
+- [ ] Validate Ferravium mining, washing, smelting and all downstream recipes.
+- [ ] Repeat resource-node, scanner and production tests for Cryonite, Asterite and Gravionite.
+- [ ] Confirm every Space Elevator VI–VIII requirement has a reachable production chain before its project is offered.
+- [ ] Confirm recipe throughput, byproducts, fluid consumption, power draw and machine input/output buffers.
+
+### Blueprints and building
+
+- [ ] Verify Blueprint Designer Mk4 builds, saves, reloads and places blueprints correctly.
+- [ ] Verify Blueprint Designer Mk5 can open Mk4 and lower-level blueprints without corrupting save data.
+- [ ] Verify boundary dimensions and placement restrictions.
+- [ ] Test blueprint sharing and dedicated-server save/load.
+- [ ] Verify all new building descriptors, build recipes, holograms, categories, icons and dismantle refunds.
+
+### Weapons, equipment and vehicles
+
+- [ ] Verify each custom weapon can be equipped, fired, reloaded and repaired where applicable.
+- [ ] Verify ammo consumption, damage, fire rate, recoil, effects and cooldowns.
+- [ ] Test Cryo/Gravitic status effects against all supported creature classes.
+- [ ] Verify Exosuit, Cryo Suit, Jetpack Mk2, Hoverpack Mk2, Gravity Boots and Personal Shield fit valid equipment slots.
+- [ ] Verify equipment state and effects replicate and persist in multiplayer.
+- [ ] Verify Survey Drones and Security Drones navigate, return, despawn and recover safely.
+- [ ] Verify Industrial Garage and all vehicle interactions do not break vanilla vehicles.
+
+### Logistics, power and automation
+
+- [ ] Measure real Conveyor Mk7/Mk8/Mk9 throughput under load; verify splitters and lifts preserve rates.
+- [ ] Measure miners at 100%, overclocked and underclocked settings across all node purities.
+- [ ] Validate Pipeline Mk3 and cryogenic fluid stability.
+- [ ] Verify Quantum Cargo Relay transfer is atomic: no item loss, duplication or cross-session desync.
+- [ ] Test relay capacity, energy consumption, pairing, filters, cooldown and network failure recovery.
+- [ ] Verify Remote Factory Control checks authority and only operates permitted devices.
+- [ ] Test all new storage, alarms, power distribution and monitoring at factory scale.
+
+### Performance and compatibility
+
+- [ ] Profile large-scale drone, turret, monitor and relay deployments.
+- [ ] Test dedicated-server CPU/network usage and multiple concurrent players.
+- [ ] Confirm all content loads with SML 3.12.x and custom UE 5.6.1.
+- [ ] Run Alpakit packaging and a clean-install test.
+- [ ] Confirm no missing assets, invalid vanilla descriptor paths, save migration warnings or runtime log spam.
+
