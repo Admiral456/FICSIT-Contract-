@@ -1,8 +1,8 @@
 {
   "FileVersion": 3,
-  "Version": 4,
-  "VersionName": "0.2.0-alpha.1",
-  "SemVersion": "0.2.0-alpha.1",
+  "Version": 5,
+  "VersionName": "0.2.0-alpha.2",
+  "SemVersion": "0.2.0-alpha.2",
   "FriendlyName": "FICSIT Contracts",
   "Description": "A FICSIT production contract board with reputation, timed orders, sequential contract stages, a placeable dispatch terminal and persistent multiplayer state.",
   "Category": "Gameplay",
@@ -13,10 +13,18 @@
   "Installed": false,
   "GameVersion": ">=491125",
   "Plugins": [
-    { "Name": "SML", "Enabled": true, "SemVersion": "^3.12.0" }
+    {
+      "Name": "SML",
+      "Enabled": true,
+      "SemVersion": "^3.12.0"
+    }
   ],
   "Modules": [
-    { "Name": "FICSITContracts", "Type": "Runtime", "LoadingPhase": "PostDefault" }
+    {
+      "Name": "FICSITContracts",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault"
+    }
   ],
   "CreatedByURL": "https://github.com/Admiral456",
   "DocsURL": "https://github.com/Admiral456/FICSIT-Contract-",
