@@ -144,6 +144,7 @@
       "elevatorGate": 5,
       "summary": "Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.",
       "unlockIds": [
+        "TITAN_ALLOY_INGOT",
         "ADVANCED_ALLOY_FOUNDRY",
         "INDUSTRIAL_PRESS",
         "HEAVY_DUTY_ASSEMBLER",
@@ -514,6 +515,15 @@
       "displayName": "Advanced Alloy Foundry",
       "description": "Velká slévárna pro Titan Alloy a další pokročilé slitiny.",
       "status": "planned"
+    },
+    {
+      "id": "TITAN_ALLOY_INGOT",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Titan Alloy Ingot Recipe",
+      "description": "Foundry recipe combining Ferravium and Steel into a high-density structural alloy.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
     },
     {
       "id": "INDUSTRIAL_PRESS",
@@ -2637,6 +2647,26 @@
       ],
       "temporaryOreSource": "RCP_FERRAVIUM_RECOVERY",
       "note": "The refinery recovery recipe is a test/bootstrap source, not a claim that natural Ferravium deposits have been placed in the world."
+    },
+    {
+      "id": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP",
+      "status": "native_source_prototype",
+      "includes": [
+        "Native Titan Alloy Ingot item descriptor",
+        "Titan Alloy recipe using 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle",
+        "Vanilla Foundry Mk1 producer as a compatibility bootstrap",
+        "Advanced Metallurgy schematic gated by purchased Frontier Survey and the saved Terminal II availability gate",
+        "Server-side confirmed purchase mapping to Terminal Research Phase II",
+        "OBJ/MTL ingot mesh and generated UI icon source"
+      ],
+      "deferred": [
+        "Dedicated Advanced Alloy Foundry buildable and its production balancing",
+        "Titan Alloy Beams, Reinforced Titan Frames and the remaining Phase II recipes",
+        "Custom UE 5.6.1/UHT compilation and Alpakit packaging",
+        "In-game recipe discovery, belt production, save/load and multiplayer tests"
+      ],
+      "bootstrapMachine": "Vanilla Foundry Mk1",
+      "note": "The recipe is a real native source prototype. It temporarily uses the vanilla Foundry; the separately designed Advanced Alloy Foundry building is not yet implemented."
     }
   ]
 }
