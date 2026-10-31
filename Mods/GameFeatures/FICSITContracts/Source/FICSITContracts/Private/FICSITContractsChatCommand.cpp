@@ -29,7 +29,7 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
 
     if (Arguments.Num() == 0)
     {
-        Sender->SendChatMessage(FString::Printf(TEXT("FICSIT CONTRACTS | %d REP | %s | active %d/3"), Contracts->GetReputation(), *Contracts->GetRankName(), Contracts->GetActiveContracts().Num()), FLinearColor(0.95f, 0.72f, 0.24f));
+        Sender->SendChatMessage(FString::Printf(TEXT("FICSIT CONTRACTS | %d REP | %s | active %d/4"), Contracts->GetReputation(), *Contracts->GetRankName(), Contracts->GetActiveContracts().Num()), FLinearColor(0.95f, 0.72f, 0.24f));
         const TArray<FFICSITContract> Offers = Contracts->GetAvailableContracts();
         Sender->SendChatMessage(TEXT("AVAILABLE CONTRACTS"), FLinearColor::Green);
         if (Offers.Num() == 0) Sender->SendChatMessage(TEXT("No offers are available right now."));
