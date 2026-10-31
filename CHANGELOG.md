@@ -28,8 +28,8 @@
 - Add a native AFGBuildableManufacturer-based Ferravium Smelter with conveyor input/output ports and a reflected 90 MW power setting.
 - Align the Ferravium conveyor component names with the canonical `Input0` / `Output0` convention and extend static validation to guard connector direction, forwarding and power configuration.
 - Add the smelter build descriptor/Build Gun recipe and a Frontier Survey schematic gated by the server-saved Phase V/Terminal I state.
-- Add Ferravium OBJ/MTL item and furnace models, four generated icon sources and a dedicated Unreal Editor import utility.
-- Update the machine-readable catalog to 56 recipes and mark Ferravium as a source prototype; natural resource-node spawning remains deferred.
+- Add Ferravium and Titan Alloy OBJ/MTL item/furnace models, five generated icon sources and a dedicated Unreal Editor import utility.
+- Update the machine-readable catalog to 56 recipes and 97 unlock entries (96 planned plus one Titan Alloy source prototype); natural resource-node spawning remains deferred.
 
 **Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey and Advanced Metallurgy purchases before marking Terminal I and II complete; existing saves are reconciled in progression order. Advanced Metallurgy unlocks a native Titan Alloy recipe on the vanilla Foundry Mk1 as a bootstrap; the dedicated Advanced Alloy Foundry and remaining Phase II production chain are not implemented. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal III–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
 
