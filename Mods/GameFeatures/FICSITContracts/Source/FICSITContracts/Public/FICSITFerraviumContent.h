@@ -79,6 +79,44 @@ private:
     TObjectPtr<UFGFactoryConnectionComponent> OutputConnection;
 };
 
+/** Dedicated heavy-industry manufacturer for Titan Alloy production. */
+UCLASS()
+class FICSITCONTRACTS_API AFICSITAdvancedAlloyFoundry : public AFGBuildableManufacturer
+{
+    GENERATED_BODY()
+public:
+    AFICSITAdvancedAlloyFoundry();
+
+private:
+    UPROPERTY()
+    TObjectPtr<UStaticMeshComponent> VisualMesh;
+
+    UPROPERTY()
+    TObjectPtr<UBoxComponent> SolidCollision;
+
+    UPROPERTY()
+    TObjectPtr<UFGFactoryConnectionComponent> InputConnection;
+
+    UPROPERTY()
+    TObjectPtr<UFGFactoryConnectionComponent> OutputConnection;
+};
+
+UCLASS()
+class FICSITCONTRACTS_API UFICSITAdvancedAlloyFoundryDescriptor : public UFGBuildingDescriptor
+{
+    GENERATED_BODY()
+public:
+    UFICSITAdvancedAlloyFoundryDescriptor();
+};
+
+UCLASS()
+class FICSITCONTRACTS_API UFICSITAdvancedAlloyFoundryBuildRecipe : public UFGRecipe
+{
+    GENERATED_BODY()
+public:
+    UFICSITAdvancedAlloyFoundryBuildRecipe();
+};
+
 UCLASS()
 class FICSITCONTRACTS_API UFICSITFerraviumSmelterDescriptor : public UFGBuildingDescriptor
 {
