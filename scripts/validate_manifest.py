@@ -216,7 +216,7 @@ def main() -> int:
                 errors.append("Endgame unlock IDs must be non-empty and globally unique.")
             unlock_by_id = {entry.get("id"): entry for entry in unlock_list if entry.get("id")}
             allowed_categories = {
-                "building", "miner", "logistics", "power", "automation", "weapon",
+                "building", "miner", "logistics", "power", "automation", "weapon", "material",
                 "ammo", "equipment", "vehicle", "blueprint", "scanner", "defense",
             }
             referenced_unlocks: list[str] = []
@@ -236,8 +236,10 @@ def main() -> int:
             for entry in unlock_list:
                 if entry.get("category") not in allowed_categories:
                     errors.append(f"Unlock {entry.get('id')} has an unsupported category.")
-                if entry.get("status") != "planned":
-                    errors.append(f"Unlock {entry.get('id')} must remain marked planned until implemented.")
+                if entry.get("status") not in {"planned", "native_source_prototype"}:
+                    errors.append(f"Unlock {entry.get('id')} has an unsupported implementation status.")
+                if entry.get("status") == "native_source_prototype" and not entry.get("sourceSliceId"):
+                    errors.append(f"Prototype unlock {entry.get('id')} must reference an implementation slice.")
 
             recipe_list = progression.get("recipes", [])
             recipe_ids = [recipe.get("id") for recipe in recipe_list]
