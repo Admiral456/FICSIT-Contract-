@@ -325,6 +325,27 @@ def main() -> int:
                 if required_recipe not in recipe_by_id:
                     errors.append(f"Ferravium processing prototype is missing catalog recipe: {required_recipe}")
 
+            titan_alloy_slice = next(
+                (entry for entry in progression.get("implementationSlices", [])
+                 if entry.get("id") == "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"),
+                None,
+            )
+            if not titan_alloy_slice or titan_alloy_slice.get("status") != "native_source_prototype":
+                errors.append("The Titan Alloy bootstrap source prototype must be recorded in the design catalog.")
+            titan_unlock = unlock_by_id.get("TITAN_ALLOY_INGOT")
+            if not titan_unlock or titan_unlock.get("status") != "native_source_prototype":
+                errors.append("Titan Alloy Ingot must be tracked as an implemented Phase II source unlock.")
+            if titan_unlock and titan_unlock.get("sourceSliceId") != "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP":
+                errors.append("Titan Alloy Ingot must reference its Phase II implementation slice.")
+            titan_recipe = recipe_by_id.get("RCP_TITAN_ALLOY")
+            if not titan_recipe or not any(
+                output.get("itemId") == "TITAN_ALLOY_INGOT"
+                for output in (titan_recipe or {}).get("outputs", [])
+            ):
+                errors.append("The Phase II Titan Alloy recipe must produce Titan Alloy Ingots.")
+            if titan_alloy_slice and titan_alloy_slice.get("bootstrapMachine") != "Vanilla Foundry Mk1":
+                errors.append("The Titan Alloy prototype must explicitly document its vanilla Foundry bootstrap.")
+
     # Verify the portable progression state machine matches every unlock ID in the catalog.
     progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
     progression_tests = ROOT / "Tests/ContractEngineTests.cpp"
@@ -418,9 +439,8 @@ def main() -> int:
             "mOnGameCompleted.AddUniqueDynamic",
             "PurchasedSchematicInstigatorDelegate.AddUniqueDynamic",
             "GetGameIsCompleted()",
-            "GetAllPurchasedSchematics(PurchasedSchematics)",
             "IsSchematicPurchased(PurchasedSchematic)",
-            "CompleteTerminalResearchPhase(1)",
+            "CompleteTerminalResearchPhase(ResearchPhase)",
             "RemoveDynamic",
             "ProgressionBindingRetryTimerHandle",
         ):
@@ -596,6 +616,8 @@ def main() -> int:
             "UFICSITFerraviumIngotDescriptor",
             "UFICSITTitanAlloyIngotDescriptor",
             "UFICSITTitanAlloyRecipe",
+            "UFICSITTitanAlloyRecipeUnlock",
+            "UFICSITAdvancedMetallurgyPrerequisite",
             "UFICSITAdvancedMetallurgySchematic",
             "AFICSITFerraviumSmelter",
             "UFICSITFrontierSurveySchematic",
@@ -618,6 +640,7 @@ def main() -> int:
             "mRecipes.Add(UFICSITFerraviumSmelterBuildRecipe::StaticClass())",
             "GetAvailableTerminalResearchPhase() == 1",
             "UFICSITTitanAlloyRecipe::UFICSITTitanAlloyRecipe()",
+            "mRecipes.Add(UFICSITTitanAlloyRecipe::StaticClass())",
             "Desc_SteelIngot.Desc_SteelIngot_C",
             "Build_FoundryMk1.Build_FoundryMk1_C",
             "GetAvailableTerminalResearchPhase() == 2",
@@ -633,7 +656,7 @@ def main() -> int:
             or "mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass())" not in world_text
             or "mSchematics.Add(UFICSITAdvancedMetallurgySchematic::StaticClass())" not in world_text
         ):
-            errors.append("Frontier Survey schematic must be registered in the SML world module.")
+            errors.append("Frontier Survey and Advanced Metallurgy schematics must be registered in the SML world module.")
 
     ferravium_importer = ROOT / "Tools/Unreal/BuildFerraviumAssets.py"
     if ferravium_importer.is_file():
