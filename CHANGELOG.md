@@ -20,6 +20,7 @@
 - Add the Advanced Metallurgy / Terminal II native milestone schematic, gated by the confirmed Frontier Survey purchase and the saved Terminal II availability check.
 - Add native Titan Alloy Ingot and Titan Alloy Beam descriptors, with Foundry Mk1 recipes for ingots (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots / 8 s) and beams (30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams / 12 s).
 - Generate dedicated Titan Alloy Ingot and I-section Beam OBJ meshes plus separate UI icon sources; extend the Unreal import utility and static validation for both products.
+- Keep the planned Industrial Press beam recipe (`RCP_TITAN_BEAM`) separate from the native Foundry bootstrap (`RCP_TITAN_BEAM_BOOTSTRAP`) in the machine-readable catalog.
 - Reconcile Frontier Survey and Advanced Metallurgy purchases in progression order and map the confirmed Advanced Metallurgy purchase to Terminal II completion.
 - Reconcile existing purchased schematics on load, retry manager binding during early world startup, and remove dynamic delegate bindings during `EndPlay`.
 - Extend static validation and the in-game acceptance checklist for event binding, save reconciliation, duplicate callbacks and unrelated schematic purchases.
