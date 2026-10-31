@@ -9,7 +9,7 @@
     "unreal": "custom UE 5.6.1"
   },
   "implementationStatus": "design_only",
-  "sourceOfTruthNote": "The catalogue remains the design source of truth for the full six-phase expansion. A first Ferravium processing source prototype now exists in native C++ and source assets; natural world nodes, editor import, runtime schematic wiring and game validation remain pending.",
+  "sourceOfTruthNote": "The wider six-phase catalogue remains design data. Native source prototypes include Ferravium processing and the Phase II Titan Alloy Ingot, Titan Alloy Beam and Reinforced Titan Frame products. Titan Alloy materials use the custom Advanced Alloy Foundry; Reinforced Titan Frames temporarily use the vanilla Manufacturer Mk1, separately from the planned Heavy-Duty Assembler recipe. Natural Ferravium node placement and full UHT/UE/game validation remain pending.",
   "progression": {
     "vanillaPhase5UnlocksTerminalPhases": [
       1,
@@ -144,6 +144,7 @@
       "elevatorGate": 5,
       "summary": "Titanové slitiny, těžká výroba, Mk7 logistika, automatická obrana a Exosuit.",
       "unlockIds": [
+        "REINFORCED_TITAN_FRAME",
         "TITAN_ALLOY_BEAM",
         "TITAN_ALLOY_INGOT",
         "ADVANCED_ALLOY_FOUNDRY",
@@ -165,6 +166,7 @@
         "REINFORCED_BUILD_SET"
       ],
       "recipeIds": [
+        "RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP",
         "RCP_ADVANCED_ALLOY_FOUNDRY_BUILD",
         "RCP_TITAN_BEAM_BOOTSTRAP",
         "RCP_TITAN_ALLOY",
@@ -526,6 +528,15 @@
       "category": "material",
       "displayName": "Titan Alloy Beam",
       "description": "Native source prototype: a Titan Alloy and Steel Pipe beam bootstrap, separate from the planned Industrial Press recipe.",
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
+    },
+    {
+      "id": "REINFORCED_TITAN_FRAME",
+      "phase": 2,
+      "category": "material",
+      "displayName": "Reinforced Titan Frame",
+      "description": "Native source prototype: Manufacturer Mk1 recipe combining Titan Alloy Beams and Heavy Modular Frames; the planned Heavy-Duty Assembler recipe remains separate.",
       "status": "native_source_prototype",
       "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
     },
@@ -2585,6 +2596,30 @@
           "amount": 1
         }
       ]
+    },
+    {
+      "id": "RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP",
+      "phase": 2,
+      "machine": "Vanilla Manufacturer Mk1 (native prototype bootstrap)",
+      "cycleSeconds": 24,
+      "inputs": [
+        {
+          "itemId": "TITAN_ALLOY_BEAM",
+          "amount": 8
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 2
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "REINFORCED_TITAN_FRAME",
+          "amount": 2
+        }
+      ],
+      "recipeKind": "prototype_bootstrap",
+      "designRecipeId": "RCP_REINFORCED_TITAN_FRAME"
     }
   ],
   "balanceTargets": {
@@ -2737,15 +2772,18 @@
         "Titan Alloy Beam Foundry bootstrap recipe: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle",
         "The planned Industrial Press recipe remains separately defined as RCP_TITAN_BEAM",
         "Native Advanced Alloy Foundry manufacturer, buildable descriptor and Build Gun recipe",
-        "Titan Alloy ingot and beam recipes run in the custom 125 MW Advanced Alloy Foundry"
+        "Titan Alloy ingot and beam recipes run in the custom 125 MW Advanced Alloy Foundry",
+        "Native Reinforced Titan Frame item descriptor with an open-cage OBJ mesh and its own generated icon",
+        "Reinforced Titan Frame Manufacturer Mk1 bootstrap: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 Reinforced Titan Frames per 24-second cycle",
+        "The planned Heavy-Duty Assembler recipe remains separately defined as RCP_REINFORCED_TITAN_FRAME"
       ],
       "deferred": [
         "Custom UE 5.6.1/UHT compilation and Alpakit packaging",
         "In-game recipe discovery, belt production, save/load and multiplayer tests",
-        "Reinforced Titan Frames and the remainder of the Phase II manufacturing chain"
+        "Heavy Industrial Rotor, Hardened Rebar, Ferravium Structural Matrix and the remaining Phase II recipes beyond the Reinforced Titan Frame"
       ],
       "bootstrapMachine": "Advanced Alloy Foundry",
-      "note": "The native Titan Alloy recipes use the custom Advanced Alloy Foundry. The Foundry Mk1 is no longer required for this production line. The planned Industrial Press recipe remains separate from the prototype beam bootstrap; remaining Phase II content is not yet implemented.",
+      "note": "Titan Alloy Ingots and Beams are made in the custom 125 MW Advanced Alloy Foundry. Reinforced Titan Frames are assembled in the vanilla Manufacturer Mk1 as a compatibility bootstrap. The planned Heavy-Duty Assembler recipe remains separate from RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP. The dedicated Heavy-Duty Assembler and remaining Phase II production chain are not implemented.",
       "bootstrapRecipes": [
         {
           "id": "RCP_TITAN_ALLOY",
@@ -2790,7 +2828,32 @@
             }
           ],
           "powerMW": 125
+        },
+        {
+          "id": "RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP",
+          "machine": "Vanilla Manufacturer Mk1",
+          "cycleSeconds": 24,
+          "inputs": [
+            {
+              "itemId": "TITAN_ALLOY_BEAM",
+              "amount": 8
+            },
+            {
+              "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+              "amount": 2
+            }
+          ],
+          "outputs": [
+            {
+              "itemId": "REINFORCED_TITAN_FRAME",
+              "amount": 2
+            }
+          ]
         }
+      ],
+      "bootstrapMachines": [
+        "Advanced Alloy Foundry (125 MW)",
+        "Vanilla Manufacturer Mk1"
       ]
     }
   ]
