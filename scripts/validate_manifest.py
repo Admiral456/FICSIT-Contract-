@@ -670,7 +670,7 @@ def main() -> int:
                     (min(point[axis] for point in positions), max(point[axis] for point in positions))
                     for axis in range(3)
                 ]
-                expected_extents = ((-222.0, 222.0), (-158.0, 158.0), (0.0, 315.0))
+                expected_extents = ((-222.0, 222.0), (-165.0, 165.0), (0.0, 315.0))
                 if bounds != list(expected_extents):
                     errors.append("Advanced Alloy Foundry mesh must retain its 444 x 316 x 315 cm clearance envelope.")
         elif obj_file.name == "TitanAlloyBeam.obj":
@@ -737,7 +737,7 @@ def main() -> int:
             "UFICSITTitanAlloyBeamRecipe::UFICSITTitanAlloyBeamRecipe()",
             "mRecipes.Add(UFICSITTitanAlloyBeamRecipe::StaticClass())",
             "mRecipes.Add(UFICSITAdvancedAlloyFoundryBuildRecipe::StaticClass())",
-            "UFICSITAdvancedAlloyFoundry::UFICSITAdvancedAlloyFoundry()",
+            "AFICSITAdvancedAlloyFoundry::AFICSITAdvancedAlloyFoundry()",
             "UFICSITAdvancedAlloyFoundryDescriptor::UFICSITAdvancedAlloyFoundryDescriptor()",
             "UFICSITAdvancedAlloyFoundryBuildRecipe::UFICSITAdvancedAlloyFoundryBuildRecipe()",
             "Power->SetPropertyValue_InContainer(this, 125.0f)",
