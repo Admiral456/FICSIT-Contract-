@@ -96,7 +96,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Load a save where both Frontier Survey and Advanced Metallurgy were already purchased before mod installation and verify reconciliation marks Terminal I then Terminal II complete.
 - [ ] Verify purchasing an unrelated schematic does not advance endgame progression.
 - [ ] Confirm Titan Alloy Ingot recipe appears only after Advanced Metallurgy is purchased.
-- [ ] Import the Titan Alloy Ingot, Titan Alloy Beam and Advanced Alloy Foundry OBJ meshes plus their separate generated icons; confirm all assets resolve under the plugin resource mount.
+- [ ] Import the Titan Alloy Ingot, Titan Alloy Beam, Reinforced Titan Frame and Advanced Alloy Foundry OBJ meshes plus their separate generated icons; confirm all assets resolve under the plugin resource mount.
 - [ ] Confirm Advanced Alloy Foundry appears in the Production build menu only after Advanced Metallurgy is purchased.
 - [ ] Build the Advanced Alloy Foundry and verify hologram, 444 × 316 × 315 cm clearance, collision, dismantle refund and power connection.
 - [ ] Verify the `Input0` port faces into the machine, the `Output0` port faces out, and both belt connectors snap/transfer correctly.
@@ -105,14 +105,18 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Run the Advanced Alloy Foundry ingot recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
 - [ ] Run `RCP_TITAN_BEAM_BOOTSTRAP` in the Advanced Alloy Foundry: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle.
 - [ ] Verify the bootstrap beam recipe remains separate from the final planned `RCP_TITAN_BEAM` Industrial Press recipe (30 ingots -> 15 beams / 8 seconds).
+- [ ] Run the Reinforced Titan Frame bootstrap in Manufacturer Mk1: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second cycle.
+- [ ] Verify the planned `RCP_REINFORCED_TITAN_FRAME` Heavy-Duty Assembler recipe remains separate from `RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP`.
+- [ ] Verify the Reinforced Titan Frame descriptor uses its imported open-cage mesh and dedicated icon, and that the source mesh retains its 92 × 64 × 64 cm envelope.
 - [ ] Verify the Titan Alloy Beam I-section mesh retains its 140 × 36 × 30 cm source envelope and all four MTL material slots resolve.
 - [ ] Verify Titan Alloy Beam uses the imported I-section mesh and its own icon, and that its conveyor mesh/stack/category metadata are valid.
 - [ ] Save/reload with both Titan Alloy Ingot and Beam production active and verify recipe unlocks, item descriptors and conveyor mesh references persist.
 - [ ] Verify neither Titan Alloy production recipe lists vanilla Foundry Mk1 as a producer, and that the Advanced Alloy Foundry build recipe is granted by the Advanced Metallurgy unlock.
+- [ ] Verify the Reinforced Titan Frame bootstrap alone uses vanilla Manufacturer Mk1 and cannot be confused with the planned Heavy-Duty Assembler recipe.
 
 ### Ferravium source prototype (pending target-game test)
 
-- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium and Titan Alloy item meshes, the Ferravium Smelter and Advanced Alloy Foundry, plus all seven generated icons, import under the expected plugin mount.
+- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium and Titan Alloy item meshes, the Ferravium Smelter and Advanced Alloy Foundry, plus all eight generated icons, import under the expected plugin mount.
 - [ ] Confirm the native ore, concentrate and ingot descriptors load without missing mesh/icon/category warnings.
 - [ ] Confirm Frontier Survey remains hidden before vanilla Space Elevator Phase V and Terminal I are available.
 - [ ] After the vanilla final-game event integration is verified in-game, confirm Frontier Survey appears and can be purchased only once; confirm its purchase marks Terminal I complete.
