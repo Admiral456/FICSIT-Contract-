@@ -3,47 +3,61 @@
 ## 0.1.x — Contract loop and source hardening
 
 - [x] Portable contract engine.
-- [x] Three-offer board and reputation-gated catalog.
-- [x] Accept up to three active contracts.
+- [x] Reputation-gated offer generation and contract catalog.
 - [x] Partial delivery and exact completion/reward logic in the engine.
 - [x] Timed expiry and capped history.
 - [x] SML C++ world subsystem, save interface and replicated board source.
-- [x] `/contracts`, `/contracts accept`, `/contracts deliver`, `/contracts cancel`, `/contracts history` source.
+- [x] Server-authoritative chat commands.
 - [x] Penalized cancellation with persisted history status and reputation-floor protection.
-- [x] Three-stage Factory Backbone Program with sequential delivery gating and saved stage progress.
+- [x] Sequential multi-stage orders with saved stage progress.
 - [x] Inventory read-back guard so progress is only credited for observed removals.
 - [x] Portable CMake tests and GitHub Actions CI.
 - [ ] Compile with target custom UE 5.6.1 and SML 3.12.x.
 - [ ] Verify item descriptor class paths in the target asset registry.
 - [ ] In-game save/load and multiplayer test.
 
-## 0.2.0 — Logistics
+## 0.2.0 — Logistics and Dispatch Terminal
 
-- [x] Native FICSIT Dispatch Terminal actor with Satisfactory use interaction.
-- [x] Native terminal board viewer for offers, active orders, reputation and history, with progress bars and live refresh.
-- [x] Native building descriptor, build-gun recipe and Tier 5 Logistics schematic source, gated behind Oil Processing.
-- [x] Low-poly UV-mapped OBJ/MTL source model, customization-aware mesh proxy and Unreal Editor asset import utility.
-- [x] Physical collision and explicit build-clearance volume.
-- [ ] Import cooked mesh/icon and create/activate the Game Feature Data asset in the target Starter Project.
-- [ ] Compile the native buildable/widget/content classes with custom UE 5.6.1 and test build-gun placement.
-- [ ] Belt input and server-side item acceptance.
-- [ ] Inventory/transfer transaction that cannot duplicate or lose items on failure.
-- [ ] Dispatch animation, model, material and sound assets.
+- [x] Native FICSIT Dispatch Terminal actor with Satisfactory build interaction.
+- [x] Native board viewer for reputation, active orders, available offers and history.
+- [x] Native building descriptor, build-gun recipe and Tier 5 Logistics schematic gated behind Oil Processing.
+- [x] Source OBJ/MTL model and Unreal Editor asset import utility.
+- [x] Physical collision, placement clearance and customization-aware mesh proxy.
+- [x] Owner-bound server RPC path for terminal Accept, Deliver and Cancel actions.
+- [x] Server validation of the player/controller, terminal lifetime and interaction distance.
+- [x] Detailed industrial terminal source model with operator deck, triple displays, service modules, canopy and beacon.
+- [x] Expanded dashboard with full program route and completed/current/locked phase display.
+- [ ] Import cooked mesh/icon and create/activate Game Feature Data asset in the target Starter Project.
+- [ ] Compile native buildable/widget/content classes with custom UE 5.6.1 and test build-gun placement.
 - [ ] Alpakit/Game Feature packaging for content assets.
+- [ ] Dispatch animation, final materials and sound assets.
+
+## 0.2.1 — Expanded contract operations
+
+- [x] Expand the catalog to 21 distinct templates across five reputation bands.
+- [x] Raise the offer board to five simultaneous offers and the active limit to four.
+- [x] Add multi-material manifests where every line must be supplied.
+- [x] Add six strategic programs ranging from four to seven sequential phases.
+- [x] Add urgent timed grid-recovery request.
+- [x] Expand reputation ranks through FICSIT Executive.
+- [x] Display the complete strategic-program route in the terminal and command output.
+- [ ] Confirm every new vanilla item class path in the target Satisfactory asset registry.
+- [ ] Balance quantities and rewards through extended in-game playtests.
+- [ ] Add optional player-facing settings for offer count, active slots, timers and rewards.
 
 ## 0.3.0 — Progression
 
-- [ ] Reputation unlocks and progression rewards.
-- [ ] Cosmetic factory decorations and FICSIT ranks.
-- [ ] More contract families, repeatable chains and balancing configuration.
+- [ ] Unlock rewards and progression milestones for reputation thresholds.
+- [ ] Cosmetic factory decorations and rank-themed terminal appearance.
 - [ ] Contract generation based on researched tiers / unlock state rather than reputation alone.
+- [ ] Player-facing contract configuration and difficulty controls.
 
 ## 0.4.0 — Expanded gameplay
 
-- [ ] Additional multi-stage contract families and special challenges.
-- [x] Server-validated terminal UI actions through an owner-valid remote-call object (source implementation).
-- [ ] Contract board graphical screen with interactive accept/deliver/cancel actions and improved history.
-- [ ] Dedicated-server validation and broader multiplayer tests.
+- [ ] Belt input and server-side item acceptance.
+- [ ] Inventory/transfer transaction that cannot duplicate or lose items on failure.
+- [ ] Additional challenge objectives beyond inventory delivery.
+- [ ] Dedicated-server validation, broader multiplayer tests and performance profiling.
 - [ ] Mod compatibility review and performance profiling.
 
 ## 1.0.0 — Release
