@@ -123,7 +123,7 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 
 ### Ferravium source prototype (pending target-game test)
 
-- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium, Titan Alloy and Reinforced Titan Frame item meshes, the Ferravium Smelter and Advanced Alloy Foundry, plus all nine generated icons, import under the expected plugin mount.
+- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium, Titan Alloy, Reinforced Titan Frame and Heavy Industrial Rotor item meshes, the Ferravium Smelter and Advanced Alloy Foundry, plus all nine generated icons, import under the expected plugin mount.
 - [ ] Confirm the native ore, concentrate and ingot descriptors load without missing mesh/icon/category warnings.
 - [ ] Confirm Frontier Survey remains hidden before vanilla Space Elevator Phase V and Terminal I are available.
 - [ ] After the vanilla final-game event integration is verified in-game, confirm Frontier Survey appears and can be purchased only once; confirm its purchase marks Terminal I complete.
