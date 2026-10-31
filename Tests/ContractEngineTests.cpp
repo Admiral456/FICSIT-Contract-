@@ -1,4 +1,5 @@
 #include "ContractEngine.h"
+#include "EndgameProgression.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -300,6 +301,68 @@ int main() {
     expect(std::string(ContractEngine::rankName(2000)) == "Supply Chain Director", "director rank threshold");
     expect(std::string(ContractEngine::rankName(1500)) == "Regional Logistics Director", "regional director rank threshold");
     expect(std::string(ContractEngine::rankName(3000)) == "FICSIT Executive", "executive rank threshold");
+
+    // Endgame progression is a strict ladder: vanilla V -> Terminal I/II ->
+    // Elevator VI -> Terminal III/IV -> Elevator VII -> Terminal V ->
+    // Elevator VIII -> Terminal VI.
+    EndgameProgression progression;
+    expect(progression.availableTerminalPhase() == 0, "endgame research stays locked before vanilla Elevator Phase V");
+    expect(progression.availableElevatorPhase() == 0, "custom Elevator projects stay locked before Terminal II");
+    expect(!progression.canResearchTerminalPhase(1), "Terminal I requires vanilla Space Elevator Phase V");
+    expect(!progression.completeTerminalPhase(2), "Terminal II cannot be skipped");
+
+    progression.recordVanillaSpaceElevatorPhase5();
+    expect(progression.availableTerminalPhase() == 1, "vanilla Phase V unlocks Terminal I");
+    expect(progression.completeTerminalPhase(1), "Terminal I can be completed");
+    expect(progression.availableTerminalPhase() == 2, "Terminal I unlocks Terminal II");
+    expect(!progression.canCompleteElevatorPhase(6), "Elevator VI remains locked until Terminal II completes");
+    expect(progression.completeTerminalPhase(2), "Terminal II can be completed");
+    expect(progression.availableElevatorPhase() == 6, "Terminal II unlocks Elevator VI");
+    expect(!progression.canResearchTerminalPhase(3), "Terminal III stays locked until Elevator VI completes");
+    expect(progression.completeElevatorPhase(6), "Elevator VI can be completed after Terminal II");
+    expect(progression.availableTerminalPhase() == 3, "Elevator VI unlocks Terminal III");
+    expect(!progression.canResearchTerminalPhase(4), "Terminal IV cannot skip Terminal III");
+    expect(progression.completeTerminalPhase(3), "Terminal III can be completed");
+    expect(progression.availableTerminalPhase() == 4, "Terminal III unlocks Terminal IV");
+    expect(progression.completeTerminalPhase(4), "Terminal IV can be completed");
+    expect(progression.availableElevatorPhase() == 7, "Terminal IV unlocks Elevator VII");
+    expect(!progression.canCompleteElevatorPhase(8), "Elevator VIII cannot skip Elevator VII and Terminal V");
+    expect(progression.completeElevatorPhase(7), "Elevator VII can be completed after Terminal IV");
+    expect(progression.availableTerminalPhase() == 5, "Elevator VII unlocks Terminal V");
+    expect(progression.completeTerminalPhase(5), "Terminal V can be completed");
+    expect(progression.availableElevatorPhase() == 8, "Terminal V unlocks Elevator VIII");
+    expect(progression.completeElevatorPhase(8), "Elevator VIII can be completed after Terminal V");
+    expect(progression.availableTerminalPhase() == 6, "Elevator VIII unlocks Terminal VI");
+    expect(progression.completeTerminalPhase(6), "Terminal VI can be completed");
+    expect(progression.availableTerminalPhase() == 0 && progression.availableElevatorPhase() == 0,
+        "all endgame phases report no remaining research or Elevator project");
+    expect(!progression.completeTerminalPhase(6), "completed terminal research cannot be purchased twice");
+    expect(!progression.completeElevatorPhase(8), "completed Elevator projects cannot be completed twice");
+
+    expect(EndgameProgression::terminalPhaseForUnlock("GEO_SURVEY_STATION") == 1,
+        "survey building is mapped to Terminal I");
+    expect(EndgameProgression::terminalPhaseForUnlock("BLUEPRINT_DESIGNER_MK5") == 4,
+        "Blueprint Designer Mk5 is mapped to Terminal IV");
+    expect(EndgameProgression::terminalPhaseForUnlock("ORBITAL_FREIGHT_HUB") == 6,
+        "Orbital Freight Hub is mapped to Terminal VI");
+    expect(EndgameProgression::terminalPhaseForUnlock("UNKNOWN_ENDGAME_UNLOCK") == 0,
+        "unknown unlock IDs do not grant a research phase");
+
+    EndgameProgression restoredProgression(progression.state());
+    expect(restoredProgression.state().terminalPhasesComplete == progression.state().terminalPhasesComplete
+        && restoredProgression.state().elevatorExtensionsComplete == progression.state().elevatorExtensionsComplete,
+        "endgame progression survives a value snapshot save/load round trip");
+
+    EndgameProgressionSnapshot malformedProgression;
+    malformedProgression.terminalPhasesComplete.fill(true);
+    malformedProgression.elevatorExtensionsComplete.fill(true);
+    EndgameProgression sanitizedProgression(malformedProgression);
+    expect(sanitizedProgression.availableTerminalPhase() == 0
+        && sanitizedProgression.availableElevatorPhase() == 0,
+        "malformed endgame save cannot bypass the vanilla Elevator finale");
+    expect(!sanitizedProgression.state().terminalPhasesComplete[0]
+        && !sanitizedProgression.state().elevatorExtensionsComplete[0],
+        "malformed endgame save is normalized by clearing impossible later progress");
 
     if (failures == 0) { std::cout << "All FICSIT Contracts core tests passed.\n"; return EXIT_SUCCESS; }
     std::cerr << failures << " test(s) failed.\n"; return EXIT_FAILURE;
