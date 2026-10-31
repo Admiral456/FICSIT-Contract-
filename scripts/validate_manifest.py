@@ -834,6 +834,7 @@ def main() -> int:
             "FerraviumIngot.obj",
             "TitanAlloyIngot.obj",
             "TitanAlloyBeam.obj",
+            "ReinforcedTitanFrame.obj",
             "FerraviumSmelter.obj",
             "AdvancedAlloyFoundry.obj",
             "AdvancedAlloyFoundry.mtl",
