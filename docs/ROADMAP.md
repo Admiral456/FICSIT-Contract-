@@ -63,9 +63,10 @@
 - [x] Add the Advanced Metallurgy / Terminal II schematic, gated by purchased Frontier Survey and the saved Phase II availability state.
 - [x] Add the native Titan Alloy Ingot descriptor and 8-second Advanced Alloy Foundry recipe (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots).
 - [x] Add Titan Alloy Beam as a second Phase II product: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second Advanced Alloy Foundry cycle, with its own descriptor, OBJ mesh and icon source.
+- [x] Add Reinforced Titan Frame as a third Phase II source prototype: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second Manufacturer Mk1 bootstrap cycle; keep the planned Heavy-Duty Assembler recipe separate.
 - [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
-- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and the Advanced Alloy Foundry with seven generated icons.
-- [ ] Import Ferravium and Titan Alloy assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
+- [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and the Advanced Alloy Foundry with eight generated icons.
+- [ ] Import all Ferravium/Titan Alloy/Reinforced Frame/Foundry assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
 - [ ] Prototype Blueprint Designer Mk4 and verify save compatibility, placement bounds and nested blueprints.
 - [ ] Prototype the first new weapon, ammo, damage path and multiplayer replication.
 - [ ] Resolve all vanilla item class paths against the target Satisfactory 1.2 asset registry.
