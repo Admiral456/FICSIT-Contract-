@@ -341,6 +341,55 @@ def main() -> int:
             if required not in progression_test_text:
                 errors.append(f"Endgame progression regression test is missing: {required}")
 
+    # The live SML subsystem must persist and replicate research progression.
+    subsystem_header = PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsSubsystem.h"
+    subsystem_runtime = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsSubsystem.cpp"
+    chat_command = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsChatCommand.cpp"
+    terminal_widget = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITDispatchTerminalWidget.cpp"
+
+    if subsystem_header.is_file():
+        header_text = subsystem_header.read_text(encoding="utf-8")
+        for required in (
+            "UPROPERTY(SaveGame, ReplicatedUsing = OnRep_ContractBoard)",
+            "bVanillaSpaceElevatorPhase5Complete",
+            "TerminalResearchPhasesComplete",
+            "ElevatorExtensionsComplete",
+            "GetAvailableTerminalResearchPhase",
+            "GetAvailableElevatorExtensionPhase",
+            "RecordVanillaSpaceElevatorPhase5Complete",
+            "CompleteTerminalResearchPhase",
+            "CompleteElevatorExtensionPhase",
+        ):
+            if required not in header_text:
+                errors.append(f"SML subsystem progression state is missing: {required}")
+
+    if subsystem_runtime.is_file():
+        runtime_text = subsystem_runtime.read_text(encoding="utf-8")
+        for required in (
+            '#include "EndgameProgression.h"',
+            "BuildEndgameProgression",
+            "ApplyEndgameProgression",
+            "DOREPLIFETIME(AFICSITContractsSubsystem, bVanillaSpaceElevatorPhase5Complete)",
+            "DOREPLIFETIME(AFICSITContractsSubsystem, TerminalResearchPhasesComplete)",
+            "DOREPLIFETIME(AFICSITContractsSubsystem, ElevatorExtensionsComplete)",
+            "Progression.completeTerminalPhase(Phase)",
+            "Progression.completeElevatorPhase(Phase)",
+            "if (!HasAuthority()) return false;",
+            "GetEndgameProgressionSummary",
+        ):
+            if required not in runtime_text:
+                errors.append(f"SML runtime progression integration is missing: {required}")
+
+    if chat_command.is_file():
+        chat_text = chat_command.read_text(encoding="utf-8")
+        if 'Subcommand == TEXT("progression")' not in chat_text or "GetEndgameProgressionSummary" not in chat_text:
+            errors.append("The /contracts progression status command is missing.")
+
+    if terminal_widget.is_file():
+        terminal_widget_text = terminal_widget.read_text(encoding="utf-8")
+        if "04  //  ENDGAME RESEARCH" not in terminal_widget_text or "GetEndgameProgressionSummary" not in terminal_widget_text:
+            errors.append("Dispatch Terminal UI must display the endgame research progression.")
+
     # Parse the Editor utility without importing Unreal's Python module.
     asset_script = source_assets[-1]
     if asset_script.is_file():
