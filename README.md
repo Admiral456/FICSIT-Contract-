@@ -71,7 +71,7 @@ The design catalog currently contains:
 - New weapons including Precision Rebar Rifle, Heavy Rebar Repeater, Cryo Projector, Photonic Rifle and Gravitic Launcher.
 - Blueprint Designer Mk4 and Mk5 as extensions beyond the existing vanilla Mk3.
 
-**Implementation status:** this is a design/data catalog, not yet live game content. The JSON validator checks phase references, unique IDs, recipe structure, Space Elevator gates and whether every Elevator requirement has a producing recipe. Actual schematics, unlock objects, item descriptors, buildables, equipment, models and in-game behavior still need to be implemented and tested.
+A portable C++ research state machine now enforces the ordered unlock gates and is covered by cross-platform regression tests. The SML runtime adapter, saved/replicated state, live schematic purchases and actual game events are still pending. **Implementation status:** this is a design/data catalog, not yet live game content. The JSON validator checks phase references, unique IDs, recipe structure, Space Elevator gates and whether every Elevator requirement has a producing recipe. Actual schematics, unlock objects, item descriptors, buildables, equipment, models and in-game behavior still need to be implemented and tested.
 
 The original vanilla Blueprint Designer already has Mk1, Mk2 and Mk3; this project intentionally adds Mk4/Mk5 rather than duplicating the existing tiers. New resource nodes in the vanilla World Partition map, custom weapon/equipment replication, defensive AI and quantum cargo transfer are called out as technical prototypes in the design document.
 
