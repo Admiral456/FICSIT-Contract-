@@ -489,6 +489,7 @@ def main() -> int:
             "Elevator VII unlocks Terminal V",
             "Elevator VIII unlocks Terminal VI",
             "malformed endgame save",
+            "Heavy Industrial Rotor is mapped to Terminal II",
         ):
             if required not in progression_test_text:
                 errors.append(f"Endgame progression regression test is missing: {required}")
