@@ -17,6 +17,10 @@
 - Add server-only progression adapter methods that re-check phase gates before modifying saved state.
 - Bind the subsystem to `AFGGamePhaseManager::mOnGameCompleted` and reconcile saves where the vanilla Project Assembly finale was already completed.
 - Bind to `AFGSchematicManager::PurchasedSchematicInstigatorDelegate`, verify the purchased class with `IsSchematicPurchased`, and map the implemented Frontier Survey schematic to Terminal Research Phase I completion.
+- Add the Advanced Metallurgy / Terminal II native milestone schematic, gated by the confirmed Frontier Survey purchase and the saved Terminal II availability check.
+- Add a native Titan Alloy Ingot descriptor and Foundry Mk1 recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
+- Generate a dedicated Titan Alloy OBJ mesh and UI icon source; extend the Unreal import utility and static validation for the new content.
+- Reconcile Frontier Survey and Advanced Metallurgy purchases in progression order and map the confirmed Advanced Metallurgy purchase to Terminal II completion.
 - Reconcile existing purchased schematics on load, retry manager binding during early world startup, and remove dynamic delegate bindings during `EndPlay`.
 - Extend static validation and the in-game acceptance checklist for event binding, save reconciliation, duplicate callbacks and unrelated schematic purchases.
 - Extend static CI validation and the in-game checklist for save, replication, UI and progression gate behavior.
@@ -27,7 +31,7 @@
 - Add Ferravium OBJ/MTL item and furnace models, four generated icon sources and a dedicated Unreal Editor import utility.
 - Update the machine-readable catalog to 56 recipes and mark Ferravium as a source prototype; natural resource-node spawning remains deferred.
 
-**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration now binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey purchase before marking Terminal I complete; existing completed/purchased saves are reconciled on load. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal II–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
+**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. Source event integration binds the vanilla game-completed event to the Phase V gate and confirms Frontier Survey and Advanced Metallurgy purchases before marking Terminal I and II complete; existing saves are reconciled in progression order. Advanced Metallurgy unlocks a native Titan Alloy recipe on the vanilla Foundry Mk1 as a bootstrap; the dedicated Advanced Alloy Foundry and remaining Phase II production chain are not implemented. This source integration has not yet been UHT/UE compiled or exercised in-game. Terminal III–VI and Elevator VI–VIII still need their actual schematic assets and purchase mappings. No natural Ferravium nodes are placed in the world; the importer, Alpakit package and in-game production tests remain outstanding.
 
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
