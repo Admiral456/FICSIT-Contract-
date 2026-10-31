@@ -570,8 +570,13 @@ def main() -> int:
     if ferravium_source.is_file():
         ferravium_text = ferravium_source.read_text(encoding="utf-8")
         for required in (
-            "FCD_INPUT",
-            "FCD_OUTPUT",
+            'CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Input0"))',
+            'CreateDefaultSubobject<UFGFactoryConnectionComponent>(TEXT("Output0"))',
+            "SetDirection(EFactoryConnectionDirection::FCD_INPUT)",
+            "SetDirection(EFactoryConnectionDirection::FCD_OUTPUT)",
+            "SetForwardPeekAndGrabToBuildable(true)",
+            "mManufacturingSpeed = 1.0f",
+            "mPowerConsumption",
             "mRecipes.Add(UFICSITFerraviumRecoveryRecipe::StaticClass())",
             "mRecipes.Add(UFICSITFerraviumConcentrateRecipe::StaticClass())",
             "mRecipes.Add(UFICSITFerraviumSmeltingRecipe::StaticClass())",
@@ -609,7 +614,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print("Plugin descriptor and Dispatch Terminal source checks are valid.")
+    print("Plugin descriptor, Ferravium machine wiring, asset source and progression checks are valid.")
     return 0
 
 
