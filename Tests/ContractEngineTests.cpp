@@ -99,6 +99,8 @@ int main() {
         "Planetary Power Grid is a five-phase infrastructure program");
     expect(findProgram(2000, "SPECIAL-PLANETARY-LOGISTICS").stages.size() == 6,
         "Planetary Logistics is a six-phase endgame megaproject");
+    expect(findProgram(3000, "SPECIAL-ORBITAL-LOGISTICS").stages.size() == 7,
+        "Orbital Logistics Authority is a seven-phase executive megaproject");
 
     ContractEngine chainEngine(backboneBoard);
     expect(chainEngine.accept(stagedOffer.id, now), "multi-stage industrial program can be accepted");
@@ -296,6 +298,8 @@ int main() {
     expect(std::string(ContractEngine::rankName(500)) == "Logistics Specialist", "specialist rank threshold");
     expect(std::string(ContractEngine::rankName(1000)) == "FICSIT Coordinator", "coordinator rank threshold");
     expect(std::string(ContractEngine::rankName(2000)) == "Supply Chain Director", "director rank threshold");
+    expect(std::string(ContractEngine::rankName(1500)) == "Regional Logistics Director", "regional director rank threshold");
+    expect(std::string(ContractEngine::rankName(3000)) == "FICSIT Executive", "executive rank threshold");
 
     if (failures == 0) { std::cout << "All FICSIT Contracts core tests passed.\n"; return EXIT_SUCCESS; }
     std::cerr << failures << " test(s) failed.\n"; return EXIT_FAILURE;
