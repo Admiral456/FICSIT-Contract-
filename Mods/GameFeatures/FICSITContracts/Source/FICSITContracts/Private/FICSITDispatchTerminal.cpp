@@ -21,7 +21,7 @@ AFICSITDispatchTerminal::AFICSITDispatchTerminal(const FObjectInitializer& Objec
 
     FFGClearanceData TerminalClearance;
     TerminalClearance.Type = EClearanceType::CT_Default;
-    TerminalClearance.ClearanceBox = FBox(FVector(-85.0f,-60.0f,0.0f),FVector(85.0f,60.0f,235.0f));
+    TerminalClearance.ClearanceBox = FBox(FVector(-85.0f,-66.0f,0.0f),FVector(85.0f,60.0f,235.0f));
     TerminalClearance.RelativeTransform = FTransform::Identity;
     TerminalClearance.ExcludeForSnapping = false;
     mClearanceData.Add(TerminalClearance);
