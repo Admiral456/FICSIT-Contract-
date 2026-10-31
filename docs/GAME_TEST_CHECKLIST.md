@@ -107,6 +107,8 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Verify the bootstrap beam recipe remains separate from the final planned `RCP_TITAN_BEAM` Industrial Press recipe (30 ingots -> 15 beams / 8 seconds).
 - [ ] Run the Reinforced Titan Frame bootstrap in Manufacturer Mk1: 8 Titan Alloy Beams + 2 Heavy Modular Frames -> 2 frames per 24-second cycle.
 - [ ] Verify the planned `RCP_REINFORCED_TITAN_FRAME` Heavy-Duty Assembler recipe remains separate from `RCP_REINFORCED_TITAN_FRAME_BOOTSTRAP`.
+- [ ] Confirm the Reinforced Titan Frame recipe is unlocked by Advanced Metallurgy and is available in vanilla Manufacturer Mk1 as the 24-second bootstrap.
+- [ ] Save/reload while manufacturing Reinforced Titan Frames; verify item mesh, icon, inventory and partial manufacturer progress persist.
 - [ ] Verify the Reinforced Titan Frame descriptor uses its imported open-cage mesh and dedicated icon, and that the source mesh retains its 92 × 64 × 64 cm envelope.
 - [ ] Verify the Titan Alloy Beam I-section mesh retains its 140 × 36 × 30 cm source envelope and all four MTL material slots resolve.
 - [ ] Verify Titan Alloy Beam uses the imported I-section mesh and its own icon, and that its conveyor mesh/stack/category metadata are valid.
