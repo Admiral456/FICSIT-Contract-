@@ -165,6 +165,7 @@
         "REINFORCED_BUILD_SET"
       ],
       "recipeIds": [
+        "RCP_ADVANCED_ALLOY_FOUNDRY_BUILD",
         "RCP_TITAN_BEAM_BOOTSTRAP",
         "RCP_TITAN_ALLOY",
         "RCP_TITAN_BEAM",
@@ -516,7 +517,8 @@
       "category": "building",
       "displayName": "Advanced Alloy Foundry",
       "description": "Velká slévárna pro Titan Alloy a další pokročilé slitiny.",
-      "status": "planned"
+      "status": "native_source_prototype",
+      "sourceSliceId": "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP"
     },
     {
       "id": "TITAN_ALLOY_BEAM",
@@ -2524,7 +2526,7 @@
     {
       "id": "RCP_TITAN_BEAM_BOOTSTRAP",
       "phase": 2,
-      "machine": "Vanilla Foundry Mk1 (native prototype bootstrap)",
+      "machine": "Advanced Alloy Foundry",
       "cycleSeconds": 12,
       "inputs": [
         {
@@ -2544,6 +2546,45 @@
       ],
       "recipeKind": "prototype_bootstrap",
       "designRecipeId": "RCP_TITAN_BEAM"
+    },
+    {
+      "id": "RCP_ADVANCED_ALLOY_FOUNDRY_BUILD",
+      "phase": 2,
+      "machine": "Build Gun",
+      "cycleSeconds": 0,
+      "recipeKind": "build_gun",
+      "inputs": [
+        {
+          "itemId": "VANILLA_ENCASED_INDUSTRIAL_BEAM",
+          "amount": 50
+        },
+        {
+          "itemId": "VANILLA_STEEL_PIPE",
+          "amount": 120
+        },
+        {
+          "itemId": "VANILLA_HEAVY_MODULAR_FRAME",
+          "amount": 25
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_CABLE",
+          "amount": 200
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "ADVANCED_ALLOY_FOUNDRY",
+          "amount": 1
+        }
+      ]
     }
   ],
   "balanceTargets": {
@@ -2689,27 +2730,26 @@
       "includes": [
         "Native Titan Alloy Ingot item descriptor",
         "Titan Alloy recipe using 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle",
-        "Vanilla Foundry Mk1 producer as a compatibility bootstrap",
         "Advanced Metallurgy schematic gated by purchased Frontier Survey and the saved Terminal II availability gate",
         "Server-side confirmed purchase mapping to Terminal Research Phase II",
         "OBJ/MTL ingot mesh and generated UI icon source",
         "Native Titan Alloy Beam item descriptor with its own OBJ/MTL mesh and generated icon",
         "Titan Alloy Beam Foundry bootstrap recipe: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle",
-        "The planned Industrial Press recipe remains separately defined as RCP_TITAN_BEAM"
+        "The planned Industrial Press recipe remains separately defined as RCP_TITAN_BEAM",
+        "Native Advanced Alloy Foundry manufacturer, buildable descriptor and Build Gun recipe",
+        "Titan Alloy ingot and beam recipes run in the custom 125 MW Advanced Alloy Foundry"
       ],
       "deferred": [
-        "Dedicated Advanced Alloy Foundry buildable and its production balancing",
         "Custom UE 5.6.1/UHT compilation and Alpakit packaging",
         "In-game recipe discovery, belt production, save/load and multiplayer tests",
-        "Reinforced Titan Frames and the remainder of the Phase II manufacturing chain",
-        "Dedicated Advanced Alloy Foundry and Industrial Press buildables"
+        "Reinforced Titan Frames and the remainder of the Phase II manufacturing chain"
       ],
-      "bootstrapMachine": "Vanilla Foundry Mk1",
-      "note": "The two recipes are native source prototypes on the vanilla Foundry Mk1. The final designed chain remains separate: Titan Alloy Ingot -> Industrial Press -> Titan Alloy Beam. The dedicated Advanced Alloy Foundry, Industrial Press and remaining Phase II buildings are not implemented.",
+      "bootstrapMachine": "Advanced Alloy Foundry",
+      "note": "The native Titan Alloy recipes use the custom Advanced Alloy Foundry. The Foundry Mk1 is no longer required for this production line. The planned Industrial Press recipe remains separate from the prototype beam bootstrap; remaining Phase II content is not yet implemented.",
       "bootstrapRecipes": [
         {
           "id": "RCP_TITAN_ALLOY",
-          "machine": "Vanilla Foundry Mk1",
+          "machine": "Advanced Alloy Foundry",
           "cycleSeconds": 8,
           "inputs": [
             {
@@ -2726,11 +2766,12 @@
               "itemId": "TITAN_ALLOY_INGOT",
               "amount": 60
             }
-          ]
+          ],
+          "powerMW": 125
         },
         {
           "id": "RCP_TITAN_BEAM_BOOTSTRAP",
-          "machine": "Vanilla Foundry Mk1",
+          "machine": "Advanced Alloy Foundry",
           "cycleSeconds": 12,
           "inputs": [
             {
@@ -2747,7 +2788,8 @@
               "itemId": "TITAN_ALLOY_BEAM",
               "amount": 30
             }
-          ]
+          ],
+          "powerMW": 125
         }
       ]
     }
