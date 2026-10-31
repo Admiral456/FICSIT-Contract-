@@ -55,6 +55,8 @@ def main() -> int:
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITContractsGameInstanceModule.h",
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsGameInstanceModule.cpp",
         PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITDispatchTerminalContent.h",
+        PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITFerraviumContent.h",
+        PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITFerraviumContent.cpp",
         ROOT / "Source/FICSITContractsCore/EndgameProgression.h",
         ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp",
         PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsCore.cpp",
@@ -68,6 +70,13 @@ def main() -> int:
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/DispatchTerminal/DispatchTerminal.obj",
         ROOT / "Mods/FICSITContracts/ContentSource/Buildables/DispatchTerminal/DispatchTerminal.mtl",
         ROOT / "Tools/Unreal/BuildFICSITContractsAssets.py",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumOre.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumConcentrate.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumIngot.obj",
+        ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
+        ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
+        ROOT / "Tools/Unreal/BuildFerraviumAssets.py",
     ]
 
     # Keep the expanded gameplay catalog and board capacities from silently shrinking.
@@ -239,8 +248,14 @@ def main() -> int:
             for recipe in recipe_list:
                 if recipe.get("phase") not in range(1, 7):
                     errors.append(f"Recipe {recipe.get('id')} references an invalid terminal phase.")
-                if not isinstance(recipe.get("cycleSeconds"), (int, float)) or recipe.get("cycleSeconds", 0) <= 0:
-                    errors.append(f"Recipe {recipe.get('id')} must have a positive cycle duration.")
+                duration = recipe.get("cycleSeconds")
+                is_build_gun_recipe = recipe.get("recipeKind") == "build_gun"
+                if (
+                    not isinstance(duration, (int, float))
+                    or duration < 0
+                    or (duration == 0 and not is_build_gun_recipe)
+                ):
+                    errors.append(f"Recipe {recipe.get('id')} must have a positive cycle duration, except instant build-gun recipes.")
                 for direction in ("inputs", "outputs"):
                     entries = recipe.get(direction, [])
                     if not entries:
@@ -292,6 +307,20 @@ def main() -> int:
             constraints = " ".join(progression.get("implementationConstraints", []))
             if "World Partition" not in constraints or "asset registry" not in constraints:
                 errors.append("The endgame design must retain World Partition and vanilla asset-path implementation caveats.")
+
+            ferravium_slice = next(
+                (entry for entry in progression.get("implementationSlices", [])
+                 if entry.get("id") == "FERRAVIUM_PROCESSING_BOOTSTRAP"),
+                None,
+            )
+            if not ferravium_slice or ferravium_slice.get("status") != "native_source_prototype":
+                errors.append("The Ferravium source prototype must be recorded in the design catalog.")
+            if ferravium_slice and ferravium_slice.get("temporaryOreSource") != "RCP_FERRAVIUM_RECOVERY":
+                errors.append("The Ferravium catalogue must clearly identify its temporary recovery source.")
+            for required_recipe in ("RCP_FERRAVIUM_RECOVERY", "RCP_FERRAVIUM_CONCENTRATE",
+                                    "RCP_FERRAVIUM_INGOT", "RCP_FERRAVIUM_SMELTER_BUILD"):
+                if required_recipe not in recipe_by_id:
+                    errors.append(f"Ferravium processing prototype is missing catalog recipe: {required_recipe}")
 
     # Verify the portable progression state machine matches every unlock ID in the catalog.
     progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
@@ -390,13 +419,17 @@ def main() -> int:
         if "04  //  ENDGAME RESEARCH" not in terminal_widget_text or "GetEndgameProgressionSummary" not in terminal_widget_text:
             errors.append("Dispatch Terminal UI must display the endgame research progression.")
 
-    # Parse the Editor utility without importing Unreal's Python module.
-    asset_script = source_assets[-1]
-    if asset_script.is_file():
-        try:
-            ast.parse(asset_script.read_text(encoding="utf-8"), filename=str(asset_script))
-        except SyntaxError as exc:
-            errors.append(f"Unreal asset utility has invalid Python syntax: {exc}")
+    # Parse Editor utilities without importing Unreal's Python module.
+    editor_scripts = (
+        ROOT / "Tools/Unreal/BuildFICSITContractsAssets.py",
+        ROOT / "Tools/Unreal/BuildFerraviumAssets.py",
+    )
+    for asset_script in editor_scripts:
+        if asset_script.is_file():
+            try:
+                ast.parse(asset_script.read_text(encoding="utf-8"), filename=str(asset_script))
+            except SyntaxError as exc:
+                errors.append(f"Unreal asset utility has invalid Python syntax: {exc}")
 
     # Validate OBJ topology references, UV coordinates and MTL slot declarations.
     obj_path, mtl_path = source_assets[0], source_assets[1]
@@ -447,6 +480,127 @@ def main() -> int:
         missing_materials = sorted(used_materials - defined_materials)
         if missing_materials:
             errors.append("Dispatch Terminal OBJ references undefined MTL slots: " + ", ".join(missing_materials))
+
+    # Validate all Ferravium OBJ/MTL pairs, including material sidecar coverage.
+    ferravium_mesh_pairs = (
+        (
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumOre.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ),
+        (
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumConcentrate.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ),
+        (
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/FerraviumIngot.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Resources/Ferravium/Mesh/Ferravium.mtl",
+        ),
+        (
+            ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/FerraviumSmelter.obj",
+            ROOT / "Mods/FICSITContracts/ContentSource/Buildables/FerraviumSmelter/Ferravium.mtl",
+        ),
+    )
+    for obj_file, material_file in ferravium_mesh_pairs:
+        if not obj_file.is_file() or not material_file.is_file():
+            continue
+        obj_lines = obj_file.read_text(encoding="utf-8").splitlines()
+        vertex_count = sum(line.startswith("v ") for line in obj_lines)
+        uv_count = sum(line.startswith("vt ") for line in obj_lines)
+        faces = [line for line in obj_lines if line.startswith("f ")]
+        used = {line[7:].strip() for line in obj_lines if line.startswith("usemtl ")}
+        defined = {
+            line[7:].strip()
+            for line in material_file.read_text(encoding="utf-8").splitlines()
+            if line.startswith("newmtl ")
+        }
+        if vertex_count < 6 or uv_count < 3 or not faces:
+            errors.append(f"Ferravium mesh {obj_file.name} has incomplete geometry or UVs.")
+        for face_number, face in enumerate(faces, start=1):
+            for corner in face[2:].split():
+                parts = corner.split("/")
+                try:
+                    vertex_index = int(parts[0])
+                    uv_index = int(parts[1]) if len(parts) > 1 and parts[1] else 0
+                except (ValueError, IndexError):
+                    errors.append(f"Ferravium mesh {obj_file.name} face {face_number} has an invalid index.")
+                    break
+                if not (1 <= vertex_index <= vertex_count) or not (1 <= uv_index <= uv_count):
+                    errors.append(f"Ferravium mesh {obj_file.name} face {face_number} points outside its vertex/UV arrays.")
+                    break
+        missing = sorted(used - defined)
+        if missing:
+            errors.append(f"Ferravium mesh {obj_file.name} references undefined materials: " + ", ".join(missing))
+        if obj_file.name == "FerraviumSmelter.obj":
+            positions = []
+            for line in obj_lines:
+                if line.startswith("v "):
+                    try:
+                        positions.append(tuple(float(value) for value in line.split()[1:4]))
+                    except (ValueError, IndexError):
+                        errors.append("Ferravium Smelter OBJ contains a malformed vertex.")
+            if positions:
+                bounds = [
+                    (min(point[axis] for point in positions), max(point[axis] for point in positions))
+                    for axis in range(3)
+                ]
+                if bounds[0][0] < -165.0 or bounds[0][1] > 165.0:
+                    errors.append("Ferravium Smelter mesh exceeds the buildable X clearance.")
+                if bounds[1][0] < -125.0 or bounds[1][1] > 125.0:
+                    errors.append("Ferravium Smelter mesh exceeds the buildable Y clearance.")
+                if bounds[2][0] < 0.0 or bounds[2][1] > 255.0:
+                    errors.append("Ferravium Smelter mesh exceeds the buildable Z clearance.")
+
+    # The native Ferravium source slice must be registered and match its asset importer.
+    ferravium_header = PLUGIN_DIR / "Source/FICSITContracts/Public/FICSITFerraviumContent.h"
+    ferravium_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITFerraviumContent.cpp"
+    world_module_source = PLUGIN_DIR / "Source/FICSITContracts/Private/FICSITContractsWorldModule.cpp"
+    if ferravium_header.is_file():
+        header_text = ferravium_header.read_text(encoding="utf-8")
+        for required in (
+            "UFICSITFerraviumOreDescriptor",
+            "UFICSITFerraviumConcentrateDescriptor",
+            "UFICSITFerraviumIngotDescriptor",
+            "AFICSITFerraviumSmelter",
+            "UFICSITFrontierSurveySchematic",
+        ):
+            if required not in header_text:
+                errors.append(f"Ferravium content header is missing declaration: {required}")
+    if ferravium_source.is_file():
+        ferravium_text = ferravium_source.read_text(encoding="utf-8")
+        for required in (
+            "UFGResourceDescriptor",
+            "AFGBuildableManufacturer",
+            "FCD_INPUT",
+            "FCD_OUTPUT",
+            "mRecipes.Add(UFICSITFerraviumRecoveryRecipe::StaticClass())",
+            "mRecipes.Add(UFICSITFerraviumConcentrateRecipe::StaticClass())",
+            "mRecipes.Add(UFICSITFerraviumSmeltingRecipe::StaticClass())",
+            "mRecipes.Add(UFICSITFerraviumSmelterBuildRecipe::StaticClass())",
+            "GetAvailableTerminalResearchPhase() == 1",
+            "UFICSITDispatchTerminalSchematic::StaticClass()",
+        ):
+            if required not in ferravium_text:
+                errors.append(f"Ferravium source prototype is missing required integration: {required}")
+    if world_module_source.is_file():
+        world_text = world_module_source.read_text(encoding="utf-8")
+        if '#include "FICSITFerraviumContent.h"' not in world_text or            "mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass())" not in world_text:
+            errors.append("Frontier Survey schematic must be registered in the SML world module.")
+
+    ferravium_importer = ROOT / "Tools/Unreal/BuildFerraviumAssets.py"
+    if ferravium_importer.is_file():
+        importer_text = ferravium_importer.read_text(encoding="utf-8")
+        for required in (
+            "FerraviumOre.obj",
+            "FerraviumConcentrate.obj",
+            "FerraviumIngot.obj",
+            "FerraviumSmelter.obj",
+            "TX_FerraviumOre_256",
+            "TX_FerraviumConcentrate_256",
+            "TX_FerraviumIngot_256",
+            "TX_FerraviumSmelter_256",
+        ):
+            if required not in importer_text:
+                errors.append(f"Ferravium asset importer is missing source asset reference: {required}")
 
     if errors:
         for error in errors:
