@@ -96,16 +96,18 @@ These are acceptance tests for the planned 0.3.x+ content. They must remain unch
 - [ ] Load a save where both Frontier Survey and Advanced Metallurgy were already purchased before mod installation and verify reconciliation marks Terminal I then Terminal II complete.
 - [ ] Verify purchasing an unrelated schematic does not advance endgame progression.
 - [ ] Confirm Titan Alloy Ingot recipe appears only after Advanced Metallurgy is purchased.
-- [ ] Import the Titan Alloy Ingot OBJ and generated icon; confirm the mesh and icon resolve under the plugin resource mount.
+- [ ] Import the Titan Alloy Ingot and Titan Alloy Beam OBJ meshes plus their separate generated icons; confirm all assets resolve under the plugin resource mount.
 - [ ] Run the Foundry Mk1 ingot recipe: 60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots per 8-second cycle.
-- [ ] Run the Foundry Mk1 beam recipe: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle.
+- [ ] Run `RCP_TITAN_BEAM_BOOTSTRAP` in Foundry Mk1: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second cycle.
+- [ ] Verify the bootstrap beam recipe remains separate from the final planned `RCP_TITAN_BEAM` Industrial Press recipe (30 ingots -> 15 beams / 8 seconds).
+- [ ] Verify the Titan Alloy Beam I-section mesh retains its 140 × 36 × 30 cm source envelope and all four MTL material slots resolve.
 - [ ] Verify Titan Alloy Beam uses the imported I-section mesh and its own icon, and that its conveyor mesh/stack/category metadata are valid.
-- [ ] Save/reload with Titan Alloy production active and verify recipe unlock and item references persist.
+- [ ] Save/reload with both Titan Alloy Ingot and Beam production active and verify recipe unlocks, item descriptors and conveyor mesh references persist.
 - [ ] Confirm the recipe is intentionally using vanilla Foundry Mk1; do not mark the dedicated Advanced Alloy Foundry as implemented.
 
 ### Ferravium source prototype (pending target-game test)
 
-- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify all Ferravium meshes/icons import under the expected plugin mount.
+- [ ] Run `BuildFICSITContractsAssets.py`, then `BuildFerraviumAssets.py`, and verify Ferravium plus Titan Alloy item/smelter meshes and all six generated icons import under the expected plugin mount.
 - [ ] Confirm the native ore, concentrate and ingot descriptors load without missing mesh/icon/category warnings.
 - [ ] Confirm Frontier Survey remains hidden before vanilla Space Elevator Phase V and Terminal I are available.
 - [ ] After the vanilla final-game event integration is verified in-game, confirm Frontier Survey appears and can be purchased only once; confirm its purchase marks Terminal I complete.
