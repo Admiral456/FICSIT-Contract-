@@ -12,6 +12,10 @@
 - Implement a portable C++ state machine for Terminal I–VI and Elevator VI–VIII, with snapshot normalization and regression tests.
 - Compile-check the same portable core wrapper used by the SML module on Linux and Windows.
 - Correct the `/contracts` summary to show the four-slot active-contract limit and guard it in static validation.
+- Store vanilla Phase V confirmation and Terminal/Elevator progression flags in SaveGame properties and replicate them to clients.
+- Expose read-only progression status in the Dispatch Terminal and `/contracts progression` command.
+- Add server-only progression adapter methods that re-check phase gates before modifying saved state.
+- Extend static CI validation and the in-game checklist for save, replication, UI and progression gate behavior.
 
 **Design only:** the catalog and validation do not register live schematics, items, weapons, buildings or recipes. Runtime integration and in-game testing remain pending.
 
