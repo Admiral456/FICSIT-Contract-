@@ -1,11 +1,11 @@
 # Changelog
 
-## Unreleased — Endgame Expansion design catalog
+## Unreleased — Endgame Expansion and Ferravium source prototype
 
 - Define six Dispatch Terminal research chapters and three additional Space Elevator projects (VI–VIII).
 - Add a machine-readable progression catalog with 96 planned unlocks across production, logistics, blueprints, weapons, ammunition, equipment, vehicles, defense, power and automation.
 - Define four fictional endgame resource families: Ferravium, Cryonite, Asterite and Gravionite.
-- Add 54 proposed production/equipment recipes, including all components required by Space Elevator VI–VIII.
+- Add 56 proposed production/equipment recipes, including all components required by Space Elevator VI–VIII.
 - Design Blueprint Designer Mk4/Mk5 as extensions beyond the vanilla Mk3.
 - Add CI validation for phase order, unique IDs, unlock references, recipe references, elevator gates and production of every Elevator requirement.
 - Record implementation risks for World Partition resource nodes, ore scanner registration, custom equipment/weapons, AI drones and quantum material transfer.
@@ -22,7 +22,7 @@
 - Add Ferravium OBJ/MTL item and furnace models, four generated icon sources and a dedicated Unreal Editor import utility.
 - Update the machine-readable catalog to 56 recipes and mark Ferravium as a source prototype; natural resource-node spawning remains deferred.
 
-**Content implementation status:** the overall endgame catalogue remains design/data. Ferravium now has native source classes, recipes and a schematic prototype, but its models/icons still require import and no natural Ferravium nodes are placed in the world. The saved/repllicated progression state and its read-only display are implemented at source level, but the vanilla Phase V completion callback and actual schematic purchase callback remain unconnected. Custom UE compilation and in-game testing remain pending.
+**Content implementation status:** the overall six-phase endgame catalogue remains design/data. The Ferravium processing slice now has native descriptor, recipe, manufacturer, buildable and schematic source classes plus OBJ/MTL meshes and an Unreal Editor importer. The importer, UHT/UE compilation and in-game production tests have not yet been run; no natural Ferravium nodes are placed in the world. The Frontier Survey schematic intentionally remains hidden until the vanilla Phase V completion callback is connected. The saved/repllicated progression display is implemented, but the vanilla completion and actual schematic purchase callbacks remain unconnected.
 
 ## 0.2.0-alpha.2 — Expanded contracts and deluxe dispatch terminal
 
