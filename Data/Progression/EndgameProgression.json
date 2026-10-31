@@ -9,7 +9,7 @@
     "unreal": "custom UE 5.6.1"
   },
   "implementationStatus": "design_only",
-  "sourceOfTruthNote": "This is the approved design catalog for implementation. It does not currently register game schematics, items, meshes, recipes or actor classes at runtime.",
+  "sourceOfTruthNote": "The catalogue remains the design source of truth for the full six-phase expansion. A first Ferravium processing source prototype now exists in native C++ and source assets; natural world nodes, editor import, runtime schematic wiring and game validation remain pending.",
   "progression": {
     "vanillaPhase5UnlocksTerminalPhases": [
       1,
@@ -124,6 +124,8 @@
         "DEEP_CORE_STORAGE"
       ],
       "recipeIds": [
+        "RCP_FERRAVIUM_SMELTER_BUILD",
+        "RCP_FERRAVIUM_RECOVERY",
         "RCP_FERRAVIUM_CONCENTRATE",
         "RCP_FERRAVIUM_INGOT",
         "RCP_FERRAVIUM_PLATE",
@@ -334,6 +336,7 @@
       "displayName": "Ferravium Ore",
       "visual": "Černomodrá kovová hornina s oranžovými žilami a jemným kovovým leskem.",
       "processing": [
+        "Ferravium Ore recovery (temporary refinery bootstrap)",
         "Ferravium Concentrate",
         "Ferravium Ingot",
         "Titan Alloy"
@@ -341,7 +344,7 @@
       "uses": [
         "Těžba, konstrukce, nové střelivo a těžké průmyslové sestavy"
       ],
-      "nodeIntegration": "High risk: placement in the vanilla World Partition is not currently guaranteed by the supported toolkit."
+      "nodeIntegration": "This first source prototype does not place natural nodes; Ferravium Ore is temporarily produced through a refinery recovery recipe until supported vanilla-world resource-node spawning is validated."
     },
     {
       "id": "CRYONITE_ORE",
@@ -420,7 +423,7 @@
       "phase": 1,
       "category": "building",
       "displayName": "Ferravium Smelter",
-      "description": "Specializovaná tavicí budova pro Ferravium Concentrate.",
+      "description": "Native AFICSITFerraviumSmelter manufacturer, buildable descriptor and build recipe are in the source prototype; meshes/icons must be imported and UE/in-game validation remains pending.",
       "status": "planned"
     },
     {
@@ -1166,22 +1169,22 @@
     {
       "id": "RCP_FERRAVIUM_CONCENTRATE",
       "phase": 1,
-      "machine": "Ore Washing Plant",
-      "cycleSeconds": 8,
+      "machine": "Refinery (prototype washing)",
+      "cycleSeconds": 12,
       "inputs": [
         {
           "itemId": "FERRAVIUM_ORE",
-          "amount": 120
+          "amount": 60
         },
         {
           "itemId": "VANILLA_WATER",
-          "amount": 60
+          "amount": 30
         }
       ],
       "outputs": [
         {
           "itemId": "FERRAVIUM_CONCENTRATE",
-          "amount": 90
+          "amount": 45
         }
       ]
     },
@@ -1189,21 +1192,21 @@
       "id": "RCP_FERRAVIUM_INGOT",
       "phase": 1,
       "machine": "Ferravium Smelter",
-      "cycleSeconds": 6,
+      "cycleSeconds": 10,
       "inputs": [
         {
           "itemId": "FERRAVIUM_CONCENTRATE",
-          "amount": 90
+          "amount": 45
         },
         {
           "itemId": "VANILLA_COAL",
-          "amount": 45
+          "amount": 30
         }
       ],
       "outputs": [
         {
           "itemId": "FERRAVIUM_INGOT",
-          "amount": 75
+          "amount": 30
         }
       ]
     },
@@ -2434,6 +2437,68 @@
           "amount": 1
         }
       ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_RECOVERY",
+      "phase": 1,
+      "machine": "Refinery (temporary recovery source)",
+      "cycleSeconds": 18,
+      "recipeKind": "manufacturing",
+      "inputs": [
+        {
+          "itemId": "VANILLA_BAUXITE_ORE",
+          "amount": 120
+        },
+        {
+          "itemId": "VANILLA_COAL",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_WATER",
+          "amount": 60
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_ORE",
+          "amount": 60
+        }
+      ]
+    },
+    {
+      "id": "RCP_FERRAVIUM_SMELTER_BUILD",
+      "phase": 1,
+      "machine": "Build Gun",
+      "cycleSeconds": 0,
+      "recipeKind": "build_gun",
+      "inputs": [
+        {
+          "itemId": "VANILLA_ENCASED_INDUSTRIAL_BEAM",
+          "amount": 30
+        },
+        {
+          "itemId": "VANILLA_STEEL_PIPE",
+          "amount": 80
+        },
+        {
+          "itemId": "VANILLA_MOTOR",
+          "amount": 20
+        },
+        {
+          "itemId": "VANILLA_COMPUTER",
+          "amount": 10
+        },
+        {
+          "itemId": "VANILLA_CABLE",
+          "amount": 100
+        }
+      ],
+      "outputs": [
+        {
+          "itemId": "FERRAVIUM_SMELTER",
+          "amount": 1
+        }
+      ]
     }
   ],
   "balanceTargets": {
@@ -2548,6 +2613,30 @@
           100
         ]
       ]
+    }
+  ],
+  "implementationSlices": [
+    {
+      "id": "FERRAVIUM_PROCESSING_BOOTSTRAP",
+      "status": "native_source_prototype",
+      "includes": [
+        "Native Ferravium Ore resource descriptor",
+        "Native Ferravium Concentrate and Ferravium Ingot item descriptors",
+        "Ferravium recovery, washing and smelting recipes",
+        "Native AFICSITFerraviumSmelter manufacturer with input/output factory connections",
+        "Ferravium Smelter buildable descriptor and Build Gun recipe",
+        "Frontier Survey schematic gated by the saved vanilla Phase V / Terminal I state",
+        "Source OBJ/MTL models and Unreal Editor asset importer"
+      ],
+      "deferred": [
+        "Natural Ferravium resource-node placement in the vanilla World Partition map",
+        "Ore scanner node registration and map markers",
+        "UE 5.6.1/UHT compile and Alpakit packaging",
+        "In-game production, power draw, belt connection and save/load tests",
+        "Live callback from the game's actual Space Elevator Phase V completion event"
+      ],
+      "temporaryOreSource": "RCP_FERRAVIUM_RECOVERY",
+      "note": "The refinery recovery recipe is a test/bootstrap source, not a claim that natural Ferravium deposits have been placed in the world."
     }
   ]
 }
