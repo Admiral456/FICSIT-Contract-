@@ -1,74 +1,64 @@
-# In-game validation checklist for 0.2.0
+# In-game validation checklist for 0.2.0-alpha.2
 
-This checklist is intentionally unchecked until tested in the target game.
+This checklist intentionally remains unchecked until tested in the target Satisfactory build.
 
 ## Packaging and loading
 
-- [ ] Build `FactoryGameEditor` with the SML 3.12.x Starter Project and custom UE 5.6.1.
+- [ ] Build `FactoryGameEditor` with SML 3.12.x Starter Project and custom UE 5.6.1.
 - [ ] Confirm UHT completes without errors.
+- [ ] Run the Unreal Editor asset import utility and verify the imported terminal mesh, icon and Game Feature Data.
+- [ ] Set the Game Feature Data Initial State to Active.
 - [ ] Package the plugin with Alpakit.
 - [ ] Confirm SMM loads FICSIT Contracts without dependency or version warnings.
 - [ ] Confirm no missing module / missing item class errors appear in the game log.
 
-## Single player
+## Dispatch Terminal building
+
+- [ ] Confirm the terminal appears in the Trading Post / Progression build category after purchasing FICSIT Dispatch Network.
+- [ ] Verify the Oil Processing dependency hides the Dispatch Network schematic beforehand.
+- [ ] Build the terminal and verify its hologram, collision, clearance and dismantle refund.
+- [ ] Verify the full industrial mesh appears, including canopy, side service towers, operator deck, three screens, keypad, vents and beacon.
+- [ ] Verify imported materials retain separate Gunmetal, Steel, Black, Orange, Screen and Indicator slots.
+- [ ] Verify Gunmetal and Steel respond to the Customizer while orange/black/screen parts retain their intended appearance.
+- [ ] Verify the cyan screen light and orange beacon illuminate without causing excessive bloom or performance cost.
+- [ ] Confirm fallback geometry appears if the imported mesh is unavailable and does not overlap the imported model.
+
+## Contract board and single player
 
 - [ ] Start a new or copied test save and run `/contracts`.
-- [ ] Confirm three offers appear and reputation starts at 0.
-- [ ] Accept an offer with `/contracts accept <ID>`.
-- [ ] Confirm the same contract moves from available to active.
-- [ ] Attempt to accept an unknown ID and confirm no state changes.
-- [ ] Attempt to accept a fourth active contract and confirm the cap is enforced.
-- [ ] Put the exact required vanilla items in the main inventory and run `/contracts deliver <ID>`.
-- [ ] Confirm only the outstanding amount is removed.
-- [ ] Confirm a partially supplied contract stays active and reports the correct percentage.
-- [ ] Confirm a completed contract is moved to history and reputation is awarded once.
-- [ ] Confirm a repeated delivery cannot award reputation again.
-- [ ] Accept Factory Backbone Program and confirm only the Structural Base stage is shown.
-- [ ] Deliver Reinforced Iron Plates or Motors early and confirm they are not removed from inventory.
-- [ ] Complete Structural Base and confirm Reinforcement unlocks; confirm the command reports the stage transition.
-- [ ] Save/reload during Reinforcement and confirm the stage index and previous deliveries persist.
-- [ ] Complete Reinforcement and confirm Powertrain unlocks.
-- [ ] Complete Powertrain and confirm the 750 REP reward is granted exactly once.
-- [ ] Cancel a partially completed order and confirm the reputation fee and retained cancellation history.
-- [ ] Confirm cancellation cannot push reputation below zero.
-- [ ] Confirm an expired order cannot be cancelled and is labelled EXPIRED, not CANCELLED.
-- [ ] Save, exit, reload and confirm offers, active progress, reputation, history and multi-stage progress persist.
-- [ ] Verify a timed offer expires after its deadline and grants no reputation.
+- [ ] Confirm five distinct offers appear when five eligible templates exist.
+- [ ] Confirm reputation starts at 0 and the entry rank is FICSIT Trainee.
+- [ ] Accept up to four orders and confirm the fifth active order is rejected.
+- [ ] Confirm reputation gates prevent higher-tier orders from appearing too early.
+- [ ] Complete a basic one-item order and verify only the outstanding amount is removed.
+- [ ] Complete a multi-material standard order and verify no reward is paid until every manifest line is supplied.
+- [ ] Attempt an unrequested item and verify it is neither removed nor credited.
+- [ ] Attempt to deliver more than the outstanding amount and verify the excess stays in inventory.
+- [ ] Confirm timed Emergency Grid Recovery expires at its deadline and grants no reputation.
+- [ ] Cancel an active order and confirm the reputation fee and retained cancellation history.
 
-## Multiplayer / dedicated server
+## Strategic program validation
 
+- [ ] Accept Factory Backbone Program and verify all four phases are shown in the terminal.
+- [ ] Deliver only one material from a multi-item phase and verify the next phase stays locked.
+- [ ] Deliver a future-phase product early and verify it is not removed from inventory.
+- [ ] Complete phase one and verify phase two becomes current.
+- [ ] Save/reload during a partially completed phase and confirm every material line and phase index persist.
+- [ ] Complete Factory Backbone and confirm the 1,100 REP reward is granted exactly once.
+- [ ] Validate the four-phase Foundry Expansion Initiative.
+- [ ] Validate the five-phase Automated Assembly Rollout and Planetary Power Grid Program.
+- [ ] Validate all six phases of Planetary Logistics Network.
+- [ ] Validate all seven phases of Orbital Logistics Authority Program.
+- [ ] Confirm full phase routes in the terminal and `/contracts` output show COMPLETE, CURRENT and LOCKED phases correctly.
+- [ ] Verify completed, expired and cancelled entries are clearly distinguished in the archive.
+
+## Terminal interaction and multiplayer
+
+- [ ] Look at the terminal and press E; confirm the interaction widget opens and closes correctly.
+- [ ] Confirm reputation, rank, five available offers, four active slots and full multi-phase routes are visible.
+- [ ] Confirm Accept, Deliver and Cancel buttons work and refresh the board after a state change.
 - [ ] Join a host session with a second client and confirm the board/reputation is replicated.
-- [ ] Confirm only the server changes the board and inventory.
-- [ ] Accept/deliver from a client and confirm exactly one state transition and one inventory deduction.
-- [ ] Save and reload the session; confirm state remains consistent on host and clients.
-
-## Edge cases
-
-- [ ] Deliver with zero matching items.
-- [ ] Deliver more than the remaining amount.
-- [ ] Deliver an item not required by the selected contract.
-- [ ] Expire an active timed contract.
-- [ ] Cancel an active contract and confirm the cancellation penalty is applied only once.
-- [ ] Test an item descriptor class that fails to resolve and confirm no items are removed.
-
-
-## Dispatch Terminal — editor and in-game validation
-
-- [ ] Run the asset import utility in the SML 3.12 Starter Project.
-- [ ] Confirm the `FICSITContracts` Game Feature Data asset exists and Initial State is Active.
-- [ ] Compile Development Editor with custom UE 5.6.1 and resolve all UHT/compiler warnings.
-- [ ] Confirm FICSIT Dispatch Network stays hidden before Oil Processing and appears in the Tier 5 Logistics schematic list after Oil Processing is purchased.
-- [ ] Purchase the schematic and confirm the build recipe appears in the build gun under Trading Post / Progression.
-- [ ] Build the terminal and verify the hologram, placement clearance, dismantle refund and paint/customizer behavior.
-- [ ] Look at the terminal and press E; confirm the Satisfactory interaction widget opens and closes correctly.
-- [ ] Confirm the board shows current reputation, active contracts, available offers and staged progress.
-- [ ] Confirm a second player sees the same board and no duplicate contract state is created by a second terminal.
-- [ ] Save/reload with one or more terminals placed and confirm they remain usable.
-- [ ] Confirm chat commands still perform accept/deliver/cancel on the authoritative host.
-
-- [ ] Verify the terminal's gunmetal/steel surfaces respond to the Customizer while orange, black and screen details retain their materials.
-- [ ] Verify the terminal's clearance box prevents overlapping placement and its solid collision blocks player movement.
-- [ ] Use Accept from a client and confirm the server updates the shared board for all players.
-- [ ] Use Deliver from a client and confirm only that player's main inventory is consumed, never another player's inventory or a client-side item count.
-- [ ] Use Cancel from a client and confirm the server applies the configured reputation penalty exactly once.
-- [ ] Confirm the UI refreshes on all clients after a contract state change.
+- [ ] Use terminal actions from a client and verify the server revalidates the owner/controller pair and terminal distance.
+- [ ] Confirm Deliver only consumes the requesting player's main inventory.
+- [ ] Save/reload with one or more terminals placed and confirm all remain usable.
+- [ ] Confirm multiple terminals access the same board rather than generating duplicate contract state.
