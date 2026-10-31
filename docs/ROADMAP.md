@@ -62,6 +62,7 @@
 - [x] Add the Frontier Survey schematic source and a prerequisite that waits for the saved Phase V / Terminal I state.
 - [x] Add the Advanced Metallurgy / Terminal II schematic, gated by purchased Frontier Survey and the saved Phase II availability state.
 - [x] Add the native Titan Alloy Ingot descriptor and the 8-second Foundry Mk1 bootstrap recipe (60 Ferravium Ingots + 60 Steel Ingots -> 60 Titan Alloy Ingots).
+- [x] Add Titan Alloy Beam as a second Phase II product: 30 Titan Alloy Ingots + 60 Steel Pipes -> 30 Titan Alloy Beams per 12-second Foundry Mk1 cycle, with its own descriptor, OBJ mesh and icon source.
 - [x] Connect confirmed Advanced Metallurgy schematic purchases to the saved Terminal II completion flag and reconcile the Phase I/II purchases in order.
 - [x] Add OBJ/MTL source meshes and the Unreal Editor importer for Ferravium and Titan Alloy items, the Ferravium Smelter, and five generated icons.
 - [ ] Import Ferravium and Titan Alloy assets, run UHT/UE 5.6.1 compilation, package with Alpakit and test the complete production/research loops in game.
