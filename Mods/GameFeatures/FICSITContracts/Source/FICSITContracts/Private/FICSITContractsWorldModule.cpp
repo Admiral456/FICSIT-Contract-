@@ -11,4 +11,5 @@ UFICSITContractsWorldModule::UFICSITContractsWorldModule()
     mChatCommands.Add(AFICSITContractsChatCommand::StaticClass());
     mSchematics.Add(UFICSITDispatchTerminalSchematic::StaticClass());
     mSchematics.Add(UFICSITFrontierSurveySchematic::StaticClass());
+    mSchematics.Add(UFICSITAdvancedMetallurgySchematic::StaticClass());
 }
