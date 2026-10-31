@@ -347,6 +347,22 @@ def main() -> int:
             if titan_alloy_slice and titan_alloy_slice.get("bootstrapMachine") != "Vanilla Foundry Mk1":
                 errors.append("The Titan Alloy prototype must explicitly document its vanilla Foundry bootstrap.")
 
+            beam_unlock = unlock_by_id.get("TITAN_ALLOY_BEAM")
+            if not beam_unlock or beam_unlock.get("status") != "native_source_prototype":
+                errors.append("Titan Alloy Beam must be tracked as a native Phase II prototype unlock.")
+            if beam_unlock and beam_unlock.get("sourceSliceId") != "ADVANCED_METALLURGY_TITAN_ALLOY_BOOTSTRAP":
+                errors.append("Titan Alloy Beam must reference the Phase II prototype slice.")
+            beam_recipe = recipe_by_id.get("RCP_TITAN_BEAM_BOOTSTRAP")
+            if not beam_recipe or not any(
+                output.get("itemId") == "TITAN_ALLOY_BEAM"
+                for output in (beam_recipe or {}).get("outputs", [])
+            ):
+                errors.append("The Titan Alloy Beam bootstrap recipe must produce Titan Alloy Beams.")
+            if beam_recipe and beam_recipe.get("designRecipeId") != "RCP_TITAN_BEAM":
+                errors.append("The Titan Alloy Beam bootstrap must retain a link to the planned Industrial Press recipe.")
+            if titan_alloy_slice and len(titan_alloy_slice.get("bootstrapRecipes", [])) < 2:
+                errors.append("Both Titan Alloy Foundry bootstrap recipes must be documented.")
+
     # Verify the portable progression state machine matches every unlock ID in the catalog.
     progression_engine = ROOT / "Source/FICSITContractsCore/EndgameProgression.cpp"
     progression_tests = ROOT / "Tests/ContractEngineTests.cpp"
