@@ -13,7 +13,7 @@ AFICSITContractsChatCommand::AFICSITContractsChatCommand()
     MinNumberOfArguments = 0;
     CommandName = TEXT("contracts");
     Aliases.Add(TEXT("fcontracts"));
-    Usage = FText::FromString(TEXT("/contracts [accept <ID> | deliver <ID> | cancel <ID> | history]"));
+    Usage = FText::FromString(TEXT("/contracts [accept <ID> | deliver <ID> | cancel <ID> | history | progression]"));
 }
 
 EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCommandSender* Sender, const TArray<FString>& Arguments, const FString& Label)
@@ -43,6 +43,11 @@ EExecutionStatus AFICSITContractsChatCommand::ExecuteCommand_Implementation(UCom
     }
 
     const FString Subcommand = Arguments[0].ToLower();
+    if (Subcommand == TEXT("progression"))
+    {
+        Sender->SendChatMessage(Contracts->GetEndgameProgressionSummary(), FLinearColor(0.35f, 0.82f, 0.97f));
+        return EExecutionStatus::COMPLETED;
+    }
     if (Subcommand == TEXT("history"))
     {
         const TArray<FFICSITContract> History = Contracts->GetContractHistory();
