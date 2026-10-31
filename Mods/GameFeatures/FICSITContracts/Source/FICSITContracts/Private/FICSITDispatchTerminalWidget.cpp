@@ -277,4 +277,8 @@ void UFICSITDispatchTerminalWidget::RefreshBoard()
             AddContractEntry(FText::FromString(ArchiveState),
                 FText::FromString(Board->FormatContract(History[Index])),false);
         }
+
+    AddSection(FText::FromString(TEXT("04  //  ENDGAME RESEARCH")));
+    AddContractEntry(FText::FromString(TEXT("TERMINAL & SPACE ELEVATOR PROGRESSION")),
+        FText::FromString(Board->GetEndgameProgressionSummary()),true);
 }
